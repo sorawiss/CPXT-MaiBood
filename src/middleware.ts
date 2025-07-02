@@ -5,11 +5,11 @@ import { decrypt } from "@/utils/session"
 
 // Check if route is protected
 export default async function middleware(req: NextRequest) {
-    const { pathname } = req.nextUrl
-    const protectedRoutes = ["/fridge"]
-    const isProtectedRoute = protectedRoutes.includes(pathname)
+    // const { pathname} = req.nextUrl
+    // const protectedRoutes = ["/dashboard"]
+    // const isProtectedRoute = protectedRoutes.includes(pathname)
 
-    if (isProtectedRoute) {
+    if (1) {
         const cookieStore = (await cookies()).get("user-session")?.value
         const session = await decrypt(cookieStore)
         if (!session) {
@@ -22,7 +22,7 @@ export default async function middleware(req: NextRequest) {
 
 
 export const config = {
-    matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+    matcher: ["/fridge/:path*"],
 }
 
 
