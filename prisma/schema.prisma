@@ -26,8 +26,9 @@ enum StatusType {
   expired
 }
 
+
 model User {
-  id Int @id @default(autoincrement())
+  id String @id @default(uuid())
   name String @db.VarChar(16)
   phone_number String @unique @db.VarChar(10)
   hashed_password String @db.VarChar(255)
@@ -37,11 +38,11 @@ model User {
 }
 
 model Fridge {
-  id Int @id @default(autoincrement())
+  id String @id @default(uuid())
   name String @db.VarChar(16)
   amount Int @default(0)
   status StatusType @default(fresh)
-  user_id Int
+  user_id String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   user User @relation(fields: [user_id], references: [id])
