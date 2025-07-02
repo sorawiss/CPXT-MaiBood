@@ -37,6 +37,7 @@ function UserLocation() {
 
         // Error callback
         const handleError = (error: GeolocationPositionError) => {
+            console.log('Error:', error.message);
             setError({ code: error.code, message: error.message });
             setLoading(false);
         };
