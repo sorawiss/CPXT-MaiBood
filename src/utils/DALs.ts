@@ -14,3 +14,15 @@ export async function addToFridge(item: string, userId: string) {
     })
     return addToFridge
 }
+
+
+// Get fridge items
+export async function getFridgeItems(userId: string) {
+    const fridgeItems = await prismaDB.fridge.findMany({
+        where: {
+            user_id: userId as string
+        }
+    })
+
+    return fridgeItems
+}

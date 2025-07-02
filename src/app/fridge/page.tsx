@@ -1,21 +1,16 @@
-"use client"
-import { handleAddToFridge } from "./action"
+import AddToFridge from "./components/AddToFridge"
+import { handleGetFridgeItems } from "./action"
+import FridgeList from "./components/FridgeList"
 
-function Fridge() {
-
-  async function handleSubmit(formData: FormData) {
-    const result = await handleAddToFridge(formData)
-    console.log(result)
-  }
+async function Fridge() {
+  const fridgeItems = await handleGetFridgeItems()
 
 
   // Render
   return (
     <div>
-      <form action={handleSubmit}>
-        <input type="text" name="item" placeholder="Item" />
-        <button type="submit">Add</button>
-      </form>
+      <FridgeList fridgeItems={fridgeItems} />
+      <AddToFridge />
     </div>
   )
 }
