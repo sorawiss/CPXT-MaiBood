@@ -11,6 +11,15 @@ export async function handleRegister(formData: FormData) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    const existingUser = await prismaDB.user.findUnique({
+        where: {
+            phone_number
+        }
+    })
+    if (existingUser) {
+        return { error: "User already exists" }
+    }
+
 
     const user = await prismaDB.user.create({
         data: {
