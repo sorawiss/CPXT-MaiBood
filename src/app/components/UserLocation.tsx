@@ -1,0 +1,95 @@
+"use client";
+import { useEffect, useState } from "react";
+import reverseGeocoding from "@/utils/reverse-geocoding";
+
+
+interface GeolocationError {
+    code: number;
+    message: string;
+}
+
+
+function UserLocation() {
+    const [location, setLocation] = useState<{ latitude: number, longitude: number, accuracy: number } | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<GeolocationError | null>(null);
+    const [address, setAddress] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (!navigator.geolocation) {
+            setError({ code: 404, message: 'Geolocation is not supported by your browser.' });
+            setLoading(false);
+            return;
+        }
+
+        // Success callback
+        const handleSuccess = (position: GeolocationPosition) => {
+            const newLocation = {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+                accuracy: position.coords.accuracy,
+            };
+            setLocation(newLocation);
+            setLoading(false);
+            setError(null);
+            console.log('Location:', newLocation);
+        };
+
+        // Error callback
+        const handleError = (error: GeolocationPositionError) => {
+            setError({ code: error.code, message: error.message });
+            setLoading(false);
+        };
+
+        const options = {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0,
+        };
+
+        // Request the user's location
+        navigator.geolocation.getCurrentPosition(handleSuccess, handleError, options);
+    }, []);
+
+
+    // Reverse geocoding
+    const fetchReverseGeocoding = async () => {
+        if (location) {
+            const data = await reverseGeocoding(location.latitude, location.longitude);
+            console.log('Reverse geocoding:', data);
+            setAddress(data.display_name);
+        }
+    }
+
+    useEffect(() => {
+        fetchReverseGeocoding();
+    }, [location]);
+
+
+    // Render the component
+    return (
+        <div>
+            <h1>User Location</h1>
+            {loading && (
+                <p>Loading location...</p>
+            )}
+
+            {error && (
+                <p style={{ color: 'red' }}>
+                    Error: {error.message} (Code: {error.code})
+                </p>
+            )}
+
+            {location && (
+                <div>
+                    <p><strong>Latitude:</strong> {location.latitude}</p>
+                    <p><strong>Longitude:</strong> {location.longitude}</p>
+                    <p><em>(Accuracy: {location.accuracy.toFixed(2)} meters)</em></p>
+                    <p><strong>Address:</strong> {address}</p>
+                </div>
+            )}
+        </div>
+    );
+}
+
+export default UserLocation;
