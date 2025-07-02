@@ -17,6 +17,7 @@ export async function handleRegister(formData: FormData) {
         }
     })
     if (existingUser) {
+        console.log("User already exists");
         return { error: "User already exists" }
     }
 
