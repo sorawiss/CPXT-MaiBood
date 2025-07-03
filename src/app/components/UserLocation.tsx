@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import reverseGeocoding from "@/utils/reverse-geocoding";
+import { getDistance } from 'geolib';
 
 
 interface GeolocationError {
@@ -14,6 +15,7 @@ function UserLocation() {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<GeolocationError | null>(null);
     const [address, setAddress] = useState<string | null>(null);
+    const [distance, setDistance] = useState<number | null>(null)
 
     useEffect(() => {
         if (!navigator.geolocation) {
@@ -53,6 +55,15 @@ function UserLocation() {
     }, []);
 
 
+    // Calculate distance
+    useEffect(() => {
+        if (location) {
+            const targetLocation = { latitude: 11.793369, longitude: 99.789215 };
+            setDistance(getDistance(location, targetLocation))
+        }
+    }, [location])
+
+
     // Reverse geocoding
     const fetchReverseGeocoding = async () => {
         if (location) {
@@ -61,7 +72,6 @@ function UserLocation() {
             setAddress(data.display_name);
         }
     }
-
     useEffect(() => {
         fetchReverseGeocoding();
     }, [location]);
@@ -87,6 +97,7 @@ function UserLocation() {
                     <p><strong>Longitude:</strong> {location.longitude}</p>
                     <p><em>(Accuracy: {location.accuracy.toFixed(2)} meters)</em></p>
                     <p><strong>Address:</strong> {address}</p>
+                    <p><strong>Distance:</strong> {distance} meters</p>
                 </div>
             )}
         </div>
