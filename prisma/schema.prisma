@@ -33,6 +33,9 @@ model User {
   phone_number String @unique @db.VarChar(10)
   hashed_password String @db.VarChar(255)
   profile_picture String? @db.VarChar(255)
+  latitude Float?
+  longitude Float?
+  display_name String? @db.VarChar(64)
   fridge Fridge[]
 
 }

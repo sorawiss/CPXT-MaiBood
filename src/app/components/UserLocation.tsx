@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import reverseGeocoding from "@/utils/reverse-geocoding";
 import { getDistance } from 'geolib';
 import { LocationEdit } from 'lucide-react';
+import { updateUserLocation, getUserLocation } from "../actions/location";
 
 
 interface GeolocationError {
@@ -16,44 +17,91 @@ function UserLocation() {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<GeolocationError | null>(null);
     const [address, setAddress] = useState<any | null>(null);
-    const [distance, setDistance] = useState<number | null>(null)
+    const [distance, setDistance] = useState<number | null>(null);
+    const [isUpdatingLocation, setIsUpdatingLocation] = useState<boolean>(false);
+
+
+    async function fetchReverseGeocoding() {
+        if (location) {
+            const data = await reverseGeocoding(location.latitude, location.longitude);
+            console.log('Reverse geocoding:', data);
+            setAddress(data.address);
+        }
+    }
 
     useEffect(() => {
-        if (!navigator.geolocation) {
-            setError({ code: 404, message: 'Geolocation is not supported by your browser.' });
-            setLoading(false);
-            return;
-        }
+        const initializeLocation = async () => {
+            try {
+                const cachedLocation = await getUserLocation();
+                console.log('Cached location:', cachedLocation);
 
-        // Success callback
-        const handleSuccess = (position: GeolocationPosition) => {
-            const newLocation = {
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude,
-                accuracy: position.coords.accuracy,
-            };
-            setLocation(newLocation);
-            setLoading(false);
-            setError(null);
-            console.log('Location:', newLocation);
+                if (cachedLocation.success && cachedLocation.location) {
+                    setLocation({
+                        latitude: cachedLocation.location.latitude,
+                        longitude: cachedLocation.location.longitude,
+                        accuracy: 0
+                    });
+                    setLoading(false);
+                    console.log('Using cached location:', cachedLocation.location);
+                    return;
+                }
+
+                // If no cached location, get from browser
+                if (!navigator.geolocation) {
+                    setError({ code: 404, message: 'Geolocation is not supported by your browser.' });
+                    setLoading(false);
+                    return;
+                }
+
+                // Success callback
+                const handleSuccess = async (position: GeolocationPosition) => {
+                    const newLocation = {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        accuracy: position.coords.accuracy,
+                    };
+                    setLocation(newLocation);
+                    await fetchReverseGeocoding();
+                    setLoading(false);
+                    setError(null);
+                    console.log('New location:', newLocation);
+
+                    // Save to database
+                    setIsUpdatingLocation(true);
+                    try {
+                        await updateUserLocation(newLocation.latitude, newLocation.longitude);
+                        console.log('Location saved to database');
+                    } catch (error) {
+                        console.error('Failed to save location to database:', error);
+                    } finally {
+                        setIsUpdatingLocation(false);
+                    }
+                };
+
+                // Error callback
+                const handleError = (error: GeolocationPositionError) => {
+                    console.log('Error code:', error.code);
+                    console.log('Error message:', error.message);
+                    setError({ code: error.code, message: error.message });
+                    setLoading(false);
+                };
+
+                const options = {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0,
+                };
+
+                // Request the user's location
+                navigator.geolocation.getCurrentPosition(handleSuccess, handleError, options);
+            } catch (error) {
+                console.error('Error initializing location:', error);
+                setError({ code: 500, message: 'Failed to initialize location' });
+                setLoading(false);
+            }
         };
 
-        // Error callback
-        const handleError = (error: GeolocationPositionError) => {
-            console.log('Error code:', error.code);
-            console.log('Error message:', error.message);
-            setError({ code: error.code, message: error.message });
-            setLoading(false);
-        };
-
-        const options = {
-            enableHighAccuracy: true,
-            timeout: 10000,
-            maximumAge: 0,
-        };
-
-        // Request the user's location
-        navigator.geolocation.getCurrentPosition(handleSuccess, handleError, options);
+        initializeLocation();
     }, []);
 
 
@@ -68,16 +116,55 @@ function UserLocation() {
 
     // Reverse geocoding
     useEffect(() => {
-        const fetchReverseGeocoding = async () => {
-            if (location) {
-                const data = await reverseGeocoding(location.latitude, location.longitude);
-                console.log('Reverse geocoding:', data);
-                setAddress(data.address);
-            }
-        }
+
         fetchReverseGeocoding();
     }, [location]);
 
+
+    // Function to manually refresh location
+    const refreshLocation = async () => {
+        if (!navigator.geolocation) {
+            setError({ code: 404, message: 'Geolocation is not supported by your browser.' });
+            return;
+        }
+
+        setIsUpdatingLocation(true);
+
+        const handleSuccess = async (position: GeolocationPosition) => {
+            const newLocation = {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+                accuracy: position.coords.accuracy,
+            };
+            setLocation(newLocation);
+            setError(null);
+            console.log('Location refreshed:', newLocation);
+
+            try {
+                await updateUserLocation(newLocation.latitude, newLocation.longitude);
+                console.log('Updated location saved to database');
+            } catch (error) {
+                console.error('Failed to save updated location to database:', error);
+            } finally {
+                setIsUpdatingLocation(false);
+            }
+        };
+
+        const handleError = (error: GeolocationPositionError) => {
+            console.log('Error code:', error.code);
+            console.log('Error message:', error.message);
+            setError({ code: error.code, message: error.message });
+            setIsUpdatingLocation(false);
+        };
+
+        const options = {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0,
+        };
+
+        navigator.geolocation.getCurrentPosition(handleSuccess, handleError, options);
+    };
 
     // Render the component
     return (
@@ -93,15 +180,21 @@ function UserLocation() {
             )}
 
             {location && (
-                <div className="flex items-center gap-[0.5rem] " >
-                    {/* <p><strong>Latitude:</strong> {location.latitude}</p>
-                    <p><strong>Longitude:</strong> {location.longitude}</p>
-                    <p><em>(Accuracy: {location.accuracy.toFixed(2)} meters)</em></p> */}
-                    {/* <p><strong>Distance:</strong> {distance} meters</p> */}
+                <div className="flex items-center gap-[0.5rem]">
                     <p className="p3 text-backgroundsecondary">
-                        คุณกำลังอยู่ที่ {address?.quarter}, {address?.suburb}
+                        คุณกำลังอยู่ที่ {address?.quarter || address?.county}, {address?.suburb || address?.city_district}
                     </p>
-                    <LocationEdit className="w-[1rem] h-[1rem] text-backgroundsecondary" />
+                    <button
+                        onClick={refreshLocation}
+                        disabled={isUpdatingLocation}
+                        className="disabled:opacity-50 hover:cursor-pointer"
+                        title="Refresh location"
+                    >
+                        <LocationEdit className="w-[1rem] h-[1rem] text-backgroundsecondary" />
+                    </button>
+                    {isUpdatingLocation && (
+                        <span className="text-xs text-backgroundsecondary">Updating...</span>
+                    )}
                 </div>
             )}
         </div>

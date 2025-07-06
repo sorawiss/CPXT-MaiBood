@@ -1,3 +1,4 @@
+import { Search } from "lucide-react";
 import UserLocation from "./components/UserLocation";
 
 
@@ -12,11 +13,10 @@ export default function Home() {
           <h3>มีส้มลดราคาเป็นจำนวนมากในชุมชน</h3>
           <h2 className="text-textprimary" >ลองเข้าไปดูสิ</h2>
         </div>
-
         <UserLocation />
-
-
       </div>
+
+      <Search />
     </div>
   );
 }
