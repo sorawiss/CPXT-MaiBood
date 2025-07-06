@@ -30,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${notoSansThai.className} ${geistMono.variable} ${geistSans.variable} antialiased`}
+        className={`${notoSansThai.className} ${geistMono.variable} ${geistSans.variable} antialiased flex flex-col items-center justify-center`}
       >
         {children}
       </body>

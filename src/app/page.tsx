@@ -1,13 +1,14 @@
-import { Search } from "lucide-react";
 import UserLocation from "./components/UserLocation";
+
+import Search from "./components/Searh";
 
 
 export default function Home() {
 
   
   return (
-    <div className="flex flex-col items-center justify-center pt-[4rem] " >
-      <div className="UserLocation w-[22.5rem] bg-makro rounded-2xl px-[1rem] py-[0.5rem]
+    <div className="flex flex-col items-center justify-center pt-[4rem] w-[25rem] px-[1.5rem] " >
+      <div className="UserLocation w-full bg-makro rounded-2xl px-[1rem] py-[0.5rem]
           text-background flex flex-col gap-[1rem] ">
         <div className="GreatMessage">
           <h3>มีส้มลดราคาเป็นจำนวนมากในชุมชน</h3>
