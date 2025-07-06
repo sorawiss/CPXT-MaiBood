@@ -66,14 +66,14 @@ function UserLocation() {
 
 
     // Reverse geocoding
-    const fetchReverseGeocoding = async () => {
-        if (location) {
-            const data = await reverseGeocoding(location.latitude, location.longitude);
-            console.log('Reverse geocoding:', data);
-            setAddress(data.display_name);
-        }
-    }
     useEffect(() => {
+        const fetchReverseGeocoding = async () => {
+            if (location) {
+                const data = await reverseGeocoding(location.latitude, location.longitude);
+                console.log('Reverse geocoding:', data);
+                setAddress(data.display_name);
+            }
+        }
         fetchReverseGeocoding();
     }, [location]);
 

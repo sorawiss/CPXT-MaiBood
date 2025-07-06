@@ -20,8 +20,13 @@ const cookie = {
 }
 
 
+interface SessionPayload {
+    userId: string;
+    [key: string]: unknown;
+}
+
 // Encrypt
-export async function encrypt(payload: any) {
+export async function encrypt(payload: SessionPayload) {
     return new SignJWT(payload)
         .setProtectedHeader({ alg: "HS256" })
         .setExpirationTime("1h")
@@ -31,7 +36,7 @@ export async function encrypt(payload: any) {
 
 
 // Decrypt
-export async function decrypt(session: any) {
+export async function decrypt(session: string) {
     try {
         const { payload } = await jwtVerify(session, key, {
             algorithms: ["HS256"]
