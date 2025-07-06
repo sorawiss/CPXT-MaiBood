@@ -1,7 +1,7 @@
 export default async function reverseGeocoding(latitude: number, longitude: number) {
     const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`, {
         headers: {
-            'User-Agent': 'CPAXT-MaiBood'
+            'User-Agent': 'MaiBood-CPAXT'
         }
     });
     if (!response.ok) {
