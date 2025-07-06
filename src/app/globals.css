@@ -25,3 +25,18 @@ h3 {
 .p3 {
     @apply text-[1rem] font-extralight
 }
+
+
+
+
+
+.circle-button {
+    border: none;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background-color: var(--color-backgroundsecondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
