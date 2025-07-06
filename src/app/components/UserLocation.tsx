@@ -23,9 +23,16 @@ function UserLocation() {
 
     async function fetchReverseGeocoding() {
         if (location) {
-            const data = await reverseGeocoding(location.latitude, location.longitude);
-            console.log('Reverse geocoding:', data);
-            setAddress(data.address);
+            try {
+                const data = await reverseGeocoding(location.latitude, location.longitude);
+                console.log('Reverse geocoding:', data);
+                setAddress(data.address);
+            } catch (error) {
+                console.error('Failed to fetch reverse geocoding:', error);
+                setError({ code: 500, message: 'Failed to get address information' });
+            } finally {
+                setLoading(false);
+            }
         }
     }
 
@@ -41,7 +48,6 @@ function UserLocation() {
                         longitude: cachedLocation.location.longitude,
                         accuracy: 0
                     });
-                    setLoading(false);
                     console.log('Using cached location:', cachedLocation.location);
                     return;
                 }
@@ -61,8 +67,6 @@ function UserLocation() {
                         accuracy: position.coords.accuracy,
                     };
                     setLocation(newLocation);
-                    await fetchReverseGeocoding();
-                    setLoading(false);
                     setError(null);
                     console.log('New location:', newLocation);
 
@@ -116,8 +120,9 @@ function UserLocation() {
 
     // Reverse geocoding
     useEffect(() => {
-
-        fetchReverseGeocoding();
+        if (location && !address) {
+            fetchReverseGeocoding();
+        }
     }, [location]);
 
 
@@ -129,6 +134,8 @@ function UserLocation() {
         }
 
         setIsUpdatingLocation(true);
+        setLoading(true); // Show loading when refreshing
+        setAddress(null); // Clear previous address
 
         const handleSuccess = async (position: GeolocationPosition) => {
             const newLocation = {
@@ -155,6 +162,7 @@ function UserLocation() {
             console.log('Error message:', error.message);
             setError({ code: error.code, message: error.message });
             setIsUpdatingLocation(false);
+            setLoading(false);
         };
 
         const options = {
@@ -170,7 +178,7 @@ function UserLocation() {
     return (
         <div>
             {loading && (
-                <p>Loading location...</p>
+                <p className="p3 text-backgroundsecondary">กำลังค้นหาตำแหน่งของคุณ...</p>
             )}
 
             {error && (
@@ -179,7 +187,7 @@ function UserLocation() {
                 </p>
             )}
 
-            {location && (
+            {location && address && !loading && (
                 <div className="flex items-center gap-[0.5rem]">
                     <p className="p3 text-backgroundsecondary">
                         คุณกำลังอยู่ที่ {address?.quarter || address?.county}, {address?.suburb || address?.city_district}
