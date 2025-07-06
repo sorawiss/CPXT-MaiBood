@@ -22,8 +22,17 @@ h2 {
 h3 {
     @apply text-[1.25rem]
 }
+p {
+    @apply text-[1rem] font-medium
+}
+.p2 {
+    @apply text-[0.8rem] font-light
+}
 .p3 {
     @apply text-[1rem] font-extralight
+}
+.p4 {
+    @apply text-[0.5rem] font-light
 }
 
 
