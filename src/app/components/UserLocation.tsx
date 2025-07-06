@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import reverseGeocoding from "@/utils/reverse-geocoding";
 import { getDistance } from 'geolib';
+import { LocationEdit } from 'lucide-react';
 
 
 interface GeolocationError {
@@ -14,7 +15,7 @@ function UserLocation() {
     const [location, setLocation] = useState<{ latitude: number, longitude: number, accuracy: number } | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<GeolocationError | null>(null);
-    const [address, setAddress] = useState<string | null>(null);
+    const [address, setAddress] = useState<any | null>(null);
     const [distance, setDistance] = useState<number | null>(null)
 
     useEffect(() => {
@@ -71,7 +72,7 @@ function UserLocation() {
             if (location) {
                 const data = await reverseGeocoding(location.latitude, location.longitude);
                 console.log('Reverse geocoding:', data);
-                setAddress(data.display_name);
+                setAddress(data.address);
             }
         }
         fetchReverseGeocoding();
@@ -92,12 +93,15 @@ function UserLocation() {
             )}
 
             {location && (
-                <div>
+                <div className="flex items-center gap-[0.5rem] " >
                     {/* <p><strong>Latitude:</strong> {location.latitude}</p>
                     <p><strong>Longitude:</strong> {location.longitude}</p>
                     <p><em>(Accuracy: {location.accuracy.toFixed(2)} meters)</em></p> */}
                     {/* <p><strong>Distance:</strong> {distance} meters</p> */}
-                    <p><strong>Address:</strong> {address}</p>
+                    <p className="p3 text-backgroundsecondary">
+                        คุณกำลังอยู่ที่ {address?.quarter}, {address?.suburb}
+                    </p>
+                    <LocationEdit className="w-[1rem] h-[1rem] text-backgroundsecondary" />
                 </div>
             )}
         </div>
