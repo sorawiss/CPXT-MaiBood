@@ -32,7 +32,7 @@ function UserLocation() {
                 accuracy: position.coords.accuracy,
             };
             setLocation(newLocation);
-            setLoading(false);
+            
             setError(null);
             console.log('Location:', newLocation);
         };
@@ -72,6 +72,8 @@ function UserLocation() {
                 const data = await reverseGeocoding(location.latitude, location.longitude);
                 console.log('Reverse geocoding:', data);
                 setAddress(data.display_name);
+                console.log('Address:', data.display_name);
+                setLoading(false);
             }
         }
         fetchReverseGeocoding();
@@ -81,7 +83,6 @@ function UserLocation() {
     // Render the component
     return (
         <div>
-            <h1>User Location</h1>
             {loading && (
                 <p>Loading location...</p>
             )}
@@ -92,13 +93,9 @@ function UserLocation() {
                 </p>
             )}
 
-            {location && (
+            {address && (
                 <div>
-                    <p><strong>Latitude:</strong> {location.latitude}</p>
-                    <p><strong>Longitude:</strong> {location.longitude}</p>
-                    <p><em>(Accuracy: {location.accuracy.toFixed(2)} meters)</em></p>
-                    <p><strong>Address:</strong> {address}</p>
-                    <p><strong>Distance:</strong> {distance} meters</p>
+                   <p>คุณกำลังอยู่ที่ {address}</p>
                 </div>
             )}
         </div>

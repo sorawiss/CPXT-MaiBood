@@ -19,3 +19,9 @@ h1 {
 h2 {
     @apply text-[1.25rem] font-semibold
 }
+h3 {
+    @apply text-[1.25rem]
+}
+.p3 {
+    @apply text-[1rem] font-extralight
+}
