@@ -86,7 +86,19 @@ function UserLocation() {
                 const handleError = (error: GeolocationPositionError) => {
                     console.log('Error code:', error.code);
                     console.log('Error message:', error.message);
-                    setError({ code: error.code, message: error.message });
+                    switch (error.code) {
+                        case 1:
+                            setError({ code: error.code, message: 'กรุณาอนุญาตให้เว็บไซต์เข้าถึงตำแหน่งของคุณ' });
+                            break;
+                        case 2:
+                            setError({ code: error.code, message: 'กรุณาเปิด GPS ของคุณ เพื่อเข้าถึงตำแหน่งของคุณ' });
+                            break;
+                        case 3:
+                            setError({ code: error.code, message: 'เวลาหมดอายุของตำแหน่งของคุณ' });
+                            break;
+                        default:
+                            setError({ code: error.code, message: error.message });
+                    }
                     setLoading(false);
                 };
 
@@ -160,7 +172,19 @@ function UserLocation() {
         const handleError = (error: GeolocationPositionError) => {
             console.log('Error code:', error.code);
             console.log('Error message:', error.message);
-            setError({ code: error.code, message: error.message });
+            switch (error.code) {
+                case 1:
+                    setError({ code: error.code, message: 'กรุณาอนุญาตให้เว็บไซต์เข้าถึงตำแหน่งของคุณ' });
+                    break;
+                case 2:
+                    setError({ code: error.code, message: 'กรุณาเปิด GPS ของคุณ' });
+                    break;
+                case 3:
+                    setError({ code: error.code, message: 'เวลาหมดอายุของตำแหน่งของคุณ' });
+                    break;
+                default:
+                    setError({ code: error.code, message: error.message });
+            }
             setIsUpdatingLocation(false);
             setLoading(false);
         };
@@ -182,8 +206,8 @@ function UserLocation() {
             )}
 
             {error && (
-                <p style={{ color: 'red' }}>
-                    Error: {error.message} (Code: {error.code})
+                <p className="p3 text-backgroundsecondary">
+                    {error.message}
                 </p>
             )}
 
