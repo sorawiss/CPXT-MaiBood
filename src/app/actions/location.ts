@@ -19,8 +19,9 @@ export async function getUserLocation() {
     try {
         const user = await verifySession();
         const userData = await prismaDB.user.findUnique({
-            where: { id: user.userId as string }
-        }) as any;
+            where: { id: user.userId as string },
+            select: { latitude: true, longitude: true },
+        });
         
         return { 
             success: true, 
