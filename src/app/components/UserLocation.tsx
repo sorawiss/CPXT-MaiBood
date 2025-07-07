@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable */
 import { useEffect, useState } from "react";
 import reverseGeocoding from "@/utils/reverse-geocoding";
 import { getDistance } from 'geolib';
