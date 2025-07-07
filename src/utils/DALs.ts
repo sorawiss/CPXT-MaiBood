@@ -26,3 +26,19 @@ export async function getFridgeItems(userId: string) {
 
     return fridgeItems
 }
+
+
+
+// User DALs
+export async function addLocation(latitude: number, longitude: number, userId: string) {
+    const addLocation = await prismaDB.user.update({
+        where: {
+            id: userId as string
+        },
+        data: {
+            latitude: latitude,
+            longitude: longitude
+        }
+    })
+    return addLocation
+}

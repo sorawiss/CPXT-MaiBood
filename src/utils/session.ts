@@ -10,7 +10,7 @@ const key = new TextEncoder().encode(process.env.JWT_KEY)
 
 const cookie = {
     name: "user-session",
-    duration: 60 * 60 * 24 * 30, // 30 days
+    duration: 60 * 60 * 24 * 30,
     options: {
         httpOnly: true,
         secure: true,
@@ -29,7 +29,7 @@ interface SessionPayload {
 export async function encrypt(payload: SessionPayload) {
     return new SignJWT(payload)
         .setProtectedHeader({ alg: "HS256" })
-        .setExpirationTime("1h")
+        .setExpirationTime("30d")
         .setIssuedAt()
         .sign(key);
 }
