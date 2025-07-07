@@ -20,8 +20,11 @@ export async function getUserLocation() {
         const user = await verifySession();
         const userData = await prismaDB.user.findUnique({
             where: { id: user.userId as string },
-            select: { latitude: true, longitude: true }
-        });
+            select: { 
+                latitude: true, 
+                longitude: true 
+            }
+        }) as { latitude: number | null, longitude: number | null } | null;
         
         return { 
             success: true, 
