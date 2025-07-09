@@ -1,42 +1,51 @@
 "use server"
 import { verifySession } from "@/utils/session"
-import { addToFridge, getFridgeItems } from "@/utils/DALs"
+import { getFridgeItems, getUser, countFridgeItems, increaseAmount, decreaseAmount } from "@/utils/DALs"
+import { revalidatePath } from "next/cache"
 
 
-// Add to fridge
+// Get fridge items and user name
 //--------------------------------
-export async function handleAddToFridge(formData: FormData) {
+export async function handleGetFridgeItemsAndUserName() {
     const session = await verifySession()
     if (!session?.userId) {
         return { error: "Unauthorized" }
     }
-    const item = formData.get('item')
-
-    if (!item) {
-        return { error: "No item" }
-    }
 
     try {
-        const result = await addToFridge(item as string, session.userId as string)
-        return { success: "Item added to fridge", result }
+        const [items, userName, count] = await Promise.all([
+            getFridgeItems(session.userId as string),
+            getUser(session.userId as string),
+            countFridgeItems(session.userId as string)
+        ])
+        return { success: "Fridge items fetched", items, userName, count }
     } catch (error) {
-        return { error: { message: "Failed to add item to fridge", error } }
+        return { error: { message: "Failed to get fridge items", error } }
     }
 }
 
 
-// Get fridge items
-//--------------------------------
-export async function handleGetFridgeItems() {
-    const session = await verifySession()
-    if (!session?.userId) {
-        return { error: "Unauthorized" }
-    }
-
+// Update item amout
+export async function handleIncreaseAmount(id: string) {
     try {
-        const items = await getFridgeItems(session.userId as string)
-        return { success: "Fridge items fetched", items }
+        await increaseAmount(id)
+        revalidatePath("/fridge")
+        console.log("Amount increased")
+        return { success: "Amount increased" }
     } catch (error) {
-        return { error: { message: "Failed to get fridge items", error } }
+        console.log("Error increase amount", error)
+        return { error: { message: "Failed to increase amount", error } }
+    }
+}
+
+export async function handleDecreaseAmount(id: string) {
+    try {
+        await decreaseAmount(id)
+        revalidatePath("/fridge")
+        console.log("Amount decreased")
+        return { success: "Amount decreased" }
+    } catch (error) {
+        console.log("Error decrease amount", error)
+        return { error: { message: "Failed to decrease amount", error } }
     }
 }
