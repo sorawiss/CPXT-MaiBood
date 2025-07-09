@@ -42,10 +42,21 @@ export async function getFridgeItems(userId: string) {
     const fridgeItems = await prismaDB.fridge.findMany({
         where: {
             user_id: userId as string
-        }
+        },
     })
 
     return fridgeItems
+}
+
+// Count fridge items
+export async function countFridgeItems(userId: string) {
+    const count = await prismaDB.fridge.count({
+        where: {
+            user_id: userId
+        }
+    })
+
+    return count
 }
 
 

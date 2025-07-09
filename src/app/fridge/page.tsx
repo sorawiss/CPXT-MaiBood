@@ -1,13 +1,16 @@
 import Link from "next/link"
 import { handleGetFridgeItemsAndUserName } from "./action"
+import { Plus } from "lucide-react"
 
 
 import FridgeList from "./components/FridgeList"
+import Button from "../components/Button"
 
 async function Fridge() {
 
-  const { items, userName } = await handleGetFridgeItemsAndUserName()
+  const { items, userName, count } = await handleGetFridgeItemsAndUserName()
   console.log("userName", userName)
+  console.log("count", count)
 
 
   // Render
@@ -17,8 +20,10 @@ async function Fridge() {
         <h2 className="text-textprimary " >❄️ ตู้เย็นของคุณ {userName?.name}</h2>
         <p className="p3 text-textsecondary " >บันทึกอาหารในตู้เย็น ช่วยให้จัดการอาหารได้ง่ายขึ้น</p>
       </div>
-      <FridgeList fridgeItems={{ items: items || [] }} />
-      <Link href="/fridge/add">Add</Link>
+      <FridgeList fridgeItems={{ items: items || [] }} count={count || 0} />
+      <Link href="/fridge/add" >
+        <Button type="button" text={<Plus className="size-12" />} className="!size-[4.5rem] rounded-full "  />
+      </Link>
     </div>
   )
 }

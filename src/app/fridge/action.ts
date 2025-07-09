@@ -1,6 +1,6 @@
 "use server"
 import { verifySession } from "@/utils/session"
-import { getFridgeItems, getUser } from "@/utils/DALs"
+import { getFridgeItems, getUser, countFridgeItems } from "@/utils/DALs"
 
 
 
@@ -15,11 +15,12 @@ export async function handleGetFridgeItemsAndUserName() {
     }
 
     try {
-        const [items, userName] = await Promise.all([
+        const [items, userName, count] = await Promise.all([
             getFridgeItems(session.userId as string),
-            getUser(session.userId as string)
+            getUser(session.userId as string),
+            countFridgeItems(session.userId as string)
         ])
-        return { success: "Fridge items fetched", items, userName }
+        return { success: "Fridge items fetched", items, userName, count }
     } catch (error) {
         return { error: { message: "Failed to get fridge items", error } }
     }
