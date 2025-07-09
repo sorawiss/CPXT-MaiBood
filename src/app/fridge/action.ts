@@ -1,9 +1,7 @@
 "use server"
 import { verifySession } from "@/utils/session"
-import { getFridgeItems, getUser, countFridgeItems } from "@/utils/DALs"
-
-
-
+import { getFridgeItems, getUser, countFridgeItems, increaseAmount, decreaseAmount } from "@/utils/DALs"
+import { revalidatePath } from "next/cache"
 
 
 // Get fridge items and user name
@@ -23,5 +21,31 @@ export async function handleGetFridgeItemsAndUserName() {
         return { success: "Fridge items fetched", items, userName, count }
     } catch (error) {
         return { error: { message: "Failed to get fridge items", error } }
+    }
+}
+
+
+// Update item amout
+export async function handleIncreaseAmount(id: string) {
+    try {
+        await increaseAmount(id)
+        revalidatePath("/fridge")
+        console.log("Amount increased")
+        return { success: "Amount increased" }
+    } catch (error) {
+        console.log("Error increase amount", error)
+        return { error: { message: "Failed to increase amount", error } }
+    }
+}
+
+export async function handleDecreaseAmount(id: string) {
+    try {
+        await decreaseAmount(id)
+        revalidatePath("/fridge")
+        console.log("Amount decreased")
+        return { success: "Amount decreased" }
+    } catch (error) {
+        console.log("Error decrease amount", error)
+        return { error: { message: "Failed to decrease amount", error } }
     }
 }

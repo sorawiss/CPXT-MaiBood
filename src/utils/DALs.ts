@@ -43,6 +43,9 @@ export async function getFridgeItems(userId: string) {
         where: {
             user_id: userId as string
         },
+        orderBy: {
+            exp_date: "asc"
+        }
     })
 
     return fridgeItems
@@ -57,6 +60,36 @@ export async function countFridgeItems(userId: string) {
     })
 
     return count
+}
+
+
+// Increase amount
+export async function increaseAmount(id: string) {
+    await prismaDB.fridge.update({
+        where: {
+            id: id
+        },
+        data: {
+            amount: {
+                increment: 1
+            }
+        }
+    })
+}
+
+
+// Decrease amount
+export async function decreaseAmount(id: string) {
+    await prismaDB.fridge.update({
+        where: {
+            id: id
+        },
+        data: {
+            amount: {
+                decrement: 1
+            }
+        }
+    })
 }
 
 
