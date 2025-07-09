@@ -45,6 +45,7 @@ model Fridge {
   name String @db.VarChar(16)
   amount Int @default(0)
   status StatusType @default(fresh)
+  exp_date DateTime
   user_id String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt

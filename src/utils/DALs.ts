@@ -3,12 +3,33 @@
 import { prismaDB } from "@/lib/prisma-client"
 
 
+
+// User DALs
+//--------------------------------
+// Get user name
+export async function getUser(userId: string) {
+    const user = await prismaDB.user.findUnique({
+        where: {
+            id: userId as string
+        },
+        select: {
+            name: true
+        }
+    })
+    return user
+}
+
+
+
+
 // Fridge DALs
 //--------------------------------
-export async function addToFridge(item: string, userId: string) {
+export async function addToFridge(item: string, amount: number, expiry_date: Date, userId: string) {
     const addToFridge = await prismaDB.fridge.create({
         data: {
             name: item as string,
+            amount: amount,
+            exp_date: expiry_date,
             user_id: userId as string
         }
     })
