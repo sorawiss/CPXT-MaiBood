@@ -5,6 +5,7 @@ import { Plus } from "lucide-react"
 
 import FridgeList from "./components/FridgeList"
 import Button from "../components/Button"
+import { filterExpDate } from "@/utils/filter-exp-date"
 
 async function Fridge() {
 
@@ -23,12 +24,16 @@ async function Fridge() {
 
       {/* Data display */}
       <div className="DataDisplay w-full flex flex-col gap-[1rem] " >
-        <p className="text-textprimary " >อาหารในตู้เย็น {count} รายการ</p>
+        <div className="MetaData flex justify-between " >
+          <p className="text-textprimary " >อาหารในตู้เย็น {count} รายการ</p>
+          <p className="text-textprimary ">ใกล้หมดอายุ {filterExpDate(items)} รายการ</p>
+
+        </div>
         <div className="FridgeListContainer w-full flex flex-col gap-[1rem] " >
 
 
           {items && items.map((item) => (
-            <FridgeList key={item.id} item={item} exp_date={item.exp_date.toLocaleDateString()} />
+            <FridgeList key={item.id} item={item} />
           ))}
         </div>
       </div>

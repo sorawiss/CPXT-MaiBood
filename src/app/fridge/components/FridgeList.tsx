@@ -11,11 +11,13 @@ interface FridgeItem {
     user_id: string;
     created_at: Date;
     updated_at: Date;
+    exp_date: Date;
 }
 
-function FridgeList({ item, exp_date }: { item: FridgeItem, exp_date: any }) {
+function FridgeList({ item }: { item: FridgeItem }) {
     const [isPending, startTransition] = useTransition()
     const [amount, setAmount] = useState(item.amount)
+    const willExpire = new Date(item.exp_date) <= new Date(new Date().setDate(new Date().getDate() + 3))
 
 
     // Increase amount
@@ -38,20 +40,22 @@ function FridgeList({ item, exp_date }: { item: FridgeItem, exp_date: any }) {
     // Render
     return (
         
-            <div className="FridgeItem w-full bg-backgroundsecondary rounded-2xl px-[1.5rem] 
-                    h-[4.5rem] flex items-center justify-between " key={item.id}>
+            <div className={`FridgeItem w-ful rounded-2xl px-[1.5rem] 
+                    h-[4.5rem] flex items-center justify-between
+                    ${willExpire ? "bg-makro" : "bg-backgroundsecondary"}
+                    `} key={item.id}>
                 <div className="ItemInfo">
-                    <p className="text-textprimary " >{item.name}</p>
-                    <p className="p4 text-textsecondary " >หมดอายุ {exp_date} </p>
+                    <p className={` ${willExpire ? "text-background" : "text-textprimary"}`} >{item.name}</p>
+                    <p className={`p4 ${willExpire ? "text-background" : "text-textsecondary"}`} >หมดอายุ {item.exp_date.toLocaleDateString()} </p>
                 </div>
 
                 {/* Amount */}
                 <div className="Amount flex gap-[0.5rem] " >
-                    <button className="text-makro cursor-pointer "
+                    <button className={`${willExpire ? "text-background" : "text-makro"} cursor-pointer `}
                         onClick={decrease}
                     >-</button>
-                    <p className=" text-textsecondary " >{amount}</p>
-                    <button className="text-textprimary cursor-pointer "
+                    <p className={`${willExpire ? "text-background" : "text-textsecondary"}`} >{amount}</p>
+                    <button className={`${willExpire ? "text-background" : "text-textprimary"} cursor-pointer `}
                         onClick={increase}
                     >+</button>
                 </div>
