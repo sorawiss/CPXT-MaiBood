@@ -8,7 +8,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import Button from "@/components/Button";
-import { StatusType, updateStatus } from "@/utils/DALs";
+import { StatusType } from "@/utils/DALs";
 
 interface FridgeItem {
     id: string;
