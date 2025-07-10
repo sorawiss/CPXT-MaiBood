@@ -52,11 +52,12 @@ async function Fridge() {
       </div>
 
       {/* Add button */}
-      <Link href="/fridge/add" className="flex flex-col items-center gap-[0.5rem] fixed bottom-28 left-1/2 -translate-x-1/2 ">
+      <Link href="/fridge/add" className="flex flex-col items-center gap-[0.5rem] 
+        fixed bottom-24 left-1/2 -translate-x-1/2 z-10  bg-background rounded-full ">
         <Button
           type="button"
-          text={<Plus className="size-12" />}
-          className="!size-[4.5rem] rounded-full   "
+          text={<Plus className="size-12 text-makro " />}
+          className="!size-[4.5rem] rounded-full !bg-transparent !border-makro !border-2    "
         />
         <h3 className="text-textsecondary " >เพิ่มอาหาร</h3>
       </Link>

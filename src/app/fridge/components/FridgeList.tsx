@@ -36,26 +36,38 @@ function FridgeList({ item }: { item: FridgeItem }) {
         })
     }
 
+    // Status
+    function setStatus() {
+        if (willExpire) {
+            return "🤢 จะบูด"
+        }
+    }
+
 
     // Render
     return (
         
             <div className={`FridgeItem w-ful rounded-2xl px-[1.5rem] 
                     h-[4.5rem] flex items-center justify-between
-                    ${willExpire ? "bg-makro" : "bg-backgroundsecondary"}
+                    ${willExpire ? "border border-makro " : "border border-textsecondary"}
                     `} key={item.id}>
                 <div className="ItemInfo">
-                    <p className={` ${willExpire ? "text-background" : "text-textprimary"}`} >{item.name}</p>
-                    <p className={`p4 ${willExpire ? "text-background" : "text-textsecondary"}`} >หมดอายุ {item.exp_date.toLocaleDateString()} </p>
+                    <p className={` "text-textprimary"}`} >{item.name}</p>
+                    <p className={`p4 "text-textsecondary"}`} >หมดอายุ {item.exp_date.toLocaleDateString()} </p>
+                </div>
+
+                {/* Status */}
+                <div className="Status">
+                    <p className={`text-textsecondary`} >{setStatus()}</p>
                 </div>
 
                 {/* Amount */}
                 <div className="Amount flex gap-[0.5rem] " >
-                    <button className={`${willExpire ? "text-background" : "text-makro"} cursor-pointer `}
+                    <button className={` text-makro"} cursor-pointer `}
                         onClick={decrease}
                     >-</button>
-                    <p className={`${willExpire ? "text-background" : "text-textsecondary"}`} >{amount}</p>
-                    <button className={`${willExpire ? "text-background" : "text-textprimary"} cursor-pointer `}
+                    <p className={`text-textsecondary`} >{amount}</p>
+                    <button className={`text-textprimary cursor-pointer `}
                         onClick={increase}
                     >+</button>
                 </div>
