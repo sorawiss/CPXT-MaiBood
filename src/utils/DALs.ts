@@ -1,6 +1,18 @@
 import { prismaDB } from "@/lib/prisma-client"
 import { unstable_cache } from "next/cache"
 
+
+export enum StatusType {
+    fresh = "fresh",
+    selling = "selling",
+    sold = "sold",
+    expired = "expired",
+    eat = "eat"
+}
+
+
+
+
 // User DALs
 //--------------------------------
 // Get user name
@@ -101,6 +113,19 @@ export async function deleteItem(id: string) {
     await prismaDB.fridge.delete({
         where: {
             id: id
+        }
+    })
+}
+
+
+// Update status
+export async function updateStatus(id: string, status: StatusType) {
+    await prismaDB.fridge.update({
+        where: {
+            id: id
+        },
+        data: {
+            status: status
         }
     })
 }

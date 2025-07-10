@@ -8,6 +8,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import Button from "@/components/Button";
+import { StatusType, updateStatus } from "@/utils/DALs";
 
 interface FridgeItem {
     id: string;
@@ -38,7 +39,7 @@ function FridgeList({ item }: { item: FridgeItem }) {
             text: "🤝 แบ่งปัน",
             className: "bg-textprimary text-background ",
             function: () => {
-                console.log("แบ่งปัน")
+                updateStatus(item.id, StatusType.selling)
             }
         },
         {
