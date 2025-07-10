@@ -15,9 +15,9 @@ interface FridgeItem {
     amount: number;
     status: 'fresh' | 'selling' | 'sold' | 'expired';
     user_id: string;
-    created_at: Date;
-    updated_at: Date;
-    exp_date: Date;
+    created_at: Date | string; // Allow string
+    updated_at: Date | string; // Allow string
+    exp_date: Date | string; // Allow string
 }
 
 
@@ -28,7 +28,9 @@ function FridgeList({ item }: { item: FridgeItem }) {
     const [isPending, startTransition] = useTransition()
     const [amount, setAmount] = useState(item.amount)
     const [isGone, setIsGone] = useState(false)
-    const willExpire = new Date(item.exp_date) <= new Date(new Date().setDate(new Date().getDate() + 3))
+    const expDate = new Date(item.exp_date); // Create a new Date object from the string or Date
+    const createdAtDate = new Date(item.created_at);
+    const willExpire = expDate <= new Date(new Date().setDate(new Date().getDate() + 3))
 
     const buttonMenu = [
         {
@@ -125,7 +127,7 @@ function FridgeList({ item }: { item: FridgeItem }) {
                     `} key={item.id}>
                     <div className="ItemInfo flex flex-col  ">
                         <p className={`text-textprimary w-fit `} >{item.name}</p>
-                        <p className={`p4 text-textsecondary  `} >หมดอายุ {item.exp_date.toLocaleDateString()} </p>
+                        <p className={`p4 text-textsecondary  `} >หมดอายุ {expDate.toLocaleDateString()} </p>
                     </div>
 
                     {/* Status */}
@@ -156,8 +158,8 @@ function FridgeList({ item }: { item: FridgeItem }) {
                 <div className="Info flex flex-col gap-[0.5rem] items-center ">
                     <h3 className="text-textprimary " >{item.name}</h3>
                     <div className="Detail flex flex-col items-center ">
-                        <p className="p3 text-textsecondary " >เข้าตู้เย็นเมื่อ {item.created_at.toLocaleDateString()} </p>
-                        <p className="p3 text-textsecondary " >จะบูดตอน {item.exp_date.toLocaleDateString()} </p>
+                        <p className="p3 text-textsecondary " >เข้าตู้เย็นเมื่อ {createdAtDate.toLocaleDateString()} </p>
+                        <p className="p3 text-textsecondary " >จะบูดตอน {expDate.toLocaleDateString()} </p>
                     </div>
                 </div>
 

@@ -1,12 +1,12 @@
 "use server"
 import { increaseAmount, decreaseAmount, deleteItem } from "@/utils/DALs"
-import { revalidatePath } from "next/cache"
+import { revalidateTag } from "next/cache"
 
 // Update item amout
 export async function handleIncreaseAmount(id: string) {
     try {
         await increaseAmount(id)
-        revalidatePath("/fridge")
+        revalidateTag("fridge-items")
         console.log("Amount increased")
         return { success: "Amount increased" }
     } catch (error) {
@@ -18,7 +18,7 @@ export async function handleIncreaseAmount(id: string) {
 export async function handleDecreaseAmount(id: string) {
     try {
         await decreaseAmount(id)
-        revalidatePath("/fridge")
+        revalidateTag("fridge-items")
         console.log("Amount decreased")
         return { success: "Amount decreased" }
     } catch (error) {
@@ -32,7 +32,7 @@ export async function handleDecreaseAmount(id: string) {
 export async function handleDeleteItem(id: string) {
     try {
         await deleteItem(id)
-        revalidatePath("/fridge")
+        revalidateTag("fridge-items")
         console.log("Item deleted")
         return { success: "Item deleted" }
     } catch (error) {

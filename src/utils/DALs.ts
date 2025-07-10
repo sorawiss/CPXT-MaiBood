@@ -1,26 +1,24 @@
-"use server"
-
 import { prismaDB } from "@/lib/prisma-client"
-
-
+import { unstable_cache } from "next/cache"
 
 // User DALs
 //--------------------------------
 // Get user name
-export async function getUser(userId: string) {
-    const user = await prismaDB.user.findUnique({
-        where: {
-            id: userId as string
-        },
-        select: {
-            name: true
-        }
-    })
-    return user
-}
-
-
-
+export const getUser = unstable_cache(
+    async (userId: string) => {
+        console.log(`(Re)validating user ${userId}`)
+        const user = await prismaDB.user.findUnique({
+            where: { id: userId },
+            select: { name: true }
+        })
+        return user
+    },
+    ['user'],
+    {
+        tags: ['user'],
+        revalidate: 3600 // Cache for 1 hour
+    }
+)
 
 // Fridge DALs
 //--------------------------------
@@ -36,31 +34,36 @@ export async function addToFridge(item: string, amount: number, expiry_date: Dat
     return addToFridge
 }
 
-
 // Get fridge items
-export async function getFridgeItems(userId: string) {
-    const fridgeItems = await prismaDB.fridge.findMany({
-        where: {
-            user_id: userId as string
-        },
-        orderBy: {
-            exp_date: "asc"
-        }
-    })
-
-    return fridgeItems
-}
+export const getFridgeItems = unstable_cache(
+    async (userId: string) => {
+        console.log(`(Re)validating fridge items for ${userId}`)
+        return prismaDB.fridge.findMany({
+            where: { user_id: userId },
+            orderBy: { exp_date: "asc" }
+        })
+    },
+    ['fridge-items'],
+    {
+        tags: ['fridge-items'],
+        revalidate: 60 // Cache for 1 minute
+    }
+)
 
 // Count fridge items
-export async function countFridgeItems(userId: string) {
-    const count = await prismaDB.fridge.count({
-        where: {
-            user_id: userId
-        }
-    })
-
-    return count
-}
+export const countFridgeItems = unstable_cache(
+    async (userId: string) => {
+        console.log(`(Re)validating fridge item count for ${userId}`)
+        return prismaDB.fridge.count({
+            where: { user_id: userId }
+        })
+    },
+    ['fridge-items-count'],
+    {
+        tags: ['fridge-items'], // Use the same tag so it revalidates with the list
+        revalidate: 60 // Cache for 1 minute
+    }
+)
 
 
 // Increase amount

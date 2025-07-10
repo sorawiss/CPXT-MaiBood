@@ -1,7 +1,7 @@
 "use server";
 import { verifySession } from "@/utils/session";
 import { addToFridge } from "@/utils/DALs";
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 
 export async function handleAddToFridge(formData: FormData) {
   const session = await verifySession();
@@ -23,7 +23,7 @@ export async function handleAddToFridge(formData: FormData) {
     session.userId as string
   );
 
-  revalidatePath("/fridge")
+  revalidateTag("fridge-items")
 }
 
 
