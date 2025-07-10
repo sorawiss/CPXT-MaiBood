@@ -32,6 +32,7 @@ function FridgeList({ item }: { item: FridgeItem }) {
     const expDate = new Date(item.exp_date); // Create a new Date object from the string or Date
     const createdAtDate = new Date(item.created_at);
     const willExpire = expDate <= new Date(new Date().setDate(new Date().getDate() + 3))
+    let status: string = item.status
 
     const buttonMenu = [
         {
@@ -105,9 +106,13 @@ function FridgeList({ item }: { item: FridgeItem }) {
     // Status
     function setStatus() {
         if (willExpire) {
-            return "🤢 จะบูด"
+            status = "🤢 จะบูด"
+        }
+        if (item.status === StatusType.selling) {
+            status = "กำลังแบ่งปัน..."
         }
     }
+    setStatus()
 
 
     // Delete item
@@ -125,7 +130,8 @@ function FridgeList({ item }: { item: FridgeItem }) {
                 <div className={`FridgeItem w-ful rounded-2xl px-[1.5rem] 
                     h-[4.5rem] flex items-center justify-between
                     ${willExpire ? "border border-makro " : "border border-textsecondary"}
-                    `} key={item.id}>
+                     ${status === "กำลังแบ่งปัน..." ? "bg-backgroundsecondary border-none " : ""}
+                     `} key={item.id}>
                     <div className="ItemInfo flex flex-col  ">
                         <p className={`text-textprimary w-fit `} >{item.name}</p>
                         <p className={`p4 text-textsecondary  `} >หมดอายุ {expDate.toLocaleDateString()} </p>
@@ -133,12 +139,12 @@ function FridgeList({ item }: { item: FridgeItem }) {
 
                     {/* Status */}
                     <div className="Status">
-                        <p className={`text-textsecondary`} >{setStatus()}</p>
+                        <p className={`text-textsecondary`} >{status}</p>
                     </div>
 
                     {/* Amount */}
                     <div className="Amount flex gap-[0.5rem] " >
-                        <button className={` text-makro"} cursor-pointer `}
+                        <button className={` text-makro cursor-pointer `}
                             onClick={decrease}
                         >-</button>
                         <p className={`text-textsecondary`} >{amount}</p>
