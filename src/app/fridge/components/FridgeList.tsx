@@ -126,15 +126,17 @@ function FridgeList({ item }: { item: FridgeItem }) {
     return (
 
         <Dialog>
-            <DialogTrigger className="cursor-pointer" >
-                <div className={`FridgeItem w-ful rounded-2xl px-[1.5rem] 
+            <DialogTrigger asChild>
+                <div className={`cursor-pointer FridgeItem w-ful rounded-2xl px-[1.5rem] 
                     h-[4.5rem] flex items-center justify-between
                     ${willExpire ? "border border-makro " : "border border-textsecondary"}
                      ${status === "กำลังแบ่งปัน..." ? "bg-backgroundsecondary border-none " : ""}
                      `} key={item.id}>
                     <div className="ItemInfo flex flex-col  ">
                         <p className={`text-textprimary w-fit `} >{item.name}</p>
-                        <p className={`p4 text-textsecondary  `} >หมดอายุ {expDate.toLocaleDateString()} </p>
+                        <p className={`p4 text-textsecondary  `} >
+  หมดอายุ {expDate.getFullYear()}/{String(expDate.getMonth() + 1).padStart(2, '0')}/{String(expDate.getDate()).padStart(2, '0')}
+</p>
                     </div>
 
                     {/* Status */}
