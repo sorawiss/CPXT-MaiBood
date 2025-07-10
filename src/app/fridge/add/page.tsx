@@ -1,10 +1,10 @@
 "use client"
-import TitleHeader from "@/app/components/TitleHeader";
+import TitleHeader from "@/components/TitleHeader";
 import { handleAddToFridge } from "./action";
-import Input from "@/app/components/Input";
-import Button from "@/app/components/Button";
+import Input from "@/components/Input";
+import Button from "@/components/Button";
 import { useState } from "react";
-import Category from "@/app/components/Category";
+import Category from "@/components/Category";
 
 export default function Add() {
   const [amount, setAmount] = useState<number | string>("");

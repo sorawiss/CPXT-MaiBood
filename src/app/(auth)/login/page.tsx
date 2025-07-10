@@ -1,7 +1,7 @@
 "use client"
 import { handleLogin } from "./action"
-import Input from "@/app/components/Input"
-import Button from "@/app/components/Button"
+import Input from "@/components/Input"
+import Button from "@/components/Button"
 
 
 function Login() {
