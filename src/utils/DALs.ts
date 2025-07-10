@@ -51,7 +51,12 @@ export const getFridgeItems = unstable_cache(
     async (userId: string) => {
         console.log(`(Re)validating fridge items for ${userId}`)
         return prismaDB.fridge.findMany({
-            where: { user_id: userId },
+            where: {
+                user_id: userId,
+                status: {
+                    in: [StatusType.fresh, StatusType.selling]
+                }
+            },
             orderBy: { exp_date: "asc" }
         })
     },
@@ -67,7 +72,12 @@ export const countFridgeItems = unstable_cache(
     async (userId: string) => {
         console.log(`(Re)validating fridge item count for ${userId}`)
         return prismaDB.fridge.count({
-            where: { user_id: userId }
+            where: {
+                user_id: userId,
+                status: {
+                    in: [StatusType.fresh, StatusType.selling]
+                }
+            }
         })
     },
     ['fridge-items-count'],

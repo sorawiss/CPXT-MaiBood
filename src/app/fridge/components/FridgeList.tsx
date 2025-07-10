@@ -1,5 +1,5 @@
 "use client"
-import { handleDecreaseAmount, handleIncreaseAmount, handleDeleteItem } from "../action";
+import { handleDecreaseAmount, handleIncreaseAmount, handleDeleteItem, handleUpdateStatus } from "../action";
 import { useTransition, useState } from "react";
 import {
     Dialog,
@@ -39,7 +39,7 @@ function FridgeList({ item }: { item: FridgeItem }) {
             text: "🤝 แบ่งปัน",
             className: "bg-textprimary text-background ",
             function: () => {
-                updateStatus(item.id, StatusType.selling)
+                handleUpdateStatus(item.id, StatusType.selling)
             }
         },
         {
@@ -48,7 +48,7 @@ function FridgeList({ item }: { item: FridgeItem }) {
             className: "bg-transparent border border-textprimary !text-textprimary ",
             function: async () => {
                 setIsGone(true)
-                const result = await handleDeleteItem(item.id)
+                const result = await handleUpdateStatus(item.id, StatusType.eat)
                 if (result.error) {
                     setIsGone(false)
                 }
