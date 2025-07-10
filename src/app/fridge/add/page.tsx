@@ -23,8 +23,13 @@ export default function Add() {
 
       {/* Form */}
       <form action={handleAddToFridge} className="my-auto w-full flex flex-col gap-[1rem] ">
-        <Input type="text" name="item" placeholder="อาหาร" label="🍽️ ชื่ออาหาร" required
+        <Input type="text" name="item" placeholder="อาหาร" label="ชื่ออาหาร" required
           className="!bg-transparent !border-backgroundsecondary " />
+
+        {/* Expiry Date */}
+        <Input type="date" name="expiry_date" placeholder="วันหมดอายุ" label="วันหมดอายุ" required
+          className="!bg-transparent !border-backgroundsecondary "
+        />
 
         {/* Amount */}
         <div className="AmountWrapper flex items-end ">
@@ -41,12 +46,8 @@ export default function Add() {
               >{suggestAmount}</button>
             ))}
           </div>
-
         </div>
 
-        <Input type="date" name="expiry_date" placeholder="วันหมดอายุ" label="วันหมดอายุ" required
-          className="!bg-transparent !border-backgroundsecondary "
-        />
         <Button type="submit" text="เพิ่มเข้าตู้เย็น ✚" className="mt-[5rem] " />
         <p className="p2 text-textsecondary text-center " >✨ บันทึกอาหารในตู้เย็นทำให้ง่ายต่อการจัดการ</p>
 

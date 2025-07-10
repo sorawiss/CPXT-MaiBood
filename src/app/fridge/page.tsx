@@ -7,6 +7,7 @@ import FridgeList from "./components/FridgeList";
 import Button from "../components/Button";
 import { filterExpDate } from "@/utils/filter-exp-date";
 import Loading from "./loading";
+import TitleHeader from "../components/TitleHeader";
 
 async function FridgeItems() {
   const { items, count } = await getFridgeItemsData();
@@ -38,7 +39,7 @@ async function Fridge() {
   return (
     <div className="flex flex-col items-center justify-center gap-[3.5rem] ">
       <div className="Title w-full flex flex-col items-center ">
-        <h2 className="text-textprimary ">❄️ ตู้เย็นของคุณ {userName?.name}</h2>
+        <TitleHeader title={`ตู้เย็นของ ${userName?.name}`} />
         <p className="p3 text-textsecondary ">
           บันทึกอาหารในตู้เย็น ช่วยให้จัดการอาหารได้ง่ายขึ้น
         </p>
