@@ -76,9 +76,9 @@ function FridgeList({ item }: { item: FridgeItem }) {
                     h-[4.5rem] flex items-center justify-between
                     ${willExpire ? "border border-makro " : "border border-textsecondary"}
                     `} key={item.id}>
-            <div className="ItemInfo">
-                <p className={` "text-textprimary"}`} >{item.name}</p>
-                <p className={`p4 "text-textsecondary"}`} >หมดอายุ {item.exp_date.toLocaleDateString()} </p>
+            <div className="ItemInfo flex flex-col  ">
+                <p className={`text-textprimary`} >{item.name}</p>
+                <p className={`p4 text-textsecondary  `} >หมดอายุ {item.exp_date.toLocaleDateString()} </p>
             </div>
 
             {/* Status */}

@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 
 import { Ellipsis } from 'lucide-react';
 
-function Category() {
+function  Category() {
     const [selectedCategory, setSelectedCategory] = useState(1);
     const category = [
         {
