@@ -14,7 +14,7 @@ interface FridgeItem {
     id: string;
     name: string;
     amount: number;
-    status: 'fresh' | 'selling' | 'sold' | 'expired';
+    status: 'fresh' | 'selling' | 'sold' | 'expired' | 'eat';
     user_id: string;
     created_at: Date | string; // Allow string
     updated_at: Date | string; // Allow string
