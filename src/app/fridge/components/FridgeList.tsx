@@ -120,7 +120,7 @@ function FridgeList({ item }: { item: FridgeItem }) {
     return (
 
         <Dialog>
-            <DialogTrigger>
+            <DialogTrigger className="cursor-pointer" >
                 <div className={`FridgeItem w-ful rounded-2xl px-[1.5rem] 
                     h-[4.5rem] flex items-center justify-between
                     ${willExpire ? "border border-makro " : "border border-textsecondary"}
