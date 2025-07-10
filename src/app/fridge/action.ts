@@ -1,29 +1,6 @@
 "use server"
-import { verifySession } from "@/utils/session"
-import { getFridgeItems, getUser, countFridgeItems, increaseAmount, decreaseAmount } from "@/utils/DALs"
+import { increaseAmount, decreaseAmount, deleteItem } from "@/utils/DALs"
 import { revalidatePath } from "next/cache"
-
-
-// Get fridge items and user name
-//--------------------------------
-export async function handleGetFridgeItemsAndUserName() {
-    const session = await verifySession()
-    if (!session?.userId) {
-        return { error: "Unauthorized" }
-    }
-
-    try {
-        const [items, userName, count] = await Promise.all([
-            getFridgeItems(session.userId as string),
-            getUser(session.userId as string),
-            countFridgeItems(session.userId as string)
-        ])
-        return { success: "Fridge items fetched", items, userName, count }
-    } catch (error) {
-        return { error: { message: "Failed to get fridge items", error } }
-    }
-}
-
 
 // Update item amout
 export async function handleIncreaseAmount(id: string) {
@@ -48,4 +25,22 @@ export async function handleDecreaseAmount(id: string) {
         console.log("Error decrease amount", error)
         return { error: { message: "Failed to decrease amount", error } }
     }
+}
+
+
+// Delete item
+export async function handleDeleteItem(id: string) {
+    try {
+        await deleteItem(id)
+        revalidatePath("/fridge")
+        console.log("Item deleted")
+        return { success: "Item deleted" }
+    } catch (error) {
+        console.log("Error delete item", error)
+        return { error: { message: "Failed to delete item", error } }
+    }
+}
+
+
+export async function handleUpdateStatus(id: string) {
 }
