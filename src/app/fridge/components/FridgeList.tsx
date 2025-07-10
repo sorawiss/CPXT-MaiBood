@@ -71,7 +71,8 @@ function FridgeList({ item }: { item: FridgeItem }) {
 
 
     // Increase amount
-    function increase() {
+    function increase(event: React.MouseEvent<HTMLButtonElement>) {
+        event.stopPropagation()
         setAmount((amount) => amount + 1)
         startTransition(async () => {
             const result = await handleIncreaseAmount(item.id)
@@ -82,7 +83,8 @@ function FridgeList({ item }: { item: FridgeItem }) {
     }
 
     // Decrease amount
-    function decrease() {
+    function decrease(event: React.MouseEvent<HTMLButtonElement>) {
+        event.stopPropagation()
         if (amount <= 1) {
             setIsGone(true)
             startTransition(async () => {
@@ -105,6 +107,9 @@ function FridgeList({ item }: { item: FridgeItem }) {
 
     // Status
     function setStatus() {
+        if (item.status === StatusType.fresh) {
+            status = ""
+        }
         if (willExpire) {
             status = "🤢 จะบูด"
         }
@@ -135,22 +140,22 @@ function FridgeList({ item }: { item: FridgeItem }) {
                     <div className="ItemInfo flex flex-col  ">
                         <p className={`text-textprimary w-fit `} >{item.name}</p>
                         <p className={`p4 text-textsecondary  `} >
-  หมดอายุ {expDate.getFullYear()}/{String(expDate.getMonth() + 1).padStart(2, '0')}/{String(expDate.getDate()).padStart(2, '0')}
-</p>
+                            หมดอายุ {expDate.getFullYear()}/{String(expDate.getMonth() + 1).padStart(2, '0')}/{String(expDate.getDate()).padStart(2, '0')}
+                        </p>
                     </div>
 
                     {/* Status */}
                     <div className="Status">
-                        <p className={`text-textsecondary`} >{status}</p>
+                        <p className={`text-textsecondary `} >{status}</p>
                     </div>
 
                     {/* Amount */}
                     <div className="Amount flex gap-[0.5rem] " >
-                        <button className={` text-makro cursor-pointer `}
+                        <button className={` text-makro cursor-pointer h-ful w-5 `}
                             onClick={decrease}
                         >-</button>
                         <p className={`text-textsecondary`} >{amount}</p>
-                        <button className={`text-textprimary cursor-pointer `}
+                        <button className={`text-textprimary cursor-pointer  h-ful w-5 `}
                             onClick={increase}
                         >+</button>
                     </div>
