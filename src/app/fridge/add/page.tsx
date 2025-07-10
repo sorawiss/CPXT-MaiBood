@@ -1,8 +1,10 @@
+import TitleHeader from "@/app/components/TitleHeader";
 import { handleAddToFridge } from "./action";
 
 export default function Add() {
   return (
     <div>
+      <TitleHeader title="เพิ่มอาหาร" />
       <form action={handleAddToFridge}>
         <input type="text" name="item" placeholder="อาหาร" required />
         <input type="number" name="amount" placeholder="จำนวน" required />
