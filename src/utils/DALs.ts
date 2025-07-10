@@ -93,8 +93,19 @@ export async function decreaseAmount(id: string) {
 }
 
 
+// Delete item
+export async function deleteItem(id: string) {
+    await prismaDB.fridge.delete({
+        where: {
+            id: id
+        }
+    })
+}
+
+
 
 // User DALs
+//--------------------------------
 export async function addLocation(latitude: number, longitude: number, userId: string) {
     const addLocation = await prismaDB.user.update({
         where: {

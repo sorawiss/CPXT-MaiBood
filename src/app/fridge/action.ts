@@ -1,5 +1,5 @@
 "use server"
-import { increaseAmount, decreaseAmount } from "@/utils/DALs"
+import { increaseAmount, decreaseAmount, deleteItem } from "@/utils/DALs"
 import { revalidatePath } from "next/cache"
 
 // Update item amout
@@ -25,4 +25,22 @@ export async function handleDecreaseAmount(id: string) {
         console.log("Error decrease amount", error)
         return { error: { message: "Failed to decrease amount", error } }
     }
+}
+
+
+// Delete item
+export async function handleDeleteItem(id: string) {
+    try {
+        await deleteItem(id)
+        revalidatePath("/fridge")
+        console.log("Item deleted")
+        return { success: "Item deleted" }
+    } catch (error) {
+        console.log("Error delete item", error)
+        return { error: { message: "Failed to delete item", error } }
+    }
+}
+
+
+export async function handleUpdateStatus(id: string) {
 }
