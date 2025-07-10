@@ -8,7 +8,7 @@ import Category from "@/components/Category";
 
 export default function Add() {
   const [amount, setAmount] = useState<number | string>("");
-  const suggestAmount = [1, 5, 10];
+  const suggestAmount = [1, 3, 5, 10];
 
 
   // Hanle when click suggestion amount
@@ -55,7 +55,7 @@ export default function Add() {
           <Category />
         </div>
 
-        <Button type="submit" text="เพิ่มเข้าตู้เย็น ✚" className="mt-[5rem] " />
+        <Button type="submit" text="เพิ่มเข้าตู้เย็น ✚" className="mt-[3rem] " />
         <p className="p2 text-textsecondary text-center " >✨ บันทึกอาหารในตู้เย็นทำให้ง่ายต่อการจัดการ</p>
 
       </form>

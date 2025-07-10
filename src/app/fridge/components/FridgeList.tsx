@@ -33,8 +33,16 @@ function FridgeList({ item }: { item: FridgeItem }) {
     const buttonMenu = [
         {
             id: 1,
-            text: "😋 กินหมด",
+            text: "🤝 แบ่งปัน",
             className: "bg-textprimary text-background ",
+            function: () => {
+                console.log("แบ่งปัน")
+            }
+        },
+        {
+            id: 2,
+            text: "😋 กินหมด",
+            className: "bg-transparent border border-textprimary !text-textprimary ",
             function: async () => {
                 setIsGone(true)
                 const result = await handleDeleteItem(item.id)
@@ -44,11 +52,15 @@ function FridgeList({ item }: { item: FridgeItem }) {
             }
         },
         {
-            id: 2,
-            text: "🤝 แบ่งปัน",
-            className: "",
-            function: () => {
-                console.log("แบ่งปัน")
+            id: 3,
+            text: "🗑 ลบ",
+            className: "bg-transparent border border-makro !text-makro ",
+            function: async () => {
+                setIsGone(true)
+                const result = await handleDeleteItem(item.id)
+                if (result.error) {
+                    setIsGone(false)
+                }
             }
         }
     ]
@@ -143,7 +155,7 @@ function FridgeList({ item }: { item: FridgeItem }) {
             >
                 <div className="Info flex flex-col gap-[0.5rem] items-center ">
                     <h3 className="text-textprimary " >{item.name}</h3>
-                    <div className="Detail flex flex-col ">
+                    <div className="Detail flex flex-col items-center ">
                         <p className="p3 text-textsecondary " >เข้าตู้เย็นเมื่อ {item.created_at.toLocaleDateString()} </p>
                         <p className="p3 text-textsecondary " >จะบูดตอน {item.exp_date.toLocaleDateString()} </p>
                     </div>
