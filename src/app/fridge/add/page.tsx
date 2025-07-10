@@ -1,13 +1,14 @@
 "use client"
-import TitleHeader from "@/app/components/TitleHeader";
+import TitleHeader from "@/components/TitleHeader";
 import { handleAddToFridge } from "./action";
-import Input from "@/app/components/Input";
-import Button from "@/app/components/Button";
+import Input from "@/components/Input";
+import Button from "@/components/Button";
 import { useState } from "react";
+import Category from "@/components/Category";
 
 export default function Add() {
   const [amount, setAmount] = useState<number | string>("");
-  const suggestAmount = [1, 5, 10];
+  const suggestAmount = [1, 3, 5, 10];
 
 
   // Hanle when click suggestion amount
@@ -23,13 +24,18 @@ export default function Add() {
 
       {/* Form */}
       <form action={handleAddToFridge} className="my-auto w-full flex flex-col gap-[1rem] ">
-        <Input type="text" name="item" placeholder="อาหาร" label="🍽️ ชื่ออาหาร" required
+        <Input type="text" name="item" placeholder="อาหาร" label="ชื่ออาหาร" required
           className="!bg-transparent !border-backgroundsecondary " />
 
+        {/* Expiry Date */}
+        <Input type="date" name="expiry_date" placeholder="วันหมดอายุ" label="วันหมดอายุ" required
+          className="!bg-transparent !border-backgroundsecondary "
+        />
+
         {/* Amount */}
-        <div className="AmountWrapper flex items-end ">
+        <div className="AmountWrapper flex flex-col gap-[1rem] ">
           <Input type="number" name="amount" value={amount.toString()} placeholder="จำนวน" label="จำนวน" required
-            className="w-[10.5rem] !bg-transparent !border-backgroundsecondary "
+            className="!bg-transparent !border-backgroundsecondary "
             onChange={(e) => setAmount(e.target.value)}
           />
           <div className="SuggestionWrapper flex gap-[0.75rem] ">
@@ -41,13 +47,15 @@ export default function Add() {
               >{suggestAmount}</button>
             ))}
           </div>
-
         </div>
 
-        <Input type="date" name="expiry_date" placeholder="วันหมดอายุ" label="วันหมดอายุ" required
-          className="!bg-transparent !border-backgroundsecondary "
-        />
-        <Button type="submit" text="เพิ่มเข้าตู้เย็น ✚" className="mt-[5rem] " />
+        {/* Category */}
+        <div className="Category flex flex-col mt-[2rem] ">
+          <label className="text-textprimary font-medium text-[1rem] " htmlFor="category">ประเภท (ไม่เลือกได้)</label>
+          <Category />
+        </div>
+
+        <Button type="submit" text="เพิ่มเข้าตู้เย็น ✚" className="mt-[3rem] " />
         <p className="p2 text-textsecondary text-center " >✨ บันทึกอาหารในตู้เย็นทำให้ง่ายต่อการจัดการ</p>
 
       </form>

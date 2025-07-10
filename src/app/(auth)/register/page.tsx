@@ -1,8 +1,8 @@
 "use client"
 import { useState } from "react"
 import { handleRegister } from "./action"
-import Input from "@/app/components/Input"
-import Button from "@/app/components/Button"
+import Input from "@/components/Input"
+import Button from "@/components/Button"
 
 
 export default function Register() {

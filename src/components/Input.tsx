@@ -13,7 +13,7 @@ interface InputProps {
 function Input({ type, name, placeholder, value, label, onChange, className, required }: InputProps) {
     return (
         <div className="Input flex flex-col w-full ">
-            <label className="text-textprimary  text-[1.25rem] " htmlFor={name}>{label}</label>
+            <label className="text-textprimary font-medium  text-[1rem] " htmlFor={name}>{label}</label>
             <input
                 type={type}
                 name={name}
@@ -21,8 +21,9 @@ function Input({ type, name, placeholder, value, label, onChange, className, req
                 value={value}
                 onChange={onChange}
                 className={`bg-backgroundsecondary rounded-2xl border h-[2.5rem] px-[1rem] border-textsecondary 
-                    ${className}`}
+                    ${className} placeholder:text-textsecondary placeholder:text-[1rem] placeholder:font-light `}
                 required={required}
+                id={name}
             />
         </div>
     )

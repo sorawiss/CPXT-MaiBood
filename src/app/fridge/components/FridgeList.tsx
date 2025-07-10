@@ -1,7 +1,13 @@
 "use client"
 import { handleDecreaseAmount, handleIncreaseAmount, handleDeleteItem } from "../action";
 import { useTransition, useState } from "react";
-
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogTrigger,
+} from "@/components/ui/dialog"
+import Button from "@/components/Button";
 
 interface FridgeItem {
     id: string;
@@ -14,11 +20,50 @@ interface FridgeItem {
     exp_date: Date;
 }
 
+
+
+
+
 function FridgeList({ item }: { item: FridgeItem }) {
     const [isPending, startTransition] = useTransition()
     const [amount, setAmount] = useState(item.amount)
     const [isGone, setIsGone] = useState(false)
     const willExpire = new Date(item.exp_date) <= new Date(new Date().setDate(new Date().getDate() + 3))
+
+    const buttonMenu = [
+        {
+            id: 1,
+            text: "🤝 แบ่งปัน",
+            className: "bg-textprimary text-background ",
+            function: () => {
+                console.log("แบ่งปัน")
+            }
+        },
+        {
+            id: 2,
+            text: "😋 กินหมด",
+            className: "bg-transparent border border-textprimary !text-textprimary ",
+            function: async () => {
+                setIsGone(true)
+                const result = await handleDeleteItem(item.id)
+                if (result.error) {
+                    setIsGone(false)
+                }
+            }
+        },
+        {
+            id: 3,
+            text: "🗑 ลบ",
+            className: "bg-transparent border border-makro !text-makro ",
+            function: async () => {
+                setIsGone(true)
+                const result = await handleDeleteItem(item.id)
+                if (result.error) {
+                    setIsGone(false)
+                }
+            }
+        }
+    ]
 
 
     // Increase amount
@@ -72,32 +117,69 @@ function FridgeList({ item }: { item: FridgeItem }) {
     // Render
     return (
 
-        <div className={`FridgeItem w-ful rounded-2xl px-[1.5rem] 
+        <Dialog>
+            <DialogTrigger>
+                <div className={`FridgeItem w-ful rounded-2xl px-[1.5rem] 
                     h-[4.5rem] flex items-center justify-between
                     ${willExpire ? "border border-makro " : "border border-textsecondary"}
                     `} key={item.id}>
-            <div className="ItemInfo">
-                <p className={` "text-textprimary"}`} >{item.name}</p>
-                <p className={`p4 "text-textsecondary"}`} >หมดอายุ {item.exp_date.toLocaleDateString()} </p>
-            </div>
+                    <div className="ItemInfo flex flex-col  ">
+                        <p className={`text-textprimary w-fit `} >{item.name}</p>
+                        <p className={`p4 text-textsecondary  `} >หมดอายุ {item.exp_date.toLocaleDateString()} </p>
+                    </div>
 
-            {/* Status */}
-            <div className="Status">
-                <p className={`text-textsecondary`} >{setStatus()}</p>
-            </div>
+                    {/* Status */}
+                    <div className="Status">
+                        <p className={`text-textsecondary`} >{setStatus()}</p>
+                    </div>
 
-            {/* Amount */}
-            <div className="Amount flex gap-[0.5rem] " >
-                <button className={` text-makro"} cursor-pointer `}
-                    onClick={decrease}
-                >-</button>
-                <p className={`text-textsecondary`} >{amount}</p>
-                <button className={`text-textprimary cursor-pointer `}
-                    onClick={increase}
-                >+</button>
-            </div>
+                    {/* Amount */}
+                    <div className="Amount flex gap-[0.5rem] " >
+                        <button className={` text-makro"} cursor-pointer `}
+                            onClick={decrease}
+                        >-</button>
+                        <p className={`text-textsecondary`} >{amount}</p>
+                        <button className={`text-textprimary cursor-pointer `}
+                            onClick={increase}
+                        >+</button>
+                    </div>
 
-        </div>
+                </div>
+
+            </DialogTrigger>
+
+            <DialogContent className="bottom-0 translate-y-0 rounded-t-2xl w-full border border-textsecondary 
+                data-[state=open]:slide-in-from-bottom data-[state=closed]:slide-out-to-bottom 
+                duration-300 ease-in-out flex flex-col items-center h-[25rem] "
+                showCloseButton={false}
+            >
+                <div className="Info flex flex-col gap-[0.5rem] items-center ">
+                    <h3 className="text-textprimary " >{item.name}</h3>
+                    <div className="Detail flex flex-col items-center ">
+                        <p className="p3 text-textsecondary " >เข้าตู้เย็นเมื่อ {item.created_at.toLocaleDateString()} </p>
+                        <p className="p3 text-textsecondary " >จะบูดตอน {item.exp_date.toLocaleDateString()} </p>
+                    </div>
+                </div>
+
+                <div className="ButtonMenu flex flex-col gap-[1rem] mt-[1.5rem] ">
+                    {buttonMenu.map((button) => {
+                        return (
+                            <DialogClose key={button.id} asChild>
+                                <Button type="button" text={button.text}
+                                    className={`!w-[12rem] !h-[3rem] ${button.className} `}
+                                    onClick={button.function}
+                                />
+                            </DialogClose>
+                        )
+                    })}
+                </div>
+
+
+
+
+            </DialogContent>
+        </Dialog>
+
 
 
 

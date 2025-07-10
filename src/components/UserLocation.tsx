@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import reverseGeocoding from "@/utils/reverse-geocoding";
 import { getDistance } from 'geolib';
 import { LocationEdit } from 'lucide-react';
-import { updateUserLocation, getUserLocation } from "../actions/location";
+import { updateUserLocation, getUserLocation } from "../app/actions/location";
 
 
 interface GeolocationError {
