@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Suspense } from "react";
-import { handleGetFridgeItems, handleGetUser } from "./action";
+import { getFridgeItemsData, getUserData } from "./data";
 import { Plus } from "lucide-react";
 
 import FridgeList from "./components/FridgeList";
@@ -9,7 +9,7 @@ import { filterExpDate } from "@/utils/filter-exp-date";
 import Loading from "./loading";
 
 async function FridgeItems() {
-  const { items, count } = await handleGetFridgeItems();
+  const { items, count } = await getFridgeItemsData();
 
   if (!items || items.length === 0) {
     return <p className="text-textsecondary">No items in your fridge.</p>;
@@ -33,7 +33,7 @@ async function FridgeItems() {
 }
 
 async function Fridge() {
-  const { userName } = await handleGetUser();
+  const { userName } = await getUserData();
 
   return (
     <div className="flex flex-col items-center justify-center gap-[3.5rem] ">
