@@ -1,8 +1,8 @@
-import UserLocation from "../components/UserLocation";
+import UserLocation from "@/components/UserLocation";
 
-import Search from "../components/Searh";
-import Category from "../components/Category";
-import PostList from "../components/PostList";
+import Search from "@/components/Searh";
+import Category from "@/components/Category";
+import PostList from "@/components/PostList";
 
 
 export default function Home() {

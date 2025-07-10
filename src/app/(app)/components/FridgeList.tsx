@@ -1,5 +1,5 @@
 "use client"
-import { handleDecreaseAmount, handleIncreaseAmount, handleDeleteItem, handleUpdateStatus } from "../action";
+import { handleDecreaseAmount, handleIncreaseAmount, handleDeleteItem, handleUpdateStatus } from "../fridge/action";
 import { useTransition, useState } from "react";
 import {
     Dialog,
