@@ -1,6 +1,18 @@
 import { prismaDB } from "@/lib/prisma-client"
 import { unstable_cache } from "next/cache"
 
+
+export enum StatusType {
+    fresh = "fresh",
+    selling = "selling",
+    sold = "sold",
+    expired = "expired",
+    eat = "eat"
+}
+
+
+
+
 // User DALs
 //--------------------------------
 // Get user name
@@ -39,7 +51,12 @@ export const getFridgeItems = unstable_cache(
     async (userId: string) => {
         console.log(`(Re)validating fridge items for ${userId}`)
         return prismaDB.fridge.findMany({
-            where: { user_id: userId },
+            where: {
+                user_id: userId,
+                status: {
+                    in: [StatusType.fresh, StatusType.selling]
+                }
+            },
             orderBy: { exp_date: "asc" }
         })
     },
@@ -55,7 +72,12 @@ export const countFridgeItems = unstable_cache(
     async (userId: string) => {
         console.log(`(Re)validating fridge item count for ${userId}`)
         return prismaDB.fridge.count({
-            where: { user_id: userId }
+            where: {
+                user_id: userId,
+                status: {
+                    in: [StatusType.fresh, StatusType.selling]
+                }
+            }
         })
     },
     ['fridge-items-count'],
@@ -101,6 +123,19 @@ export async function deleteItem(id: string) {
     await prismaDB.fridge.delete({
         where: {
             id: id
+        }
+    })
+}
+
+
+// Update status
+export async function updateStatus(id: string, status: StatusType) {
+    await prismaDB.fridge.update({
+        where: {
+            id: id
+        },
+        data: {
+            status: status
         }
     })
 }

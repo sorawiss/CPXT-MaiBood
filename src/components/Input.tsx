@@ -20,7 +20,7 @@ function Input({ type, name, placeholder, value, label, onChange, className, req
                 placeholder={placeholder}
                 value={value}
                 onChange={onChange}
-                className={`bg-backgroundsecondary rounded-2xl border h-[2.5rem] px-[1rem] border-textsecondary 
+                className={`bg-backgroundsecondary w-full rounded-2xl border h-[2.5rem] px-[1rem] border-textsecondary 
                     ${className} placeholder:text-textsecondary placeholder:text-[1rem] placeholder:font-light `}
                 required={required}
                 id={name}

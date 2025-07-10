@@ -1,5 +1,5 @@
 "use server"
-import { increaseAmount, decreaseAmount, deleteItem } from "@/utils/DALs"
+import { increaseAmount, decreaseAmount, deleteItem, updateStatus, StatusType } from "@/utils/DALs"
 import { revalidateTag } from "next/cache"
 
 // Update item amout
@@ -41,6 +41,15 @@ export async function handleDeleteItem(id: string) {
     }
 }
 
-
-export async function handleUpdateStatus(id: string) {
+// Update status
+export async function handleUpdateStatus(id: string, status: StatusType) {
+    try {
+        await updateStatus(id, status)
+        revalidateTag("fridge-items")
+        console.log("Status updated")
+        return { success: "Status updated" }
+    } catch (error) {
+        console.log("Error updating status", error)
+        return { error: { message: "Failed to update status", error } }
+    }
 }
