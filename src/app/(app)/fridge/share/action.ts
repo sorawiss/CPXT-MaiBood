@@ -19,6 +19,7 @@ export async function handleShare(formData: FormData) {
   });
 
   revalidateTag("fridge-items")
+  revalidateTag("selling-fridge-items")
 }
 
 

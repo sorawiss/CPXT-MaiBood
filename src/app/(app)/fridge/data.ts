@@ -1,12 +1,10 @@
 import { verifySession } from "@/utils/session"
 import { getFridgeItems, getUser, countFridgeItems } from "@/utils/DALs"
 
-// These are NOT server actions. They are just server-side data fetching helpers.
 
 export async function getFridgeItemsData() {
     const session = await verifySession()
     if (!session?.userId) {
-        // In a real app, you might throw an error here and use an error.tsx file
         return { items: [], count: 0 }
     }
 

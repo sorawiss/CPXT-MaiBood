@@ -159,6 +159,22 @@ export async function shareFridge({ id, price, name, description, category, exp_
 }
 
 
+export const getSellingFridgeItems = unstable_cache(
+    async () => {
+        return prismaDB.fridge.findMany({
+            where: {
+                status: StatusType.selling
+            },
+            orderBy: { exp_date: "asc" }
+        });
+    },
+    ['selling-fridge-items'],
+    {
+        tags: ['selling-fridge-items'],
+        revalidate: 30 // Cache for 30 seconds
+    }
+);
+
 
 // User DALs
 //--------------------------------
