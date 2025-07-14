@@ -34,13 +34,14 @@ export const getUser = unstable_cache(
 
 // Fridge DALs
 //--------------------------------
-export async function addToFridge(item: string, amount: number, expiry_date: Date, userId: string) {
+export async function addToFridge(item: string, amount: number, expiry_date: Date, userId: string, category: string) {
     const addToFridge = await prismaDB.fridge.create({
         data: {
             name: item as string,
             amount: amount,
             exp_date: expiry_date,
-            user_id: userId as string
+            user_id: userId as string,
+            category: category as string
         }
     })
     return addToFridge
