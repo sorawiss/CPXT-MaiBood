@@ -10,6 +10,7 @@ import {
 import Button from "@/components/Button";
 import { StatusType } from "@/utils/DALs";
 import { useRouter } from "next/navigation";
+import { DialogTitle } from "@radix-ui/react-dialog";
 
 interface FridgeItem {
     id: string;
@@ -173,6 +174,9 @@ function FridgeList({ item }: { item: FridgeItem }) {
                 </div>
 
             </DialogTrigger>
+            <DialogTitle className="sr-only " >
+                <p className="text-textprimary " >{item.name}</p>
+            </DialogTitle>
 
             <DialogContent className="bottom-0 translate-y-0 rounded-t-2xl w-full border border-textsecondary 
                 data-[state=open]:slide-in-from-bottom data-[state=closed]:slide-out-to-bottom 
