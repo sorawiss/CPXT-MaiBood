@@ -9,6 +9,8 @@ import {
 } from "@/components/ui/dialog"
 import Button from "@/components/Button";
 import { StatusType } from "@/utils/DALs";
+import { useRouter } from "next/navigation";
+import { DialogTitle } from "@radix-ui/react-dialog";
 
 interface FridgeItem {
     id: string;
@@ -29,7 +31,8 @@ function FridgeList({ item }: { item: FridgeItem }) {
     const [isPending, startTransition] = useTransition()
     const [amount, setAmount] = useState(item.amount)
     const [isGone, setIsGone] = useState(false)
-    const expDate = new Date(item.exp_date); // Create a new Date object from the string or Date
+    const router = useRouter();
+    const expDate = new Date(item.exp_date);
     const createdAtDate = new Date(item.created_at);
     const willExpire = expDate <= new Date(new Date().setDate(new Date().getDate() + 3))
     let status: string = item.status
@@ -40,7 +43,15 @@ function FridgeList({ item }: { item: FridgeItem }) {
             text: "🤝 แบ่งปัน",
             className: "bg-textprimary text-background ",
             function: () => {
-                handleUpdateStatus(item.id, StatusType.selling)
+                // Go to share page with prefilled data
+                const params = new URLSearchParams({
+                    name: item.name,
+                    expiry_date: expDate.toISOString().split('T')[0],
+                    category: (item as any).category ? String((item as any).category) : "",
+                    id: item.id,
+                    amount: item.amount.toString()
+                });
+                router.push(`/fridge/share?${params.toString()}`);
             }
         },
         {
@@ -163,6 +174,9 @@ function FridgeList({ item }: { item: FridgeItem }) {
                 </div>
 
             </DialogTrigger>
+            <DialogTitle className="sr-only " >
+                <p className="text-textprimary " >{item.name}</p>
+            </DialogTitle>
 
             <DialogContent className="bottom-0 translate-y-0 rounded-t-2xl w-full border border-textsecondary 
                 data-[state=open]:slide-in-from-bottom data-[state=closed]:slide-out-to-bottom 
