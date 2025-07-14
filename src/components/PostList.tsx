@@ -5,10 +5,11 @@ interface PostListProps {
     exp_date: Date
     price: number
     name: string
+    id: string
 }
 
 
-function PostList({ exp_date, price, name }: PostListProps) {
+function PostList({ exp_date, price, name, id }: PostListProps) {
     const formattedDate = new Date(exp_date).toLocaleDateString('th-TH', {
         year: 'numeric',
         month: 'long',
@@ -16,7 +17,7 @@ function PostList({ exp_date, price, name }: PostListProps) {
     });
 
     return (
-        <Link href={`/#`} >
+        <Link href={`/post/${id}?name=${name}`} >
             <div className="PostContainer w-[10.5rem]  bg-white flex flex-col gap-2 ">
                 <div className="ImageWrapper relative ">
                     <div className="ImagePlaceHolder w-[10.5rem] h-[14rem] bg-backgroundsecondary rounded-2xl "></div>

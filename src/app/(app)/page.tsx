@@ -41,6 +41,7 @@ export default async function Home() {
               exp_date={item.exp_date}
               price={item.price ?? 0}
               name={item.name}
+              id={item.id}
             />
           ))}
         </div>
@@ -58,6 +59,7 @@ export default async function Home() {
               exp_date={item.exp_date}
               price={item.price ?? 0}
               name={item.name}
+              id={item.id}
             />
           ))}
         </div>
