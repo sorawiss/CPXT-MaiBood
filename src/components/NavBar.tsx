@@ -2,7 +2,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
-import { Bell, House, Refrigerator, User } from "lucide-react"
+import { Bell, House, Refrigerator, User, Plus } from "lucide-react"
 
 const navItems = [
     {
@@ -24,6 +24,11 @@ const navItems = [
         name: "ตู้เย็น",
         href: "/fridge",
         icon: <Refrigerator className="size-[1rem] " />
+    },
+    {
+        name: "แจกจ่าย",
+        href: "/fridge/share",
+        icon: <Plus className="size-[1rem] " />
     },
 ]
 

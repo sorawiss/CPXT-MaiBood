@@ -1,15 +1,15 @@
-"use client";
 import UserLocation from "@/components/UserLocation";
-import { useState } from "react";
 
 import Search from "@/components/Searh";
 import Category from "@/components/Category";
+import { getSellingFridgeItems } from "@/utils/DALs";
 import PostList from "@/components/PostList";
+import { makroData } from "../../../public/makro-data";
 
 
-export default function Home() {
-  const postList = new Array(4).fill(0)
-  const [category, setCategory] = useState<number | null>(1);
+export default async function Home() {
+  const postList = await getSellingFridgeItems();
+  console.log("postList", postList);
 
 
   return (
@@ -27,7 +27,7 @@ export default function Home() {
 
       <div className="SearchAndCategory w-full flex flex-col gap-[1rem] ">
         <Search />
-        <Category value={category} onChange={setCategory} />
+        {/* <Category value={category} onChange={setCategory} /> */}
       </div>
 
       <div className="PostContainer w-full flex flex-col gap-[1rem] ">
@@ -36,8 +36,14 @@ export default function Home() {
           <p className="p3 text-textsecondary" >คำอธิบายตรงนี้จะมาจากการเก็บข้อมูล user </p>
         </div>
         <div className="MakroPost w-full grid grid-cols-2 gap-[1rem] ">
-          {postList.map((item, index) => (
-            <PostList key={index} />
+          {makroData.map((item, index) => (
+            <PostList
+              key={index}
+              exp_date={item.exp_date}
+              price={item.price ?? 0}
+              name={item.name}
+              id={item.id}
+            />
           ))}
         </div>
       </div>
@@ -48,8 +54,14 @@ export default function Home() {
           <p className="p3 text-textsecondary" >คำอธิบายตรงนี้จะมาจากการเก็บข้อมูล user </p>
         </div>
         <div className="MakroPost w-full grid grid-cols-2 gap-[1rem] ">
-          {postList.map((item, index) => (
-            <PostList key={index} />
+          {postList.map((item) => (
+            <PostList
+              key={item.id}
+              exp_date={item.exp_date}
+              price={item.price ?? 0}
+              name={item.name}
+              id={item.id}
+            />
           ))}
         </div>
       </div>

@@ -25,7 +25,7 @@ export default function Add() {
 
       {/* Form */}
       <form action={handleAddToFridge} className="my-auto w-full flex flex-col gap-[1rem] ">
-        <Input type="text" name="item" placeholder="อาหาร" label="ชื่ออาหาร" required
+        <Input type="text" name="item" placeholder="ตัวอย่าง: อกไก่สด" label="ชื่ออาหาร" required
           className="!bg-transparent !border-backgroundsecondary " />
 
         {/* Expiry Date */}

@@ -36,7 +36,7 @@ model User {
   profile_picture String? @db.VarChar(255)
   latitude Float?
   longitude Float?
-  display_name String? @db.VarChar(64)
+  post_code String? @db.VarChar(5)
   fridge Fridge[]
 
 }

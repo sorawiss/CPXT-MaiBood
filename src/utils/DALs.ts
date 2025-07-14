@@ -159,18 +159,61 @@ export async function shareFridge({ id, price, name, description, category, exp_
 }
 
 
+export const getSellingFridgeItems = unstable_cache(
+    async () => {
+        return prismaDB.fridge.findMany({
+            where: {
+                status: StatusType.selling
+            },
+            orderBy: { exp_date: "asc" }
+        });
+    },
+    ['selling-fridge-items'],
+    {
+        tags: ['selling-fridge-items'],
+        revalidate: 30 // Cache for 30 seconds
+    }
+);
+
 
 // User DALs
 //--------------------------------
-export async function addLocation(latitude: number, longitude: number, userId: string) {
+export async function addLocation(latitude: number, longitude: number, userId: string, post_code?: string) {
+    const data: any = {
+        latitude: latitude,
+        longitude: longitude
+    };
+    if (post_code) {
+        data.post_code = post_code;
+    }
     const addLocation = await prismaDB.user.update({
         where: {
             id: userId as string
         },
-        data: {
-            latitude: latitude,
-            longitude: longitude
-        }
+        data
     })
     return addLocation
+}
+
+
+// Post DALs
+//--------------------------------
+export async function getPost(id: string) {
+    return prismaDB.fridge.findUnique({
+        where: {
+            id: id
+        },
+        select: {
+            id: true,
+            name: true,
+            price: true,
+            description: true,
+            category: true,
+            user: {
+                select: {
+                    name: true
+                }
+            }
+        }
+    })
 }

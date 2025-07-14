@@ -34,11 +34,11 @@ export default function Share() {
   return (
     // Title Header
     <div className="min-h-[calc(100vh-10rem)] flex flex-col justify-center items-center w-full ">
-      <TitleHeader title="เพิ่มอาหาร" />
+      <TitleHeader title="แบ่งปัน ❤︎" />
 
       {/* Form */}
       <form action={handleShare} className="my-auto w-full flex flex-col gap-[1rem] ">
-        <Input type="text" name="item" placeholder="อาหาร" label="ชื่ออาหาร" required
+        <Input type="text" name="item" placeholder="ตัวอย่าง: อกไก่สด" label="ชื่ออาหาร" required
           className="!bg-transparent !border-backgroundsecondary "
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -56,7 +56,7 @@ export default function Share() {
           className="!bg-transparent !border-backgroundsecondary "
         />
 
-        <Input type="text" name="description" placeholder="ราคา" label="คำอธิบาย (ไม่ใส่ได้)"
+        <Input type="text" name="description" placeholder="ตัวอย่าง: มารับได้ที่ร้านครัวแม่พันธุ์" label="คำอธิบาย (ไม่ใส่ได้)"
           className="!bg-transparent !border-backgroundsecondary "
         />
 
@@ -67,8 +67,8 @@ export default function Share() {
           <input type="hidden" name="category" value={category ? category.toString() : ""} />
         </div>
 
-        <Button type="submit" text="แบ่งปัน ✚" className="mt-[3rem] " />
-        <p className="p2 text-textsecondary text-center " >✨ บันทึกอาหารในตู้เย็นทำให้ง่ายต่อการจัดการ</p>
+        <Button type="submit" text="แบ่งปัน ❤︎" className="mt-[3rem] " />
+        <p className="p2 text-textsecondary text-center " >🎁 แจกจ่ายอาหารให้กับคนในชุมชน</p>
 
         <input type="hidden" name="id" value={searchParams.get("id") || ""} />
 
