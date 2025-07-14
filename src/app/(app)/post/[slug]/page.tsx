@@ -4,13 +4,9 @@ import { getPost } from "@/utils/DALs"
 import { Ellipsis, Croissant, LeafyGreen, Ham } from 'lucide-react';
 
 
-interface PostProps {
-  params: {
-    slug: string
-  }
-}
 
-async function Post({ params }: PostProps) {
+
+async function Post({ params }: { params: { slug: string } }) {
   const post = await getPost(params.slug)
   const categoryIcon = {
     "1": <Ham />,
