@@ -178,15 +178,19 @@ export const getSellingFridgeItems = unstable_cache(
 
 // User DALs
 //--------------------------------
-export async function addLocation(latitude: number, longitude: number, userId: string) {
+export async function addLocation(latitude: number, longitude: number, userId: string, post_code?: string) {
+    const data: any = {
+        latitude: latitude,
+        longitude: longitude
+    };
+    if (post_code) {
+        data.post_code = post_code;
+    }
     const addLocation = await prismaDB.user.update({
         where: {
             id: userId as string
         },
-        data: {
-            latitude: latitude,
-            longitude: longitude
-        }
+        data
     })
     return addLocation
 }

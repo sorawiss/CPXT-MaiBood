@@ -4,10 +4,10 @@ import { verifySession } from "@/utils/session";
 import { addLocation } from "@/utils/DALs";
 import { prismaDB } from "@/lib/prisma-client";
 
-export async function updateUserLocation(latitude: number, longitude: number) {
+export async function updateUserLocation(latitude: number, longitude: number, post_code?: string) {
     try {
         const user = await verifySession();
-        const updatedUser = await addLocation(latitude, longitude, user.userId as string);
+        const updatedUser = await addLocation(latitude, longitude, user.userId as string, post_code);
         return { success: true, user: updatedUser };    
     } catch (error) {
         console.error("Error updating user location:", error);

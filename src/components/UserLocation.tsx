@@ -20,6 +20,7 @@ function UserLocation() {
     const [address, setAddress] = useState<any | null>(null);
     const [distance, setDistance] = useState<number | null>(null);
     const [isUpdatingLocation, setIsUpdatingLocation] = useState<boolean>(false);
+    const [userPostCode, setUserPostCode] = useState<string | null>(null);
 
 
     async function fetchReverseGeocoding() {
@@ -28,6 +29,10 @@ function UserLocation() {
                 const data = await reverseGeocoding(location.latitude, location.longitude);
                 console.log('Reverse geocoding:', data);
                 setAddress(data.address);
+                // If user has no postcode, update it
+                if (!userPostCode && data.address?.postcode) {
+                    await updateUserLocation(location.latitude, location.longitude, data.address.postcode);
+                }
             } catch (error) {
                 console.error('Failed to fetch reverse geocoding:', error);
                 setError({ code: 500, message: 'Failed to get address information' });
@@ -161,7 +166,7 @@ function UserLocation() {
             console.log('Location refreshed:', newLocation);
 
             try {
-                await updateUserLocation(newLocation.latitude, newLocation.longitude);
+                await updateUserLocation(newLocation.latitude, newLocation.longitude, address?.postcode);
                 console.log('Updated location saved to database');
             } catch (error) {
                 console.error('Failed to save updated location to database:', error);
