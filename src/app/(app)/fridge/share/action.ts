@@ -2,6 +2,7 @@
 import { verifySession } from "@/utils/session";
 import { revalidateTag } from "next/cache";
 import { shareFridge } from "@/utils/DALs";
+import { redirect } from "next/navigation";
 
 export async function handleShare(formData: FormData) {
   const session = await verifySession();
@@ -20,6 +21,7 @@ export async function handleShare(formData: FormData) {
 
   revalidateTag("fridge-items")
   revalidateTag("selling-fridge-items")
+  redirect("/fridge")
 }
 
 
