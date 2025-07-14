@@ -2,7 +2,7 @@ import Link from "next/link"
 
 
 interface PostListProps {
-    exp_date: Date
+    exp_date: string | Date
     price: number
     name: string
     id: string

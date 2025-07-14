@@ -4,6 +4,7 @@ import Search from "@/components/Searh";
 import Category from "@/components/Category";
 import { getSellingFridgeItems } from "@/utils/DALs";
 import PostList from "@/components/PostList";
+import { makroData } from "../../../public/makro-data";
 
 
 export default async function Home() {
@@ -35,7 +36,7 @@ export default async function Home() {
           <p className="p3 text-textsecondary" >คำอธิบายตรงนี้จะมาจากการเก็บข้อมูล user </p>
         </div>
         <div className="MakroPost w-full grid grid-cols-2 gap-[1rem] ">
-          {postList.map((item, index) => (
+          {makroData.map((item, index) => (
             <PostList
               key={index}
               exp_date={item.exp_date}
