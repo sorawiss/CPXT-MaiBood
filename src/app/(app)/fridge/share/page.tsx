@@ -60,23 +60,6 @@ export default function Share() {
           className="!bg-transparent !border-backgroundsecondary "
         />
 
-        {/* Amount */}
-        <div className="AmountWrapper flex flex-col gap-[1rem] ">
-          <Input type="number" name="amount" value={amount.toString()} placeholder="จำนวน" label="จำนวน" required
-            className="!bg-transparent !border-backgroundsecondary "
-            onChange={(e) => setAmount(e.target.value)}
-          />
-          <div className="SuggestionWrapper flex gap-[0.75rem] ">
-            {suggestAmount.map((suggestAmount) => (
-              <button key={suggestAmount} className={`w-[3rem] h-[2.5rem] border rounded-2xl cursor-pointer
-                border-textprimary ${amount === suggestAmount ? "bg-textprimary text-background" : ""} `}
-                onClick={() => handleSuggestAmount(suggestAmount)}
-                type="button"
-              >{suggestAmount}</button>
-            ))}
-          </div>
-        </div>
-
         {/* Category */}
         <div className="Category flex flex-col mt-[2rem] ">
           <label className="text-textprimary font-medium text-[1rem] " htmlFor="category">ประเภท</label>
