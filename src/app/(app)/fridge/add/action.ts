@@ -13,7 +13,7 @@ export async function handleAddToFridge(formData: FormData) {
   const expiry_date = formData.get("expiry_date");
   const category = formData.get("category");
 
-  if (!item || !amount || !expiry_date || !category) {
+  if (!item || !amount || !expiry_date) {
     throw new Error("Missing fields");
   }
 
@@ -22,7 +22,7 @@ export async function handleAddToFridge(formData: FormData) {
     Number(amount),
     new Date(expiry_date as string),
     session.userId as string,
-    category as string
+    category && category !== "" ? category as string : null
   );
 
   revalidateTag("fridge-items")

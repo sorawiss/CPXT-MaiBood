@@ -8,6 +8,7 @@ import Category from "@/components/Category";
 
 export default function Add() {
   const [amount, setAmount] = useState<number | string>("");
+  const [category, setCategory] = useState<number | null>(1);
   const suggestAmount = [1, 3, 5, 10];
 
 
@@ -52,7 +53,8 @@ export default function Add() {
         {/* Category */}
         <div className="Category flex flex-col mt-[2rem] ">
           <label className="text-textprimary font-medium text-[1rem] " htmlFor="category">ประเภท (ไม่เลือกได้)</label>
-          <Category />
+          <Category value={category} onChange={setCategory} />
+          <input type="hidden" name="category" value={category ? category.toString() : ""} />
         </div>
 
         <Button type="submit" text="เพิ่มเข้าตู้เย็น ✚" className="mt-[3rem] " />
