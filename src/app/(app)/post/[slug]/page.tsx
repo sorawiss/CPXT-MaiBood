@@ -6,7 +6,11 @@ import { Ellipsis, Croissant, LeafyGreen, Ham } from 'lucide-react';
 
 
 
-export default async function Post({ params }: { params: { slug: string } }) {
+type PageProps = {
+  params: { slug: string }
+}
+
+export default async function Post({ params }: PageProps) {
   const post = await getPost(params.slug)
   const categoryIcon = {
     "1": <Ham />,
