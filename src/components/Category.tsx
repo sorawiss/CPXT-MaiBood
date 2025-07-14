@@ -2,32 +2,32 @@
 /* eslint-disable */
 import React, { useState } from 'react'
 
-import { Ellipsis } from 'lucide-react';
+import { Ellipsis, Croissant, LeafyGreen, Ham } from 'lucide-react';
 
-function  Category() {
+function Category() {
     const [selectedCategory, setSelectedCategory] = useState(1);
     const category = [
         {
             id: 1,
             name: 'เนื้อสัตว์',
-            icon: <Ellipsis />
+            icon: <Ham className='text-textprimary' />
         },
         {
             id: 2,
-            name: 'ผัก',
-            icon: <Ellipsis />
+            name: 'ขนม',
+            icon: <Croissant className='text-textprimary' />
         },
         {
             id: 3,
-            name: 'ขนม',
-            icon: <Ellipsis />
+            name: 'ผัก/ผลไม้',
+            icon: <LeafyGreen className='text-textprimary' />
         },
         {
             id: 4,
-            name: 'อื่น ๆ',
-            icon: <Ellipsis />
+            name: 'อื่นๆ',
+            icon: <Ellipsis className='text-textprimary' />
         }
-        
+
 
     ]
 
@@ -35,11 +35,14 @@ function  Category() {
     return (
         <div className="category-button flex justify-between items-center w-full">
 
-           {category.map((item) => (
-            <button key={item.id} className="circle-button cursor-pointer ">
-                {item.icon}
-            </button>
-           ))}
+            {category.map((item) => (
+                <div className="CategoryButtonWrapper">
+                    <button key={item.id} className="circle-button cursor-pointer ">
+                        {item.icon}
+                    </button>
+                    <p className='p3 text-textsecondary text-center mt-1 '>{item.name}</p>
+                </div>
+            ))}
 
         </div>
     )
