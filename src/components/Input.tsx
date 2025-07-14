@@ -7,10 +7,13 @@ interface InputProps {
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     className?: string;
     required?: boolean;
+    readOnly?: boolean;
+    defaultValue?: string;
 }
 
 
-function Input({ type, name, placeholder, value, label, onChange, className, required }: InputProps) {
+function Input({ type, name, placeholder, value, label, onChange, className, 
+    required, readOnly, defaultValue }: InputProps) {
     return (
         <div className="Input flex flex-col w-full ">
             <label className="text-textprimary font-medium  text-[1rem] " htmlFor={name}>{label}</label>
@@ -24,6 +27,8 @@ function Input({ type, name, placeholder, value, label, onChange, className, req
                     ${className} placeholder:text-textsecondary placeholder:text-[1rem] placeholder:font-light `}
                 required={required}
                 id={name}
+                readOnly={readOnly}
+                defaultValue={defaultValue}
             />
         </div>
     )

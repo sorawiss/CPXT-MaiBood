@@ -8,7 +8,7 @@ import Category from "@/components/Category";
 
 export default function Add() {
   const [amount, setAmount] = useState<number | string>("");
-  const [category, setCategory] = useState<number | null>(1);
+  const [category, setCategory] = useState<number | null>(0);
   const suggestAmount = [1, 3, 5, 10];
 
 

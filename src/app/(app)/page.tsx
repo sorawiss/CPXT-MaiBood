@@ -1,4 +1,6 @@
+"use client";
 import UserLocation from "@/components/UserLocation";
+import { useState } from "react";
 
 import Search from "@/components/Searh";
 import Category from "@/components/Category";
@@ -7,6 +9,7 @@ import PostList from "@/components/PostList";
 
 export default function Home() {
   const postList = new Array(4).fill(0)
+  const [category, setCategory] = useState<number | null>(1);
 
 
   return (
@@ -24,7 +27,7 @@ export default function Home() {
 
       <div className="SearchAndCategory w-full flex flex-col gap-[1rem] ">
         <Search />
-        <Category />
+        <Category value={category} onChange={setCategory} />
       </div>
 
       <div className="PostContainer w-full flex flex-col gap-[1rem] ">

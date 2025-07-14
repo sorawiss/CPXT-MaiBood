@@ -142,6 +142,23 @@ export async function updateStatus(id: string, status: StatusType) {
 }
 
 
+export async function shareFridge({ id, price, name, description, category, exp_date }: { id: string, price: number, name: string, description: string, category: string, exp_date: string }) {
+    await prismaDB.fridge.update({
+        where: {
+            id: id
+        },
+        data: {
+            price: price,
+            status: StatusType.selling,
+            name: name,
+            description: description,
+            category: category,
+            exp_date: new Date(exp_date)
+        }
+    })
+}
+
+
 
 // User DALs
 //--------------------------------
