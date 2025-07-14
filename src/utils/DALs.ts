@@ -190,3 +190,26 @@ export async function addLocation(latitude: number, longitude: number, userId: s
     })
     return addLocation
 }
+
+
+// Post DALs
+//--------------------------------
+export async function getPost(id: string) {
+    return prismaDB.fridge.findUnique({
+        where: {
+            id: id
+        },
+        select: {
+            id: true,
+            name: true,
+            price: true,
+            description: true,
+            category: true,
+            user: {
+                select: {
+                    name: true
+                }
+            }
+        }
+    })
+}
