@@ -8,13 +8,14 @@ import { Ellipsis, Croissant, LeafyGreen, Ham } from "lucide-react";
 export default async function Post({ params }: { params: Promise<{ foodId: string }> }) {
   const resolvedParams = await params; // Resolve the Promise
   const foodId = resolvedParams.foodId; // Access foodId
-  const post = await getPost(foodId);
   const categoryIcon = {
     "1": <Ham />,
     "2": <Croissant />,
     "3": <LeafyGreen />,
     "4": <Ellipsis />,
   };
+
+  const [post, user] = await Promise.all([getPost(foodId), getUserData()]);
 
   if (!post) {
     return <div>Post not found</div>;
@@ -27,7 +28,6 @@ export default async function Post({ params }: { params: Promise<{ foodId: strin
       : null;
 
   // User Location
-  const user = await getUserData();
   const userLocation =
     user?.latitude != null && user?.longitude != null
       ? { latitude: user.latitude, longitude: user.longitude }
