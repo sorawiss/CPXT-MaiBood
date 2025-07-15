@@ -9,11 +9,12 @@ interface InputProps {
     required?: boolean;
     readOnly?: boolean;
     defaultValue?: string;
+    error?: string[];
 }
 
 
-function Input({ type, name, placeholder, value, label, onChange, className, 
-    required, readOnly, defaultValue }: InputProps) {
+function Input({ type, name, placeholder, value, label, onChange, className,
+    required, readOnly, defaultValue, error }: InputProps) {
     return (
         <div className="Input flex flex-col w-full ">
             <label className="text-textprimary font-medium  text-[1rem] " htmlFor={name}>{label}</label>
@@ -30,6 +31,7 @@ function Input({ type, name, placeholder, value, label, onChange, className,
                 readOnly={readOnly}
                 defaultValue={defaultValue}
             />
+            {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
         </div>
     )
 }

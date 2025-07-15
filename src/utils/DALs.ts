@@ -32,6 +32,13 @@ export const getUser = unstable_cache(
     }
 )
 
+export async function updateUser(userId: string, data: any) {
+  return prismaDB.user.update({
+    where: { id: userId },
+    data,
+  });
+}
+
 // Fridge DALs
 //--------------------------------
 export async function addToFridge(item: string, amount: number, expiry_date: Date, userId: string, category: string | null) {

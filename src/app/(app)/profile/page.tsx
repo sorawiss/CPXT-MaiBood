@@ -14,7 +14,7 @@ async function Profile() {
 
     return (
         <div className="flex flex-col items-center justify-center pt-[4rem] w-[25rem] px-[1.5rem] mx-auto gap-[2rem] " >
-            <TitleHeader title={"บัญชีของ " + user.name} />
+            <TitleHeader title={"บัญชีของ " + user.name} showEdit={true} />
 
             <div className="ProfileHeader flex flex-col items-center justify-between w-full gap-2 ">
                 <div className="ImageWrapper size-[10rem] bg-backgroundsecondary rounded-full "></div>
