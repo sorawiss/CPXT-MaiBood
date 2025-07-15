@@ -72,6 +72,21 @@ function FridgeList({ item }: { item: FridgeItem }) {
         },
         {
             id: 3,
+            text: "แบ่งปันสำเร็จ",
+            className: " bg-textprimary text-background ",
+            function: async () => {
+                setIsGone(true)
+                startTransition(async () => {
+                    const result = await handleUpdateStatus(item.id, StatusType.sold)
+                    if (result.error) {
+                        setIsGone(false)
+                        console.error("Failed to update status:", result.error)
+                    }
+                })
+            }
+        },
+        {
+            id: 4,
             text: "🗑 ลบ",
             className: "bg-transparent border border-makro !text-makro ",
             function: async () => {
@@ -203,16 +218,22 @@ function FridgeList({ item }: { item: FridgeItem }) {
                 </div>
 
                 <div className="ButtonMenu flex flex-col gap-[1rem] mt-[1.5rem] ">
-                    {buttonMenu.map((button) => {
-                        return (
+                    {buttonMenu
+                        .filter(
+                            button =>
+                                !(item.status === "selling" && button.id === 1) &&
+                                !(item.status !== "selling" && button.id === 3)   
+                        )
+                        .map((button) => (
                             <DialogClose key={button.id} asChild>
-                                <Button type="button" text={button.text}
+                                <Button
+                                    type="button"
+                                    text={button.text}
                                     className={`!w-[12rem] !h-[3rem] ${button.className} `}
                                     onClick={button.function}
                                 />
                             </DialogClose>
-                        )
-                    })}
+                        ))}
                 </div>
 
 

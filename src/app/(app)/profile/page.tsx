@@ -1,6 +1,7 @@
 import Contact from "@/components/Contact"
 import TitleHeader from "@/components/TitleHeader"
 import { getUserData } from "@/utils/user"
+import { countSoldItems } from "@/utils/DALs"
 
 
 
@@ -32,6 +33,8 @@ async function Profile() {
 
             <div className="Info border border-makro rounded-2xl p-4 w-full flex justify-between items-center ">
                 <p className="text-textprimary " >🤝 แบ่งปันอาหารไป</p>
+                <p className="text-textprimary " >{countSoldItems(user.id)}</p>
+
                 
 
             </div>

@@ -229,6 +229,26 @@ export async function addLocation(latitude: number, longitude: number, userId: s
 }
 
 
+// Cout sold items
+export const countSoldItems = unstable_cache(
+    async (userId: string) => {
+    return prismaDB.fridge.count({
+        where: {
+            user_id: userId,
+            status: StatusType.sold
+        }
+    })
+},
+    ['sold-items-count'],
+    {
+        tags: ['sold-items-count'],
+        revalidate: 60
+    }
+)
+
+
+
+
 // Post DALs
 //--------------------------------
 export const getPost = unstable_cache(
