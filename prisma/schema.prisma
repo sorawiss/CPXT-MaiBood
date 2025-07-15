@@ -32,6 +32,9 @@ model User {
   id String @id @default(uuid())
   name String @db.VarChar(16)
   phone_number String @unique @db.VarChar(10)
+  line String? @db.VarChar(16)
+  facebook String? @db.VarChar(16)
+  instagram String? @db.VarChar(16)
   hashed_password String @db.VarChar(255)
   profile_picture String? @db.VarChar(255)
   latitude Float?

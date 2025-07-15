@@ -8,7 +8,16 @@ const getCachedUserData = unstable_cache(
         console.log(`(Re)validating user data for ${userId}`)
         return prismaDB.user.findUnique({
             where: { id: userId },
-            select: { id: true, name: true, latitude: true, longitude: true, post_code: true }
+            select: {
+                id: true,
+                name: true,
+                latitude: true,
+                longitude: true,
+                post_code: true,
+                phone_number: true,
+                line: true, facebook: true,
+                instagram: true
+            }
         });
     },
     ['user-data'],
@@ -21,6 +30,6 @@ const getCachedUserData = unstable_cache(
 export async function getUserData() {
     const session = await verifySession();
     if (!session?.userId) return null;
-    
+
     return getCachedUserData(session.userId as string);
 } 

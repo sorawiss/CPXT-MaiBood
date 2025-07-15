@@ -3,8 +3,8 @@ import { Suspense } from "react";
 import { getFridgeItemsData, getUserData } from "./data";
 import { Plus } from "lucide-react";
 
-import FridgeList from "../components/FridgeList";
-import Button from "../../../components/Button";
+import FridgeList from "@/components/FridgeList";
+import Button from "@/components/Button";
 import { filterExpDate } from "@/utils/filter-exp-date";
 import Loading from "./loading";
 import TitleHeader from "../../../components/TitleHeader";

@@ -9,7 +9,6 @@ import { makroData } from "../../../public/makro-data";
 
 export default async function Home() {
   const postList = await getSellingFridgeItems();
-  console.log("postList", postList);
 
 
   return (
