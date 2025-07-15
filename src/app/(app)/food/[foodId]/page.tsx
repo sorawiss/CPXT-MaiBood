@@ -86,14 +86,14 @@ export default async function Post({ params }: { params: Promise<{ foodId: strin
           </div>
 
           {/* Contact */}
-          <div className="Contact flex flex-col gap-2 ">
+          {/* <div className="Contact flex flex-col gap-2 ">
             {userLocation && postLocation ? (
               <Distance userLocation={userLocation} ownerLocation={postLocation} />
             ) : (
               <div>ไม่พบข้อมูลตำแหน่ง</div>
             )}
 
-          </div>
+          </div> */}
 
         </div>
 
