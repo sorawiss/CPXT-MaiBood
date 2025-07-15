@@ -1,11 +1,11 @@
 "use client"
 import { ChevronLeft } from "lucide-react"
 import { useRouter } from "next/navigation";
+import { PenLine } from "lucide-react";
 
 
 
-
-function TitleHeader({ title }: { title: string }) {
+function TitleHeader({ title, showEdit = false }: { title: string, showEdit?: boolean }) {
     const router = useRouter();
 
     
@@ -16,7 +16,12 @@ function TitleHeader({ title }: { title: string }) {
                 onClick={() => router.back()}
             />
             <h1>{title}</h1>
-            <p className="invisible " >.</p>
+
+            {showEdit ? (
+                <PenLine className="cursor-pointer text-textprimary " onClick={() => router.push('/profile/edit')} />
+            ) : (
+                <p className="invisible " >.</p>
+            )}
         </div>
     )
 }
