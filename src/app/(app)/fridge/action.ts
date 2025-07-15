@@ -7,6 +7,7 @@ export async function handleIncreaseAmount(id: string) {
     try {
         await increaseAmount(id)
         revalidateTag("fridge-items")
+        revalidateTag("selling-fridge-items")
         console.log("Amount increased")
         return { success: "Amount increased" }
     } catch (error) {
@@ -19,6 +20,7 @@ export async function handleDecreaseAmount(id: string) {
     try {
         await decreaseAmount(id)
         revalidateTag("fridge-items")
+        revalidateTag("selling-fridge-items")
         console.log("Amount decreased")
         return { success: "Amount decreased" }
     } catch (error) {
@@ -33,6 +35,7 @@ export async function handleDeleteItem(id: string) {
     try {
         await deleteItem(id)
         revalidateTag("fridge-items")
+        revalidateTag("selling-fridge-items")
         console.log("Item deleted")
         return { success: "Item deleted" }
     } catch (error) {
@@ -46,6 +49,7 @@ export async function handleUpdateStatus(id: string, status: StatusType) {
     try {
         await updateStatus(id, status)
         revalidateTag("fridge-items")
+        revalidateTag("selling-fridge-items")
         console.log("Status updated")
         return { success: "Status updated" }
     } catch (error) {

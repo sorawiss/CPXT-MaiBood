@@ -31,6 +31,7 @@ function FridgeList({ item }: { item: FridgeItem }) {
     const [isPending, startTransition] = useTransition()
     const [amount, setAmount] = useState(item.amount)
     const [isGone, setIsGone] = useState(false)
+    const [isDeleting, setIsDeleting] = useState(false)
     const router = useRouter();
     const expDate = new Date(item.exp_date);
     const createdAtDate = new Date(item.created_at);
@@ -60,10 +61,13 @@ function FridgeList({ item }: { item: FridgeItem }) {
             className: "bg-transparent border border-textprimary !text-textprimary ",
             function: async () => {
                 setIsGone(true)
-                const result = await handleUpdateStatus(item.id, StatusType.eat)
-                if (result.error) {
-                    setIsGone(false)
-                }
+                startTransition(async () => {
+                    const result = await handleUpdateStatus(item.id, StatusType.eat)
+                    if (result.error) {
+                        setIsGone(false)
+                        console.error("Failed to update status:", result.error)
+                    }
+                })
             }
         },
         {
@@ -71,11 +75,17 @@ function FridgeList({ item }: { item: FridgeItem }) {
             text: "🗑 ลบ",
             className: "bg-transparent border border-makro !text-makro ",
             function: async () => {
+                setIsDeleting(true)
                 setIsGone(true)
-                const result = await handleDeleteItem(item.id)
-                if (result.error) {
-                    setIsGone(false)
-                }
+                startTransition(async () => {
+                    const result = await handleDeleteItem(item.id)
+                    if (result.error) {
+                        setIsGone(false)
+                        setIsDeleting(false)
+                        // You could add a toast notification here
+                        console.error("Failed to delete item:", result.error)
+                    }
+                })
             }
         }
     ]
@@ -147,6 +157,7 @@ function FridgeList({ item }: { item: FridgeItem }) {
                     h-[4.5rem] flex items-center justify-between
                     ${willExpire ? "border border-makro " : "border border-textsecondary"}
                      ${status === "กำลังแบ่งปัน..." ? "bg-backgroundsecondary border-none " : ""}
+                     ${isDeleting ? "opacity-50" : ""}
                      `} key={item.id}>
                     <div className="ItemInfo flex flex-col  ">
                         <p className={`text-textprimary w-fit `} >{item.name}</p>

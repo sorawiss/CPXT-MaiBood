@@ -170,7 +170,7 @@ export const getSellingFridgeItems = unstable_cache(
     },
     ['selling-fridge-items'],
     {
-        tags: ['selling-fridge-items'],
+        tags: ['fridge-items', 'selling-fridge-items'], // Add both tags for consistency
         revalidate: 30 // Cache for 30 seconds
     }
 );
