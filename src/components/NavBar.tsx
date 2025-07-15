@@ -16,9 +16,9 @@ const navItems = [
         icon: <Bell className="size-[1rem] " />
     },
     {
-        name: "ตัวฉัน",
-        href: "/profile",
-        icon: <User className="size-[1rem] " />
+        name: "แบ่งปัน",
+        href: "/fridge/share",
+        icon: <Plus className="size-[1rem] " />
     },
     {
         name: "ตู้เย็น",
@@ -26,10 +26,11 @@ const navItems = [
         icon: <Refrigerator className="size-[1rem] " />
     },
     {
-        name: "แจกจ่าย",
-        href: "/fridge/share",
-        icon: <Plus className="size-[1rem] " />
+        name: "ตัวฉัน",
+        href: "/profile",
+        icon: <User className="size-[1rem] " />
     },
+
 ]
 
 

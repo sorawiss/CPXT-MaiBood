@@ -10,7 +10,7 @@ function TitleHeader({ title }: { title: string }) {
 
     
     return (
-        <div className="TitleHeader flex items-center justify-between w-full">
+        <div className="TitleHeader flex items-center justify-between w-full mb-[2rem] ">
             <ChevronLeft
                 className="cursor-pointer text-makro "
                 onClick={() => router.back()}
