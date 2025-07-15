@@ -4,6 +4,21 @@ import { getPost } from "@/utils/DALs";
 import { dateFormate } from "@/utils/date-formate";
 import { getUserData } from "@/utils/user";
 import { Ellipsis, Croissant, LeafyGreen, Ham } from "lucide-react";
+import { Metadata } from "next";
+
+// Add revalidation for page-level caching
+export const revalidate = 300; // Revalidate every 5 minutes
+
+// Generate metadata for better SEO and caching
+export async function generateMetadata({ params }: { params: Promise<{ foodId: string }> }): Promise<Metadata> {
+  const resolvedParams = await params;
+  const post = await getPost(resolvedParams.foodId);
+  
+  return {
+    title: post ? `${post.name} - CPAXT` : 'Food Item - CPAXT',
+    description: post ? post.description || `Fresh ${post.name} available` : 'Food item from CPAXT',
+  };
+}
 
 export default async function Post({ params }: { params: Promise<{ foodId: string }> }) {
   const resolvedParams = await params; // Resolve the Promise
@@ -32,6 +47,13 @@ export default async function Post({ params }: { params: Promise<{ foodId: strin
     user?.latitude != null && user?.longitude != null
       ? { latitude: user.latitude, longitude: user.longitude }
       : null;
+
+  const dateInfo = {
+    created_at: new Date(post.created_at).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }),
+    updated_at: new Date(post.updated_at).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }),
+    exp_date: new Date(post.exp_date).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })
+  }
+
 
 
 
@@ -66,12 +88,12 @@ export default async function Post({ params }: { params: Promise<{ foodId: strin
           {/* DateInfo */}
           <div className="DateInfo">
             <p className="p3 text-textsecondary">
-              ✚ เพิ่มเข้าตู้เย็นเมื่อ {dateFormate(post.created_at)}
+              ✚ เพิ่มเข้าตู้เย็นเมื่อ {dateInfo.created_at}
             </p>
             <p className="p3 text-textsecondary">
-              ✏️ อัปเดตล่าสุดเมื่อ {dateFormate(post.updated_at)}
+              ✏️ อัปเดตล่าสุดเมื่อ {dateInfo.updated_at}
             </p>
-            <p className="p3 text-textsecondary">🤢 จะบูดตอน {dateFormate(post.exp_date)}</p>
+            <p className="p3 text-textsecondary">🤢 จะบูดตอน {dateInfo.exp_date}</p>
           </div>
 
           {/* Contact */}

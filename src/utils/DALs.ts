@@ -198,27 +198,35 @@ export async function addLocation(latitude: number, longitude: number, userId: s
 
 // Post DALs
 //--------------------------------
-export async function getPost(id: string) {
-    return prismaDB.fridge.findUnique({
-        where: {
-            id: id
-        },
-        select: {
-            id: true,
-            name: true,
-            price: true,
-            description: true,
-            category: true,
-            created_at: true,
-            exp_date: true,
-            updated_at: true,
-            user: {
-                select: {
-                    name: true,
-                    latitude: true,
-                    longitude: true
+export const getPost = unstable_cache(
+    async (id: string) => {
+        console.log(`(Re)validating post ${id}`)
+        return prismaDB.fridge.findUnique({
+            where: {
+                id: id
+            },
+            select: {
+                id: true,
+                name: true,
+                price: true,
+                description: true,
+                category: true,
+                created_at: true,
+                exp_date: true,
+                updated_at: true,
+                user: {
+                    select: {
+                        name: true,
+                        latitude: true,
+                        longitude: true
+                    }
                 }
             }
-        }
-    })
-}
+        })
+    },
+    ['post'],
+    {
+        tags: ['post'],
+        revalidate: 300 // Cache for 5 minutes
+    }
+)
