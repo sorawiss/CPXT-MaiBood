@@ -1,5 +1,6 @@
 import TitleHeader from "@/components/TitleHeader"
 import { getPost } from "@/utils/DALs"
+import { dateFormate } from "@/utils/date-formate";
 
 import { Ellipsis, Croissant, LeafyGreen, Ham } from 'lucide-react';
 
@@ -49,6 +50,11 @@ export default async function Post({ params }: PageProps) {
           </div>
           <div className="PostPrice">
             <h2 className="text-makro  " >{!post.price ? "ฟรี" : post.price}</h2>
+          </div>
+          <div className="DateInfo">
+            <p className="p3 text-textsecondary " >✚ เพิ่มเข้าตู้เย็นเมื่อ {dateFormate(post.created_at)}</p>
+            <p className="p3 text-textsecondary " >✏️ อัปเดตล่าสุดเมื่อ {dateFormate(post.updated_at)}</p>
+            <p className="p3 text-textsecondary " >🤢 จะบูดตอน {dateFormate(post.exp_date)}</p>
           </div>
           <p className="p3 text-textsecondary " >{post.description}</p>
 

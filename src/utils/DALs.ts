@@ -209,6 +209,9 @@ export async function getPost(id: string) {
             price: true,
             description: true,
             category: true,
+            created_at: true,
+            exp_date: true,
+            updated_at: true,
             user: {
                 select: {
                     name: true
