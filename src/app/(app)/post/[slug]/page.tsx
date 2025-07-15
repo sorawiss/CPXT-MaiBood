@@ -11,7 +11,8 @@ type PageProps = {
 }
 
 export default async function Post({ params }: PageProps) {
-  const post = await getPost(params.slug)
+  const slug = await params.slug
+  const post = await getPost(slug)
   const categoryIcon = {
     "1": <Ham />,
     "2": <Croissant />,
