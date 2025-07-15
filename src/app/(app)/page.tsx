@@ -21,7 +21,7 @@ export default async function Home() {
           <h2 className="text-textprimary" >ลองเข้าไปดูสิ</h2>
         </div>
 
-        <UserLocation />
+        {/* <UserLocation /> */}
 
       </div>
 
