@@ -3,14 +3,41 @@ import TitleHeader from "@/components/TitleHeader";
 import { handleAddToFridge } from "./action";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useFormState, useFormStatus } from "react-dom";
 import Category from "@/components/Category";
+
+// Submit button component with loading state
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  
+  return (
+    <Button 
+      type="submit" 
+      text={pending ? "กำลังเพิ่ม..." : "เพิ่มเข้าตู้เย็น ✚"} 
+      className="mt-[3rem]" 
+      isLoading={pending}
+    />
+  );
+}
 
 export default function Add() {
   const [amount, setAmount] = useState<number | string>("");
   const [category, setCategory] = useState<number | null>(0);
+  const [state, formAction] = useFormState(handleAddToFridge, { error: undefined, success: undefined });
+  const formRef = useRef<HTMLFormElement>(null);
   const suggestAmount = [1, 3, 5, 10];
 
+
+  useEffect(() => {
+    if (state.success) {
+      setAmount("");
+      setCategory(0);
+      if (formRef.current) {
+        formRef.current.reset();
+      }
+    }
+  }, [state.success]);
 
   // Hanle when click suggestion amount
   function handleSuggestAmount(amount: number) {
@@ -24,7 +51,7 @@ export default function Add() {
       <TitleHeader title="เพิ่มอาหาร" />
 
       {/* Form */}
-      <form action={handleAddToFridge} className="my-auto w-full flex flex-col gap-[1rem] ">
+      <form ref={formRef} action={formAction} className="my-auto w-full flex flex-col gap-[1rem] ">
         <Input type="text" name="item" placeholder="ตัวอย่าง: อกไก่สด" label="ชื่ออาหาร" required
           className="!bg-transparent !border-backgroundsecondary " />
 
@@ -57,7 +84,7 @@ export default function Add() {
           <input type="hidden" name="category" value={category ? category.toString() : ""} />
         </div>
 
-        <Button type="submit" text="เพิ่มเข้าตู้เย็น ✚" className="mt-[3rem] " />
+        <SubmitButton />
         <p className="p2 text-textsecondary text-center " >✨ บันทึกอาหารในตู้เย็นทำให้ง่ายต่อการจัดการ</p>
 
       </form>
