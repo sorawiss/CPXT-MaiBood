@@ -43,6 +43,8 @@ export default async function Home() {
               price={item.price ?? 0}
               name={item.name}
               id={item.id}
+              isMakro={true}
+              image={item.image}
             />
           ))}
         </div>
