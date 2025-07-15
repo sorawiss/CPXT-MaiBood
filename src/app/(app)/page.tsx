@@ -9,7 +9,6 @@ import { makroData } from "../../../public/makro-data";
 
 export default async function Home() {
   const postList = await getSellingFridgeItems();
-  console.log("postList", postList);
 
 
   return (
@@ -21,7 +20,7 @@ export default async function Home() {
           <h2 className="text-textprimary" >ลองเข้าไปดูสิ</h2>
         </div>
 
-        {/* <UserLocation /> */}
+        <UserLocation />
 
       </div>
 
@@ -43,6 +42,8 @@ export default async function Home() {
               price={item.price ?? 0}
               name={item.name}
               id={item.id}
+              isMakro={true}
+              image={item.image}
             />
           ))}
         </div>

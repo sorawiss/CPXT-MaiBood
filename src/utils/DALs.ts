@@ -142,6 +142,39 @@ export async function updateStatus(id: string, status: StatusType) {
 }
 
 
+// Create new item directly for sharing
+export async function createSellingItem({ 
+  name, 
+  amount, 
+  exp_date, 
+  userId, 
+  category, 
+  price, 
+  description 
+}: { 
+  name: string, 
+  amount: number, 
+  exp_date: string, 
+  userId: string, 
+  category: string, 
+  price: number, 
+  description: string 
+}) {
+    return await prismaDB.fridge.create({
+        data: {
+            name: name,
+            amount: amount,
+            exp_date: new Date(exp_date),
+            user_id: userId,
+            category: category,
+            price: price,
+            description: description,
+            status: StatusType.selling
+        }
+    });
+}
+
+// Update existing item
 export async function shareFridge({ id, price, name, description, category, exp_date }: { id: string, price: number, name: string, description: string, category: string, exp_date: string }) {
     await prismaDB.fridge.update({
         where: {
@@ -194,6 +227,26 @@ export async function addLocation(latitude: number, longitude: number, userId: s
     })
     return addLocation
 }
+
+
+// Cout sold items
+export const countSoldItems = unstable_cache(
+    async (userId: string) => {
+    return prismaDB.fridge.count({
+        where: {
+            user_id: userId,
+            status: StatusType.sold
+        }
+    })
+},
+    ['sold-items-count'],
+    {
+        tags: ['sold-items-count'],
+        revalidate: 60
+    }
+)
+
+
 
 
 // Post DALs

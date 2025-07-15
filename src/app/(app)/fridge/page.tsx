@@ -3,8 +3,8 @@ import { Suspense } from "react";
 import { getFridgeItemsData, getUserData } from "./data";
 import { Plus } from "lucide-react";
 
-import FridgeList from "../components/FridgeList";
-import Button from "../../../components/Button";
+import FridgeList from "@/components/FridgeList";
+import Button from "@/components/Button";
 import { filterExpDate } from "@/utils/filter-exp-date";
 import Loading from "./loading";
 import TitleHeader from "../../../components/TitleHeader";
@@ -13,7 +13,7 @@ async function FridgeItems() {
   const { items, count } = await getFridgeItemsData();
 
   if (!items || items.length === 0) {
-    return <p className="text-textsecondary">No items in your fridge.</p>;
+    return <p className="text-textsecondary">ยังไม่มีอาหารถูกบันทึกในตู้เย็น เริ่มบันทึกอาหารเพื่อจัดระเบียบครัวกันเถอะ!</p>;
   }
 
   return (
