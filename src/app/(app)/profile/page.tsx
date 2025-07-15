@@ -29,6 +29,12 @@ async function Profile() {
                 facebook={user.facebook ?? undefined}
                 ig={user.instagram ?? undefined}
             />
+
+            <div className="Info border border-makro rounded-2xl p-4 w-full flex justify-between items-center ">
+                <p className="text-textprimary " >🤝 แบ่งปันอาหารไป</p>
+                
+
+            </div>
         </div>
     )
 }
