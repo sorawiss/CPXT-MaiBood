@@ -17,7 +17,7 @@ function PostList({ exp_date, price, name, id }: PostListProps) {
     });
 
     return (
-        <Link href={`/post/${id}?name=${name}`} >
+        <Link href={`/food/${id}?name=${name}`} >
             <div className="PostContainer w-[10.5rem]  bg-white flex flex-col gap-2 ">
                 <div className="ImageWrapper relative ">
                     <div className="ImagePlaceHolder w-[10.5rem] h-[14rem] bg-backgroundsecondary rounded-2xl "></div>

@@ -214,7 +214,9 @@ export async function getPost(id: string) {
             updated_at: true,
             user: {
                 select: {
-                    name: true
+                    name: true,
+                    latitude: true,
+                    longitude: true
                 }
             }
         }
