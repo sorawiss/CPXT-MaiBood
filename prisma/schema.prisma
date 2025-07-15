@@ -55,4 +55,9 @@ model Fridge {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   user User @relation(fields: [user_id], references: [id])
+
+  @@index([user_id])
+  @@index([status])
+  @@index([exp_date])
+  @@index([user_id, status])
 }

@@ -1,24 +1,11 @@
 import Distance from "@/components/Distance";
 import TitleHeader from "@/components/TitleHeader";
 import { getPost } from "@/utils/DALs";
-import { dateFormate } from "@/utils/date-formate";
 import { getUserData } from "@/utils/user";
 import { Ellipsis, Croissant, LeafyGreen, Ham } from "lucide-react";
-import { Metadata } from "next";
 
 // Add revalidation for page-level caching
 export const revalidate = 300; // Revalidate every 5 minutes
-
-// Generate metadata for better SEO and caching
-export async function generateMetadata({ params }: { params: Promise<{ foodId: string }> }): Promise<Metadata> {
-  const resolvedParams = await params;
-  const post = await getPost(resolvedParams.foodId);
-  
-  return {
-    title: post ? `${post.name} - CPAXT` : 'Food Item - CPAXT',
-    description: post ? post.description || `Fresh ${post.name} available` : 'Food item from CPAXT',
-  };
-}
 
 export default async function Post({ params }: { params: Promise<{ foodId: string }> }) {
   const resolvedParams = await params; // Resolve the Promise
@@ -30,6 +17,8 @@ export default async function Post({ params }: { params: Promise<{ foodId: strin
     "4": <Ellipsis />,
   };
 
+  console.log(`Starting data fetch for post ${foodId}`);
+  
   const [post, user] = await Promise.all([getPost(foodId), getUserData()]);
 
   if (!post) {

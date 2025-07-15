@@ -3,6 +3,7 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { unstable_cache } from "next/cache";
 
 
 const key = new TextEncoder().encode(process.env.JWT_KEY)
@@ -62,6 +63,23 @@ export async function createSession(userId: string) {
 }
 
 
+// Cached session verification to avoid repeated JWT decryption
+const cachedVerifySession = unstable_cache(
+    async (sessionToken: string) => {
+        console.log('(Re)validating session token')
+        const user = await decrypt(sessionToken);
+        if (!user) {
+            return null;
+        }
+        return user;
+    },
+    ['session-verification'],
+    {
+        tags: ['session'],
+        revalidate: 300 // Cache for 5 minutes
+    }
+);
+
 // Verify the session
 //--------------------------------
 export async function verifySession() {
@@ -72,7 +90,7 @@ export async function verifySession() {
         redirect("/login")
     }
 
-    const user = await decrypt(session)
+    const user = await cachedVerifySession(session);
 
     if (!user) {
         redirect("/login")
