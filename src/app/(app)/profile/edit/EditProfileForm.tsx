@@ -64,13 +64,6 @@ function EditProfileForm({ user }: { user: User }) {
                     defaultValue={user.instagram ?? ''}
                     placeholder='Your Instagram'
                 />
-                <Input
-                    name="post_code"
-                    label='Post Code'
-                    type='text'
-                    defaultValue={user.post_code ?? ''}
-                    placeholder='Your post code'
-                />
                 <Button type="submit" className='mt-[2rem] ' text='Update' />
             </form>
         </div>

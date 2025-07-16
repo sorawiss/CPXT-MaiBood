@@ -16,8 +16,7 @@ export async function updateUser(userId: string, prevState: State, formData: For
     phone_number: formData.get("phone_number"),
     line: formData.get("line"),
     facebook: formData.get("facebook"),
-    instagram: formData.get("instagram"),
-    post_code: formData.get("post_code"),
+    instagram: formData.get("instagram")
   };
 
   try {
