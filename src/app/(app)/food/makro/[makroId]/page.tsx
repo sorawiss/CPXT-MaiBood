@@ -1,14 +1,16 @@
-import Distance from "@/components/Distance";
 import TitleHeader from "@/components/TitleHeader";
 import { Ellipsis, Croissant, LeafyGreen, Ham } from "lucide-react";
 import { makroData } from "../../../../../../public/makro-data";
 import Image from "next/image";
 
+export function generateStaticParams() {
+    return makroData.map((post) => ({
+        makroId: post.id,
+    }));
+}
 
-
-export default async function Post({ params }: { params: Promise<{ makroId: string }> }) {
-    const resolvedParams = await params;
-    const makroId = resolvedParams.makroId;
+export default async function Post({ params }: { params: { makroId: string } }) {
+    const makroId = params.makroId;
     const categoryIcon = {
         "1": <Ham />,
         "2": <Croissant />,
@@ -38,7 +40,10 @@ export default async function Post({ params }: { params: Promise<{ makroId: stri
                             rounded-2xl w-full h-full" />
                     </div>
                     <div className="ProfileWrapper flex items-center gap-2 mt-[1rem]">
-                        <div className="ProfileImage w-10 h-10 bg-backgroundsecondary rounded-full"></div>
+                        <div className="ProfileImage w-10 h-10 bg-backgroundsecondary rounded-full">
+                            <Image src="/makro-logo.png" alt={post.user?.name} width={180} height={180}
+                                className="object-cover rounded-full" />
+                        </div>
                         <h3 className="h3 text-textprimary">{post.user?.name}</h3>
                     </div>
                 </div>
