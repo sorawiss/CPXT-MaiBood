@@ -3,7 +3,7 @@ import Link from "next/link";
 
 function NotificationObject({ notification }: { notification: any }) {
     return (
-        <Link href={`/food/${notification.fridge_id}`}>
+        <Link href={`/profile/${notification.sender.id}`}>
             <div className="border border-textprimary rounded-2xl p-[1rem] h-[4.5rem] w-full " >
                 <div className="Left flex items-center gap-1 ">
                     <div className="ProfileWrapper size-10 ">

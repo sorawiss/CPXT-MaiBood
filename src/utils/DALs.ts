@@ -372,6 +372,7 @@ export const getNotifications = unstable_cache(
                     select: {
                         name: true,
                         profile_picture: true,
+                        id: true,
                     },
                 },
                 fridge: {
