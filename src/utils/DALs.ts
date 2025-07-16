@@ -1,6 +1,7 @@
 import { prismaDB } from "@/lib/prisma-client"
 import { unstable_cache } from "next/cache"
 import { StatusType } from "@prisma/client";
+import { safeDate } from "./date-formate";
 
 
 export { StatusType };
@@ -174,7 +175,7 @@ export async function createSellingItem({
         data: {
             name: name,
             amount: amount,
-            exp_date: new Date(exp_date),
+            exp_date: safeDate(exp_date),
             user_id: userId,
             category: category,
             price: price,
@@ -197,7 +198,7 @@ export async function shareFridge({ id, price, name, description, category, exp_
             name: name,
             description: description,
             category: category,
-            exp_date: new Date(exp_date),
+            exp_date: safeDate(exp_date),
             image: image
         }
     })

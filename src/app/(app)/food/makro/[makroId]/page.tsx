@@ -2,6 +2,7 @@ import TitleHeader from "@/components/TitleHeader";
 import { Ellipsis, Croissant, LeafyGreen, Ham } from "lucide-react";
 import { makroData } from "../../../../../../public/makro-data";
 import Image from "next/image";
+import { safeDate } from "@/utils/date-formate";
 
 export function generateStaticParams() {
     return makroData.map((post) => ({
@@ -24,10 +25,11 @@ export default async function Post({ params }: { params: Promise<{ makroId: stri
         return <div>Post not found</div>;
     }
 
+    // Date Info
     const dateInfo = {
-        created_at: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 3).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }),
-        updated_at: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 2).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }),
-        exp_date: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 1).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })
+        created_at: safeDate(new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 3)).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }),
+        updated_at: safeDate(new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 2)).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }),
+        exp_date: safeDate(new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 1)).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })
     }
 
 

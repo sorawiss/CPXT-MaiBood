@@ -11,6 +11,7 @@ import Button from "@/components/Button";
 import { StatusType } from "@/utils/DALs";
 import { useRouter } from "next/navigation";
 import { DialogTitle } from "@radix-ui/react-dialog";
+import { safeDate } from "@/utils/date-formate";
 
 interface FridgeItem {
     id: string;
@@ -33,8 +34,8 @@ function FridgeList({ item }: { item: FridgeItem }) {
     const [isGone, setIsGone] = useState(false)
     const [isDeleting, setIsDeleting] = useState(false)
     const router = useRouter();
-    const expDate = new Date(item.exp_date);
-    const createdAtDate = new Date(item.created_at);
+    const expDate = safeDate(item.exp_date);
+    const createdAtDate = safeDate(item.created_at);
     const willExpire = expDate <= new Date(new Date().setDate(new Date().getDate() + 3))
     let status: string = item.status
 

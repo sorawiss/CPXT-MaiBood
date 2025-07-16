@@ -2,6 +2,7 @@
 import { verifySession } from "@/utils/session";
 import { addToFridge } from "@/utils/DALs";
 import { revalidateTag } from "next/cache";
+import { safeDate } from "@/utils/date-formate";
 
 type FormState = {
   error?: string;
@@ -27,7 +28,7 @@ export async function handleAddToFridge(prevState: FormState, formData: FormData
     await addToFridge(
       item as string,
       Number(amount),
-      new Date(expiry_date as string),
+      safeDate(expiry_date as string),
       session.userId as string,
       category && category !== "" ? category as string : null
     );

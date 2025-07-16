@@ -10,6 +10,7 @@ import Image from "next/image";
 import { sendNotification } from "./action";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { safeDate } from "@/utils/date-formate";
 
 export default function FoodPageContent({ post, foodId, currentUser, hasSentRequest }: { post: any, foodId: string, currentUser: any, hasSentRequest: boolean }) {
     const [isPending, startTransition] = useTransition();
@@ -49,9 +50,9 @@ export default function FoodPageContent({ post, foodId, currentUser, hasSentRequ
 
     // Date Info
     const dateInfo = {
-        created_at: new Date(post.created_at).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }),
-        updated_at: new Date(post.updated_at).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }),
-        exp_date: new Date(post.exp_date).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })
+        created_at: safeDate(post.created_at).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }),
+        updated_at: safeDate(post.updated_at).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }),
+        exp_date: safeDate(post.exp_date).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })
     }
 
     return (

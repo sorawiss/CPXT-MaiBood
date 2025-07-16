@@ -1,5 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
+import { safeDate } from "@/utils/date-formate";
 
 
 interface PostListProps {
@@ -13,7 +14,7 @@ interface PostListProps {
 
 
 function PostList({ exp_date, price, name, id, isMakro = false, image = "" }: PostListProps) {
-    const formattedDate = new Date(exp_date).toLocaleDateString('th-TH', {
+    const formattedDate = safeDate(exp_date).toLocaleDateString('th-TH', {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
