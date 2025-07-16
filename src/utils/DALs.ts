@@ -12,7 +12,7 @@ export const getUser = unstable_cache(
         console.log(`(Re)validating user ${userId}`)
         const user = await prismaDB.user.findUnique({
             where: { id: userId },
-            select: { name: true }
+            select: { name: true, profile_picture: true, phone_number: true, line: true, instagram: true, facebook: true }
         })
         return user
     },
@@ -24,10 +24,10 @@ export const getUser = unstable_cache(
 )
 
 export async function updateUser(userId: string, data: any) {
-  return prismaDB.user.update({
-    where: { id: userId },
-    data,
-  });
+    return prismaDB.user.update({
+        where: { id: userId },
+        data,
+    });
 }
 
 // Fridge DALs
@@ -62,7 +62,7 @@ export const getFridgeItems = unstable_cache(
     ['fridge-items'],
     {
         tags: ['fridge-items'],
-        revalidate: 300 
+        revalidate: 300
     }
 )
 
@@ -151,24 +151,24 @@ export async function updateStatus(id: string, status: StatusType) {
 
 
 // Create new item directly for sharing
-export async function createSellingItem({ 
-  name, 
-  amount, 
-  exp_date, 
-  userId, 
-  category, 
-  price, 
-  description,
-  image
-}: { 
-  name: string, 
-  amount: number, 
-  exp_date: string, 
-  userId: string, 
-  category: string, 
-  price: number, 
-  description: string,
-  image?: string
+export async function createSellingItem({
+    name,
+    amount,
+    exp_date,
+    userId,
+    category,
+    price,
+    description,
+    image
+}: {
+    name: string,
+    amount: number,
+    exp_date: string,
+    userId: string,
+    category: string,
+    price: number,
+    description: string,
+    image?: string
 }) {
     return await prismaDB.fridge.create({
         data: {
@@ -252,13 +252,13 @@ export async function addLocation(latitude: number, longitude: number, userId: s
 // Cout sold items
 export const countSoldItems = unstable_cache(
     async (userId: string) => {
-    return prismaDB.fridge.count({
-        where: {
-            user_id: userId,
-            status: StatusType.sold
-        }
-    })
-},
+        return prismaDB.fridge.count({
+            where: {
+                user_id: userId,
+                status: StatusType.sold
+            }
+        })
+    },
     ['sold-items-count'],
     {
         tags: ['sold-items-count'],
@@ -316,7 +316,7 @@ export const getPost = unstable_cache(
                         line: true,
                         instagram: true,
                         phone_number: true,
-                        
+
                     }
                 }
             }
@@ -330,49 +330,49 @@ export const getPost = unstable_cache(
 )
 
 export const createNotification = async (recipientId: string, senderId: string, fridgeId: string) => {
-  try {
-    const notification = await prismaDB.notification.create({
-      data: {
-        recipientId,
-        senderId,
-        fridge_id: fridgeId,
-      },
-    });
-    return notification;
-  } catch (error) {
-    console.error(error);
-    throw new Error("Failed to create notification");
-  }
+    try {
+        const notification = await prismaDB.notification.create({
+            data: {
+                recipientId,
+                senderId,
+                fridge_id: fridgeId,
+            },
+        });
+        return notification;
+    } catch (error) {
+        console.error(error);
+        throw new Error("Failed to create notification");
+    }
 };
 
 export const getNotifications = unstable_cache(
-  async (userId: string) => {
-    console.log(`(Re)validating notifications for ${userId}`);
-    return prismaDB.notification.findMany({
-      where: {
-        recipientId: userId,
-      },
-      include: {
-        sender: {
-          select: {
-            name: true,
-            profile_picture: true,
-          },
-        },
-        fridge: {
-          select: {
-            name: true,
-          },
-        },
-      },
-      orderBy: {
-        created_at: "desc",
-      },
-    });
-  },
-  ["notifications"],
-  {
-    tags: ["notifications"],
-    revalidate: 60, // Cache for 1 minute
-  }
+    async (userId: string) => {
+        console.log(`(Re)validating notifications for ${userId}`);
+        return prismaDB.notification.findMany({
+            where: {
+                recipientId: userId,
+            },
+            include: {
+                sender: {
+                    select: {
+                        name: true,
+                        profile_picture: true,
+                    },
+                },
+                fridge: {
+                    select: {
+                        name: true,
+                    },
+                },
+            },
+            orderBy: {
+                created_at: "desc",
+            },
+        });
+    },
+    ["notifications"],
+    {
+        tags: ["notifications"],
+        revalidate: 60, // Cache for 1 minute
+    }
 );

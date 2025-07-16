@@ -8,6 +8,7 @@ import { Croissant, Ellipsis, Ham, LeafyGreen } from "lucide-react";
 import Image from "next/image";
 import { Suspense } from "react";
 import { sendNotification } from "./action";
+import Link from "next/link";
 
 export default function FoodPageContent({ post, foodId, currentUser }: { post: any, foodId: string, currentUser: any }) {
     const categoryIcon = {
@@ -56,10 +57,10 @@ export default function FoodPageContent({ post, foodId, currentUser }: { post: a
                         <Image src={post.image ?? ""} alt={post.name} width={924} height={689} className="object-cover 
                             rounded-2xl w-full h-full" />
                     </div>
-                    <div className="ProfileWrapper flex items-center gap-2 mt-[1rem]">
+                    <Link href={`/profile/${post.user.id}`} className="ProfileWrapper flex items-center gap-2 mt-[1rem]">
                         <div className="ProfileImage w-10 h-10 bg-backgroundsecondary rounded-full"></div>
                         <h3 className="h3 text-textprimary">{post.user.name}</h3>
-                    </div>
+                    </Link>
                 </div>
 
                 <div className="PostInfo mt-[2rem] flex flex-col gap-[2rem] ">
