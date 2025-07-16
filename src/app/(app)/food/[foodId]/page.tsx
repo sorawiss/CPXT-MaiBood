@@ -5,6 +5,8 @@ import { Ellipsis, Croissant, LeafyGreen, Ham } from "lucide-react";
 import Image from "next/image";
 import PostDistance from "@/components/PostDistance";
 import { Suspense } from "react";
+import Contact from "@/components/Contact";
+import Button from "@/components/Button";
 
 // Add revalidation for page-level caching
 export const revalidate = 300; // Revalidate every 5 minutes
@@ -86,11 +88,18 @@ export default async function Post({ params }: { params: Promise<{ foodId: strin
           </div>
 
           {/* Contact */}
-          <div className="Contact flex flex-col gap-2 ">
+          <div className="Contact flex flex-col gap-[1rem] ">
             <Suspense fallback={<div className="p3 text-textsecondary">กำลังคำนวณระยะทาง...</div>}>
               <PostDistance postLocation={postLocation} />
             </Suspense>
+            <Contact ig={post.user.instagram ?? undefined}
+              line={post.user.line ?? undefined} phone={post.user.phone_number ?? undefined}
+              facebook={post.user.facebook ?? undefined} align="start" />
           </div>
+
+
+          {/* Button */}
+          <Button type="button" text="รับอาหาร" className="mb-[1rem]" />
 
         </div>
 
