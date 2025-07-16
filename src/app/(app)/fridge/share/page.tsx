@@ -8,6 +8,7 @@ import Category from "@/components/Category";
 import { useSearchParams } from "next/navigation";
 import { uploadFileToSupabase } from "@/utils/file-upload";
 import { ImagePlus } from "lucide-react";
+import { compressImage } from "@/utils/image-compression";
 import Image from "next/image";
 
 export default function Share() {
@@ -41,11 +42,19 @@ export default function Share() {
     if (!file) return;
 
     setUploading(true);
-    const publicUrl = await uploadFileToSupabase(file, "cpaxt-maibood-bucket");
-    setUploading(false);
 
-    if (publicUrl) {
-      setImageUrl(publicUrl);
+    try {
+      const compressedFile = await compressImage(file);
+      const publicUrl = await uploadFileToSupabase(compressedFile, "cpaxt-maibood-bucket");
+      
+      if (publicUrl) {
+        setImageUrl(publicUrl);
+      }
+    } catch (error) {
+        console.error("Upload failed:", error);
+        // Optionally, show an error message to the user
+    } finally {
+        setUploading(false);
     }
   };
 
