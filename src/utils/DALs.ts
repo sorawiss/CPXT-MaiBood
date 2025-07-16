@@ -75,6 +75,16 @@ export const getFridgeItems = unstable_cache(
     }
 )
 
+
+// Get fridge item image for delete
+export async function getFridgeItem(id: string) {
+    return prismaDB.fridge.findUnique({
+        where: { id },
+        select: { image: true },
+    });
+}
+
+
 // Count fridge items
 export const countFridgeItems = unstable_cache(
     async (userId: string) => {

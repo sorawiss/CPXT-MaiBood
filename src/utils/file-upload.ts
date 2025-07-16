@@ -18,4 +18,23 @@ export async function uploadFileToSupabase(file: File, bucket: string) {
         .getPublicUrl(fileName);
 
     return data.publicUrl;
+}
+
+export async function deleteFileFromSupabase(fileUrl: string, bucket: string) {
+    if (!fileUrl) return;
+
+    try {
+        const fileName = fileUrl.split('/').pop();
+        if (!fileName) return;
+
+        const { error } = await supabase.storage
+            .from(bucket)
+            .remove([fileName]);
+
+        if (error) {
+            console.error("Error deleting file:", error);
+        }
+    } catch (error) {
+        console.error("Error parsing file URL:", error);
+    }
 } 
