@@ -74,7 +74,7 @@ model Notification {
   recipientId String
   senderId    String
   fridge_id String
-  isRead Boolean @default(false)
+  isAccepted Boolean @default(false)
   created_at DateTime @default(now())
   recipient User @relation("received_notifications", fields: [recipientId], references: [id], onDelete: Cascade)
   sender User @relation("sent_notifications", fields: [senderId], references: [id], onDelete: Cascade)
@@ -84,5 +84,5 @@ model Notification {
   @@index([senderId])
   @@index([fridge_id])
   @@index([recipientId, fridge_id])
-  @@index([recipientId, isRead])
+  @@index([recipientId, isAccepted])
 }
