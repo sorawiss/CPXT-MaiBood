@@ -37,18 +37,25 @@ export async function getUserData() {
 }
 
 
-export const getCurrentUser = async () => {
-    const session = await getSession();
-    if (!session) {
-        return null;
-    }
-    const currentUser = await prismaDB.user.findUnique({
-        where: {
-            id: session.userId as string
-        },
-        select: {
-            id: true
+export const getCurrentUser = unstable_cache(
+    async () => {
+        const session = await getSession();
+        if (!session) {
+            return null;
         }
-    });
-    return currentUser;
-} 
+        const currentUser = await prismaDB.user.findUnique({
+            where: {
+                id: session.userId as string
+            },
+            select: {
+                id: true
+            }
+        });
+        return currentUser;
+    },
+    ['current-user'],
+    {
+        tags: ['session'],
+        revalidate: 3600
+    }
+) 
