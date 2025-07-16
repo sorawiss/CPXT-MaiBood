@@ -1,6 +1,8 @@
 import { verifySession } from "@/utils/session";
 import { prismaDB } from "@/lib/prisma-client";
 import { unstable_cache } from "next/cache";
+import { getSession } from "./session";
+
 
 // Create the cached function once, outside of getUserData
 const getCachedUserData = unstable_cache(
@@ -32,4 +34,18 @@ export async function getUserData() {
     if (!session?.userId) return null;
 
     return getCachedUserData(session.userId as string);
+}
+
+
+export const getCurrentUser = async () => {
+    const session = await getSession();
+    if (!session) {
+        return null;
+    }
+    const currentUser = await prismaDB.user.findUnique({
+        where: {
+            id: session.userId as string
+        }
+    });
+    return currentUser;
 } 

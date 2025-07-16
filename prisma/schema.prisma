@@ -42,7 +42,8 @@ model User {
   longitude Float?
   post_code String? @db.VarChar(5)
   fridge Fridge[]
-  notification Notification[]
+  received_notifications Notification[] @relation("received_notifications")
+  sent_notifications Notification[] @relation("sent_notifications")
 }
 
 model Fridge {
@@ -70,13 +71,18 @@ model Fridge {
 
 model Notification {
   id String @id @default(uuid())
-  user_id String
+  recipientId String
+  senderId    String
   fridge_id String
+  isRead Boolean @default(false)
   created_at DateTime @default(now())
-  user User @relation(fields: [user_id], references: [id])
+  recipient User @relation("received_notifications", fields: [recipientId], references: [id])
+  sender User @relation("sent_notifications", fields: [senderId], references: [id])
   fridge Fridge @relation(fields: [fridge_id], references: [id])
 
-  @@index([user_id])
+  @@index([recipientId])
+  @@index([senderId])
   @@index([fridge_id])
-  @@index([user_id, fridge_id])
+  @@index([recipientId, fridge_id])
+  @@index([recipientId, isRead])
 }

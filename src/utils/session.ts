@@ -101,6 +101,19 @@ export async function verifySession() {
 }
 
 
+// Get session without redirecting
+//--------------------------------
+export async function getSession() {
+    const cookieStore = await cookies()
+    const sessionToken = cookieStore.get(cookie.name)?.value
+
+    if (!sessionToken) {
+        return null;
+    }
+    return await cachedVerifySession(sessionToken);
+}
+
+
 // Delete the session
 //--------------------------------
 export async function deleteSession() {
