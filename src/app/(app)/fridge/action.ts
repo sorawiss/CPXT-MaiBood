@@ -62,6 +62,7 @@ export async function handleUpdateStatus(id: string, status: StatusType) {
         revalidateTag("fridge-items")
         revalidateTag("selling-fridge-items")
         revalidateTag("sold-items-count")
+        revalidateTag("free-items-count")
         console.log("Status updated")
         return { success: "Status updated" }
     } catch (error) {

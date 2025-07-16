@@ -25,6 +25,7 @@ enum StatusType {
   sold
   expired
   eat
+  free
 }
 
 

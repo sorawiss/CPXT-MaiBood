@@ -77,7 +77,7 @@ function FridgeList({ item }: { item: FridgeItem }) {
             function: async () => {
                 setIsGone(true)
                 startTransition(async () => {
-                    const result = await handleUpdateStatus(item.id, StatusType.sold)
+                    const result = await handleUpdateStatus(item.id, StatusType.free)
                     if (result.error) {
                         setIsGone(false)
                         console.error("Failed to update status:", result.error)

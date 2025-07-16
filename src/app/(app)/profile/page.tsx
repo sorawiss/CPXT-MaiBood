@@ -1,7 +1,8 @@
 import Contact from "@/components/Contact"
 import TitleHeader from "@/components/TitleHeader"
 import { getUserData } from "@/utils/user"
-import { countSoldItems } from "@/utils/DALs"
+import { countFreeItems, countSoldItems } from "@/utils/DALs"
+import ProfileStat from "@/components/ProfileStat"
 
 
 
@@ -10,6 +11,8 @@ async function Profile() {
     if (!user) {
         return <div>User not found</div>
     }
+    const soldItems = await countSoldItems(user.id)
+    const freeItems = await countFreeItems(user.id)
 
 
     return (
@@ -31,13 +34,12 @@ async function Profile() {
                 ig={user.instagram ?? undefined}
             />
 
-            <div className="Info border border-makro rounded-2xl p-4 w-full flex justify-between items-center ">
-                <p className="text-textprimary " >🤝 แบ่งปันอาหารไป</p>
-                <p className="text-textprimary " >{countSoldItems(user.id)}</p>
-
-                
-
+            <div className="StateWrapper flex flex-col items-center justify-center w-full gap-2 ">
+                <ProfileStat title="🤝 ขายอาหาร" amount={soldItems} />
+                <ProfileStat title="❤ แจกฟรี" amount={freeItems} />
             </div>
+
+
         </div>
     )
 }
