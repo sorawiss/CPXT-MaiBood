@@ -4,6 +4,7 @@ import { handleRegister } from "./action"
 import Input from "@/components/Input"
 import Button from "@/components/Button"
 import Link from "next/link"
+import Image from "next/image"
 
 
 export default function Register() {
@@ -34,71 +35,54 @@ export default function Register() {
     return (
         <div className="RegisterPage bg-makro min-h-screen flex flex-col items-center justify-end " >
 
-                <div className="LogoWrapper mb-[6rem] ">
-                    <svg width="240" height="74" viewBox="0 0 240 74" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g clipPath="url(#clip0_38_281)">
-                            <path d="M17.85 35.98C7.34 35.98 0 28.58 0 18C0 7.42 7.34 0.0200015 17.85 0.0200015C22.57 -0.00999854 27.1 1.9 30.37 5.32L30.62 5.58C31.56 6.57 31.53 8.13 30.54 9.08C30.54 9.08 30.52 9.1 30.51 9.11L28.28 11.18C27.29 12.09 25.76 12.04 24.82 11.08L24.58 10.83C22.83 9.02 20.41 8.02 17.9 8.06C12.75 7.81 8.37 11.77 8.12 16.92C8.1 17.28 8.11 17.64 8.12 18C7.78 23.14 11.67 27.59 16.81 27.93C17.17 27.95 17.53 27.96 17.89 27.93C20.49 27.94 22.98 26.93 24.84 25.11L25.09 24.86C26.06 23.91 27.61 23.92 28.57 24.87L30.74 27.04C31.7 28.01 31.7 29.57 30.74 30.54L30.49 30.79C27.14 34.13 22.58 35.99 17.85 35.96" fill="white" />
-                            <path d="M38.5 35.98H35.93C34.4 35.98 33.16 34.74 33.16 33.21V3.11C33.16 1.41 34.54 0.0299988 36.24 0.0299988H48.59C56.2 0.0299988 61.32 5.05 61.32 12.51C61.32 19.97 56.2 24.95 48.59 24.95H41.26V33.22C41.26 34.75 40.02 35.99 38.49 35.99M41.26 16.97H48.51C51.59 16.97 53.22 15.43 53.22 12.51C53.22 9.59 51.59 8.01 48.51 8.01H41.26V16.97Z" fill="white" />
-                            <path d="M154.18 73.78C125.12 73.84 96.99 63.51 74.88 44.65C73.35 43.37 73.16 41.09 74.44 39.57C74.48 39.52 74.53 39.47 74.57 39.42C76.01 37.89 78.4 37.76 80 39.12C122.78 75.47 185.59 75.47 228.36 39.12C229.96 37.76 232.35 37.89 233.79 39.42C235.15 40.87 235.08 43.16 233.63 44.52C233.58 44.56 233.53 44.61 233.48 44.65C211.37 63.52 183.23 73.85 154.17 73.78" fill="white" />
-                            <path d="M99.43 35.98H99.2C97.64 35.98 96.22 35.06 95.59 33.63L93.33 28.5C93.33 28.5 93.3 28.47 93.28 28.47H78.21C78.21 28.47 78.17 28.48 78.16 28.5L76.04 33.24C75.29 34.91 73.63 35.98 71.81 35.98C69.91 35.98 68.37 34.43 68.38 32.53C68.38 32.05 68.48 31.58 68.68 31.14L81.41 2.77C82.16 1.11 83.81 0.0299988 85.64 0.0299988H87.36C88.28 0.0299988 89.12 0.569999 89.5 1.42L102.74 30.91C103.55 32.73 102.74 34.86 100.92 35.68C100.46 35.89 99.96 35.99 99.46 36M81.52 21.01H90.01L85.76 11.45L81.51 21.01H81.52Z" fill="white" />
-                            <path d="M236.4 35.98H236.17C234.61 35.98 233.19 35.06 232.56 33.63L230.3 28.5C230.3 28.5 230.27 28.47 230.25 28.47H215.17C215.17 28.47 215.13 28.48 215.12 28.5L213 33.24C212.25 34.91 210.59 35.98 208.77 35.98C206.87 35.98 205.33 34.43 205.34 32.53C205.34 32.05 205.44 31.58 205.64 31.14L218.37 2.77C219.12 1.1 220.78 0.0299988 222.6 0.0299988H224.32C225.24 0.0299988 226.08 0.569999 226.46 1.42L239.69 30.91C240.5 32.73 239.69 34.86 237.87 35.68C237.41 35.89 236.91 35.99 236.41 36M218.47 21.01H226.96L222.71 11.44L218.47 21.01Z" fill="white" />
-                            <path d="M201.93 35.98H197.59C196.22 35.98 194.91 35.41 193.98 34.4L193.93 34.34L186.18 24.4H181.42V33.87C181.42 35.04 180.47 35.98 179.31 35.98H175.93C174.76 35.98 173.82 35.03 173.82 33.87V3C173.82 1.36 175.15 0.0200043 176.8 0.0200043H189.94C197.57 0.0200043 202.7 4.92 202.7 12.2C202.89 17.11 199.96 21.59 195.39 23.4L203.27 33.19C203.86 33.92 203.75 35 203.02 35.59C202.71 35.84 202.33 35.97 201.94 35.97M181.44 16.86H190C193.29 16.86 195.11 15.2 195.11 12.2C195.11 9.2 193.3 7.54 190 7.54H181.44V16.87V16.86Z" fill="white" />
-                            <path d="M158.82 35.98H155.62C154.4 35.98 153.42 34.99 153.42 33.78V7.54001H143.82C143.03 7.54001 142.39 6.90001 142.39 6.11001C142.39 5.82001 142.48 5.53001 142.65 5.29001L145.18 1.68001C145.91 0.64001 147.11 0.0100098 148.38 0.0100098H170.88C171.57 0.0100098 172.12 0.57001 172.12 1.25001V2.48001C172.12 5.27001 169.86 7.52001 167.07 7.53001H161.02V33.76C161.02 34.98 160.03 35.96 158.82 35.96" fill="white" />
-                            <path d="M108.44 35.98C106.38 35.98 104.72 34.31 104.72 32.25C104.72 31.26 105.11 30.32 105.81 29.62L117.43 18L105.81 6.38C104.34 4.94 104.33 2.58 105.77 1.11C107.21 -0.359997 109.57 -0.369997 111.04 1.07C111.05 1.08 111.07 1.1 111.08 1.11L125.34 15.37C126.79 16.82 126.79 19.18 125.34 20.64L111.08 34.89C110.38 35.59 109.43 35.98 108.45 35.98" fill="white" />
-                            <path d="M132.26 13.7L139.62 6.34001C141.07 4.89001 141.07 2.53001 139.62 1.08001C139.6 1.06001 139.59 1.05001 139.57 1.03001C138.06 -0.369993 135.71 -0.309993 134.27 1.16001L125.42 10.01L129.11 13.7C129.98 14.57 131.39 14.57 132.26 13.7Z" fill="white" />
-                            <path d="M132.28 22.26C131.41 21.39 130 21.39 129.13 22.26L125.44 25.95L134.37 34.88C135.82 36.33 138.18 36.33 139.64 34.88C139.7 34.82 139.76 34.75 139.82 34.68C141.09 33.16 140.98 30.91 139.56 29.53L132.29 22.26H132.28Z" fill="white" />
-                        </g>
-                        <defs>
-                            <clipPath id="clip0_38_281">
-                                <rect width="240" height="73.78" fill="white" />
-                            </clipPath>
-                        </defs>
-                    </svg>
-
-                </div>
+            <div className="LogoWrapper mb-[6rem] ">
+                <Image src="/maibood-logo.svg" alt="logo" width={106} height={134} />
 
 
-                {/* Form */}
-                <form className="flex flex-col bg-backgroundsecondary w-full px-[2rem] py-[1.5rem] rounded-tl-[88px] p-[2rem] 
+            </div>
+
+
+            {/* Form */}
+            <form className="flex flex-col bg-backgroundsecondary w-full px-[2rem] py-[1.5rem] rounded-tl-[88px] p-[2rem] 
                     gap-[1rem] items-center " onSubmit={onSubmit}>
-                    <h1 className="text-textprimary font-bold text-[2.5rem] " >สมัครใช้งาน</h1>
-                    <Input
-                        type="text"
-                        name="name"
-                        placeholder="Name"
-                        label="ชื่อ"
-                        value={form.name}
-                        onChange={onChangeForm}
-                    />
-                    <Input
-                        type="tel"
-                        name="phone_number"
-                        placeholder="Phone Number"
-                        label="เบอร์โทรศัพท์"
-                        value={form.phone_number}
-                        onChange={onChangeForm}
-                    />
-                    <Input
-                        type="password"
-                        name="password"
-                        placeholder="Password"
-                        label="รหัสผ่าน"
-                        value={form.password}
-                        onChange={onChangeForm}
-                    />
-                    <Input
-                        type="password"
-                        name="confirm_password"
-                        placeholder="Confirm Password"
-                        label="ยืนยันรหัสผ่าน"
-                        value={form.confirm_password}
-                        onChange={onChangeForm}
-                    />
-                    <Button type="submit" text="สมัคร" className="mt-[1rem] " isLoading={isLoading} />
-                    <p className="text-textsecondary text-[1.2rem] ">หากมีบัญชีแล้ว  <Link href="/login" className="text-makro">เข้าสู่ระบบ</Link></p>
-                </form>
+                <h1 className="text-textprimary font-bold text-[2.5rem] " >สมัครใช้งาน</h1>
+                <Input
+                    type="text"
+                    name="name"
+                    placeholder="Name"
+                    label="ชื่อ"
+                    value={form.name}
+                    onChange={onChangeForm}
+                />
+                <Input
+                    type="tel"
+                    name="phone_number"
+                    placeholder="Phone Number"
+                    label="เบอร์โทรศัพท์"
+                    value={form.phone_number}
+                    onChange={onChangeForm}
+                />
+                <Input
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    label="รหัสผ่าน"
+                    value={form.password}
+                    onChange={onChangeForm}
+                />
+                <Input
+                    type="password"
+                    name="confirm_password"
+                    placeholder="Confirm Password"
+                    label="ยืนยันรหัสผ่าน"
+                    value={form.confirm_password}
+                    onChange={onChangeForm}
+                />
+                <Button type="submit" text="สมัคร" className="mt-[1rem] " isLoading={isLoading} />
+                <p className="text-textsecondary text-[1.2rem] ">หากมีบัญชีแล้ว  <Link href="/login" className="text-makro">เข้าสู่ระบบ</Link></p>
+            </form>
 
-                {error && <div style={{ color: "red" }}>{error}</div>}
+            {error && <div style={{ color: "red" }}>{error}</div>}
 
 
         </div>
