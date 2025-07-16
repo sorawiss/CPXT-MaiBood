@@ -1,3 +1,4 @@
+"use client"    
 import Image from "next/image"
 import Link from "next/link";
 import {
@@ -6,9 +7,31 @@ import {
     DialogContent,
     DialogTrigger,
 } from "@/components/ui/dialog"
+import { useTransition } from "react";
+import Button from "./Button";
+import { acceptNotification, declineNotification } from "@/app/(app)/notification/action";
 
 
 function NotificationObject({ notification }: { notification: any }) {
+    const [isPending, startTransition] = useTransition();
+    const [isGone, setIsGone] = useTransition();
+
+    const handleAccept = () => {
+        startTransition(async () => {
+            await acceptNotification(notification.id);
+        });
+    };
+
+    const handleDecline = () => {
+        startTransition(async () => {
+            await declineNotification(notification.id);
+        });
+    };
+
+    if (isGone) {
+        return null;
+    }
+
     return (
         <Dialog>
             <DialogTrigger asChild>
@@ -38,11 +61,27 @@ function NotificationObject({ notification }: { notification: any }) {
                     </div>
                 </div>
 
-
-
-
-
-
+                <div className="ButtonMenu flex flex-col gap-[1rem] mt-[1.5rem] ">
+                    <DialogClose asChild>
+                        <Button
+                            type="button"
+                            text="ตอบรับ"
+                            className="!w-[12rem] !h-[3rem] bg-textprimary text-background"
+                            onClick={handleAccept}
+                            isLoading={isPending}
+                            disabled={notification.isAccepted}
+                        />
+                    </DialogClose>
+                    <DialogClose asChild>
+                        <Button
+                            type="button"
+                            text="ปฏิเสธ"
+                            className="!w-[12rem] !h-[3rem] bg-transparent border border-makro !text-makro"
+                            onClick={handleDecline}
+                            isLoading={isPending}
+                        />
+                    </DialogClose>
+                </div>
             </DialogContent>
         </Dialog>
 
