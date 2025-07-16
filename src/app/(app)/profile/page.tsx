@@ -1,6 +1,6 @@
 import Contact from "@/components/Contact"
 import TitleHeader from "@/components/TitleHeader"
-import { getUserData } from "@/utils/user"
+import { getCurrentUser } from "@/utils/user"
 import { countFreeItems, countSoldItems } from "@/utils/DALs"
 import ProfileStat from "@/components/ProfileStat"
 import Button from "@/components/Button"
@@ -9,7 +9,7 @@ import { deleteSession } from "@/utils/session"
 
 
 async function Profile() {
-    const user = await getUserData()
+    const user = await getCurrentUser()
     if (!user) {
         return <div>User not found</div>
     }
