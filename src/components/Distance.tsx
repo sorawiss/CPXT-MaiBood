@@ -13,14 +13,14 @@ function Distance({ userLocation, ownerLocation }: DistanceProps) {
 
   const distance = getDistance(userLocation, ownerLocation);
   const distanceKm = (distance / 1000)
-  const displayDistance = distanceKm < 0.5 ? "อยู่ใกล้มาก ๆ" : distanceKm.toFixed(2) + " กม.";
+  const displayDistance = distanceKm < 0.5 ? "อยู่ใลก้มาก ๆ ไม่เกิน 500 เมตร" : "อยู่ห่างจากคุณ" + distanceKm.toFixed(2) + " กม.";
 
 
 
   return (
     <div className="flex items-center gap-1">
       <MapPin className='text-makro ' />
-      <p className="p3 text-textprimary">อยู่ห่างจากคุณ {displayDistance}</p>
+      <p className="p3 text-textprimary"> {displayDistance}</p>
     </div>
   );
 }

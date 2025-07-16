@@ -1,9 +1,10 @@
 import Distance from "@/components/Distance";
 import TitleHeader from "@/components/TitleHeader";
 import { getPost } from "@/utils/DALs";
-import { getUserData } from "@/utils/user";
 import { Ellipsis, Croissant, LeafyGreen, Ham } from "lucide-react";
 import Image from "next/image";
+import PostDistance from "@/components/PostDistance";
+import { Suspense } from "react";
 
 // Add revalidation for page-level caching
 export const revalidate = 300; // Revalidate every 5 minutes
@@ -20,7 +21,7 @@ export default async function Post({ params }: { params: Promise<{ foodId: strin
 
   console.log(`Starting data fetch for post ${foodId}`);
 
-  const [post, user] = await Promise.all([getPost(foodId), getUserData()]);
+  const post = await getPost(foodId);
 
   if (!post) {
     return <div>Post not found</div>;
@@ -30,12 +31,6 @@ export default async function Post({ params }: { params: Promise<{ foodId: strin
   const postLocation =
     post.user.latitude != null && post.user.longitude != null
       ? { latitude: post.user.latitude, longitude: post.user.longitude }
-      : null;
-
-  // User Location
-  const userLocation =
-    user?.latitude != null && user?.longitude != null
-      ? { latitude: user.latitude, longitude: user.longitude }
       : null;
 
   // Date Info
@@ -91,14 +86,11 @@ export default async function Post({ params }: { params: Promise<{ foodId: strin
           </div>
 
           {/* Contact */}
-          {/* <div className="Contact flex flex-col gap-2 ">
-            {userLocation && postLocation ? (
-              <Distance userLocation={userLocation} ownerLocation={postLocation} />
-            ) : (
-              <div>ไม่พบข้อมูลตำแหน่ง</div>
-            )}
-
-          </div> */}
+          <div className="Contact flex flex-col gap-2 ">
+            <Suspense fallback={<div className="p3 text-textsecondary">กำลังคำนวณระยะทาง...</div>}>
+              <PostDistance postLocation={postLocation} />
+            </Suspense>
+          </div>
 
         </div>
 
