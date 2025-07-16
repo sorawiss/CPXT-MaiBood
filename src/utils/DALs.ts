@@ -62,7 +62,7 @@ export const getFridgeItems = unstable_cache(
     ['fridge-items'],
     {
         tags: ['fridge-items'],
-        revalidate: 60 // Cache for 1 minute
+        revalidate: 300 
     }
 )
 

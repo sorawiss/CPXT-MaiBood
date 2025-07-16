@@ -1,6 +1,5 @@
 import { verifySession } from "@/utils/session"
-import { getFridgeItems, getUser, countFridgeItems } from "@/utils/DALs"
-import { unstable_cache } from "next/cache"
+import { getFridgeItems, countFridgeItems, getUser } from "@/utils/DALs"
 
 
 export async function getFridgeItemsData() {
@@ -9,22 +8,10 @@ export async function getFridgeItemsData() {
         return { items: [], count: 0 }
     }
 
-    const cachedGetFridgeItems = unstable_cache(
-        async (userId: string) => getFridgeItems(userId),
-        ['fridge-items'],
-        { tags: ['fridge-items'] }
-    )
-
-    const cachedCountFridgeItems = unstable_cache(
-        async (userId: string) => countFridgeItems(userId),
-        ['fridge-count'],
-        { tags: ['fridge-items'] }
-    )
-
     try {
         const [items, count] = await Promise.all([
-            cachedGetFridgeItems(session.userId as string),
-            cachedCountFridgeItems(session.userId as string)
+            getFridgeItems(session.userId as string),
+            countFridgeItems(session.userId as string)
         ])
         return { items, count }
     } catch (error) {
