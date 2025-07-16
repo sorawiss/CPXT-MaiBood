@@ -58,7 +58,9 @@ export default function FoodPageContent({ post, foodId, currentUser }: { post: a
                             rounded-2xl w-full h-full" />
                     </div>
                     <Link href={`/profile/${post.user.id}`} className="ProfileWrapper flex items-center gap-2 mt-[1rem]">
-                        <div className="ProfileImage w-10 h-10 bg-backgroundsecondary rounded-full"></div>
+                        <div className="ProfileImage w-10 h-10 bg-backgroundsecondary rounded-full">
+                            <Image src={post.user.profile_picture ?? "/default-profile.jpg"} alt={post.user.name} width={45} height={45} className="object-cover rounded-full w-full h-full" />
+                        </div>
                         <h3 className="h3 text-textprimary">{post.user.name}</h3>
                     </Link>
                 </div>
