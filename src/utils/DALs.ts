@@ -1,19 +1,9 @@
 import { prismaDB } from "@/lib/prisma-client"
 import { unstable_cache } from "next/cache"
+import { StatusType } from "@prisma/client";
 
 
-export enum StatusType {
-    fresh = "fresh",
-    selling = "selling",
-    sold = "sold",
-    expired = "expired",
-    eat = "eat",
-    free = "free"
-}
-
-
-
-
+export { StatusType };
 // User DALs
 //--------------------------------
 // Get user name
