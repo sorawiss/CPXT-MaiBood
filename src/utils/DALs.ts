@@ -157,7 +157,8 @@ export async function createSellingItem({
   userId, 
   category, 
   price, 
-  description 
+  description,
+  image
 }: { 
   name: string, 
   amount: number, 
@@ -165,7 +166,8 @@ export async function createSellingItem({
   userId: string, 
   category: string, 
   price: number, 
-  description: string 
+  description: string,
+  image?: string
 }) {
     return await prismaDB.fridge.create({
         data: {
@@ -176,13 +178,14 @@ export async function createSellingItem({
             category: category,
             price: price,
             description: description,
-            status: StatusType.selling
+            status: StatusType.selling,
+            image: image
         }
     });
 }
 
 // Update existing item
-export async function shareFridge({ id, price, name, description, category, exp_date }: { id: string, price: number, name: string, description: string, category: string, exp_date: string }) {
+export async function shareFridge({ id, price, name, description, category, exp_date, image }: { id: string, price: number, name: string, description: string, category: string, exp_date: string, image?: string }) {
     await prismaDB.fridge.update({
         where: {
             id: id
@@ -193,7 +196,8 @@ export async function shareFridge({ id, price, name, description, category, exp_
             name: name,
             description: description,
             category: category,
-            exp_date: new Date(exp_date)
+            exp_date: new Date(exp_date),
+            image: image
         }
     })
 }
