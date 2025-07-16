@@ -11,12 +11,13 @@ interface ContactProps {
     line?: string,
     phone?: string,
     facebook?: string,
+    align?: "center" | "start"
 }
 
-function Contact({ ig, line, phone, facebook }: ContactProps) {
+function Contact({ ig, line, phone, facebook, align = "center" }: ContactProps) {
     return (
         <div>
-            <div className="ContactItem flex flex-col items-center justify-center gap-[1rem] ">
+            <div className={`ContactItem flex flex-col items-center justify-center gap-1 ${align === "start" ? "items-start" : "items-center"}`}>
                 {phone && (
                     <div className="ContactWrapper flex items-center justify-center gap-1 ">
                         <Phone className="size-4 text-textprimary " />

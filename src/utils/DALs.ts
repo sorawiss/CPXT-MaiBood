@@ -301,7 +301,12 @@ export const getPost = unstable_cache(
                     select: {
                         name: true,
                         latitude: true,
-                        longitude: true
+                        longitude: true,
+                        facebook: true,
+                        line: true,
+                        instagram: true,
+                        phone_number: true,
+                        
                     }
                 }
             }
