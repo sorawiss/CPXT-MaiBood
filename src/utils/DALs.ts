@@ -209,6 +209,14 @@ export const getSellingFridgeItems = unstable_cache(
             where: {
                 status: StatusType.selling
             },
+            select: {
+                id: true,
+                name: true,
+                price: true,
+                category: true,
+                exp_date: true,
+                image: true
+            },
             orderBy: { exp_date: "asc" }
         });
     },
@@ -278,6 +286,7 @@ export const getPost = unstable_cache(
                 created_at: true,
                 exp_date: true,
                 updated_at: true,
+                image: true,
                 user: {
                     select: {
                         name: true,
