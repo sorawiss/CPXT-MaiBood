@@ -3,6 +3,7 @@ import { useState } from "react"
 import { handleLogin } from "./action"
 import Input from "@/components/Input"
 import Button from "@/components/Button"
+import Link from "next/link"
 
 
 function Login() {
@@ -65,6 +66,7 @@ function Login() {
           label="รหัสผ่าน"
         />
         <Button type="submit" text="เข้าสู่ระบบ" className="mt-[1rem]" isLoading={isLoading} />
+        <p className="text-textsecondary text-[1.2rem] ">หากยังไม่มีบัญชี  <Link href="/register" className="text-makro">สมัครสมาชิก</Link></p>
       </form>
     </div>
   )

@@ -3,6 +3,7 @@ import { useState } from "react"
 import { handleRegister } from "./action"
 import Input from "@/components/Input"
 import Button from "@/components/Button"
+import Link from "next/link"
 
 
 export default function Register() {
@@ -94,6 +95,7 @@ export default function Register() {
                         onChange={onChangeForm}
                     />
                     <Button type="submit" text="สมัคร" className="mt-[1rem] " isLoading={isLoading} />
+                    <p className="text-textsecondary text-[1.2rem] ">หากมีบัญชีแล้ว  <Link href="/login" className="text-makro">เข้าสู่ระบบ</Link></p>
                 </form>
 
                 {error && <div style={{ color: "red" }}>{error}</div>}
