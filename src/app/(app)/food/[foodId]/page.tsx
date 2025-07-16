@@ -54,7 +54,7 @@ export default async function Post({ params }: { params: Promise<{ foodId: strin
       <div className="PostContainer">
         <div className="ProfileAndPic">
           <div className="PostImage w-full h-[30rem] bg-backgroundsecondary rounded-2xl mt-2">
-            <Image src={post.image ?? ""} alt={post.name} width={1000} height={1000} className="object-cover 
+            <Image src={post.image ?? ""} alt={post.name} width={924} height={689} className="object-cover 
                             rounded-2xl w-full h-full" />
           </div>
           <div className="ProfileWrapper flex items-center gap-2 mt-[1rem]">
