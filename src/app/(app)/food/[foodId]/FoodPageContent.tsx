@@ -10,7 +10,7 @@ import { Suspense } from "react";
 import { sendNotification } from "./action";
 import Link from "next/link";
 
-export default function FoodPageContent({ post, foodId, currentUser }: { post: any, foodId: string, currentUser: any }) {
+export default function FoodPageContent({ post, foodId, currentUser, hasSentRequest }: { post: any, foodId: string, currentUser: any, hasSentRequest: boolean }) {
     const categoryIcon = {
         "1": <Ham />,
         "2": <Croissant />,
@@ -104,7 +104,13 @@ export default function FoodPageContent({ post, foodId, currentUser }: { post: a
 
                     {/* Button */}
                     {!isCurrentUser && (
-                        <Button type="button" text="รับอาหาร" className="mb-[1rem]" onClick={handleSendNotification} />
+                        <Button
+                            type="button"
+                            text={hasSentRequest ? "ส่งคำขอแล้ว" : "รับอาหาร"}
+                            className="mb-[1rem]"
+                            onClick={handleSendNotification}
+                            disabled={hasSentRequest}
+                        />
                     )}
 
 

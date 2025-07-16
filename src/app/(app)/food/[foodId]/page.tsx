@@ -9,15 +9,13 @@ export default async function Post({ params }: { params: Promise<{ foodId: strin
   const resolvedParams = await params; 
   const foodId = resolvedParams.foodId; 
   
-  const [post, currentUser] = await Promise.all([
-    getPost(foodId),
-    getCurrentUser()
-  ]);
+  const currentUser = await getCurrentUser();
+  const post = await getPost(foodId, currentUser?.id);
 
   if (!post) {
     return <div>Post not found</div>;
   }
 
-  return <FoodPageContent post={post} foodId={foodId} currentUser={currentUser} />;
+  return <FoodPageContent post={post} foodId={foodId} currentUser={currentUser} hasSentRequest={post.hasSentRequest} />;
   
 }

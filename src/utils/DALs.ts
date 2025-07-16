@@ -290,9 +290,9 @@ export const countFreeItems = unstable_cache(
 // Post DALs
 //--------------------------------
 export const getPost = unstable_cache(
-    async (id: string) => {
+    async (id: string, userId?: string) => {
         console.log(`(Re)validating post ${id}`)
-        return prismaDB.fridge.findUnique({
+        const post = await prismaDB.fridge.findUnique({
             where: {
                 id: id
             },
@@ -321,6 +321,19 @@ export const getPost = unstable_cache(
                 }
             }
         })
+
+        if (!post || !userId) {
+            return { ...post, hasSentRequest: false };
+        }
+
+        const notification = await prismaDB.notification.findFirst({
+            where: {
+                senderId: userId,
+                fridge_id: id,
+            },
+        });
+
+        return { ...post, hasSentRequest: !!notification };
     },
     ['post'],
     {
@@ -345,6 +358,8 @@ export const createNotification = async (recipientId: string, senderId: string, 
     }
 };
 
+// Notification DALs
+//--------------------------------
 export const getNotifications = unstable_cache(
     async (userId: string) => {
         console.log(`(Re)validating notifications for ${userId}`);
