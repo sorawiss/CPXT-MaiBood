@@ -1,14 +1,22 @@
 "use client"
+import { useState } from "react"
 import { handleLogin } from "./action"
 import Input from "@/components/Input"
 import Button from "@/components/Button"
 
 
 function Login() {
+  const [isLoading, setIsLoading] = useState(false)
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    const result = await handleLogin(new FormData(e.target as HTMLFormElement))
-    console.log("login", result)
+    setIsLoading(true)
+    try {
+      const result = await handleLogin(new FormData(e.target as HTMLFormElement))
+      console.log("login", result)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
 
@@ -56,7 +64,7 @@ function Login() {
           placeholder="Password"
           label="รหัสผ่าน"
         />
-        <Button type="submit" text="เข้าสู่ระบบ" className="mt-[1rem] " />
+        <Button type="submit" text="เข้าสู่ระบบ" className="mt-[1rem]" isLoading={isLoading} />
       </form>
     </div>
   )
