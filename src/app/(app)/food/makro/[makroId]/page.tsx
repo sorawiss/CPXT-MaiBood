@@ -9,8 +9,9 @@ export function generateStaticParams() {
     }));
 }
 
-export default async function Post({ params }: { params: { makroId: string } }) {
-    const makroId = params.makroId;
+export default async function Post({ params }: { params: Promise<{ makroId: string }> }) {
+    const resolvedParams = await params;
+    const makroId = resolvedParams.makroId;
     const categoryIcon = {
         "1": <Ham />,
         "2": <Croissant />,

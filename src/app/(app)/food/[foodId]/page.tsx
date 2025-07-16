@@ -88,7 +88,7 @@ export default async function Post({ params }: { params: Promise<{ foodId: strin
           </div>
 
           {/* Contact */}
-          <div className="Contact flex flex-col gap-[1rem] ">
+          <div className="Contact flex flex-col gap-1 ">
             <Suspense fallback={<div className="p3 text-textsecondary">กำลังคำนวณระยะทาง...</div>}>
               <PostDistance postLocation={postLocation} />
             </Suspense>
