@@ -3,7 +3,7 @@ import TitleHeader from "@/components/TitleHeader";
 import { handleShare } from "./action";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import Category from "@/components/Category";
 import { useSearchParams } from "next/navigation";
 import { uploadFileToSupabase } from "@/utils/file-upload";
@@ -12,6 +12,7 @@ import { compressImage } from "@/utils/image-compression";
 import Image from "next/image";
 
 export default function Share() {
+  const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
   const isExistingItem = searchParams.get("id") && searchParams.get("id")?.trim() !== "";
   
@@ -58,13 +59,19 @@ export default function Share() {
     }
   };
 
+  const shareAction = (formData: FormData) => {
+    startTransition(async () => {
+      await handleShare(formData);
+    });
+  };
+
   return (
     // Title Header
     <div className="min-h-[calc(100vh-10rem)] flex flex-col justify-center items-center w-full ">
       <TitleHeader title="แบ่งปัน ❤︎" />
 
       {/* Form */}
-      <form action={handleShare} className="my-auto w-full flex flex-col gap-[1rem] ">
+      <form action={shareAction} className="my-auto w-full flex flex-col gap-[1rem] ">
         <div className="flex flex-col items-center justify-center w-full mb-4">
             <label htmlFor="file-upload" className="w-full h-48 border-2 border-dashed rounded-lg cursor-pointer flex items-center justify-center">
                 {imageUrl ? (
@@ -131,7 +138,7 @@ export default function Share() {
           </div>
         )}
 
-        <Button type="submit" text="แบ่งปัน ❤︎" className="mt-[3rem] " />
+        <Button type="submit" text="แบ่งปัน ❤︎" className="mt-[3rem] " isLoading={isPending} />
         <p className="p2 text-textsecondary text-center " >
           {isExistingItem 
             ? "🎁 แจกจ่ายอาหารจากตู้เย็นให้กับคนในชุมชน" 
