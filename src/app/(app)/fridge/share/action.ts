@@ -1,6 +1,6 @@
 "use server";
 import { verifySession } from "@/utils/session";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { shareFridge, createSellingItem } from "@/utils/DALs";
 import { redirect } from "next/navigation";
 
@@ -46,6 +46,7 @@ export async function handleShare(formData: FormData) {
   revalidateTag("fridge-items");
   revalidateTag("selling-fridge-items");
   revalidateTag("post");
+  revalidatePath("/");
   redirect("/fridge");
 }
 
