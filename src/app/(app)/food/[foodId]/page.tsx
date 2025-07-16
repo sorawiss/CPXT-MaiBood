@@ -1,22 +1,21 @@
 import { getPost } from "@/utils/DALs";
 import FoodPageContent from "./FoodPageContent";
+import { getCurrentUser } from "@/utils/user";
 
 // Add revalidation for page-level caching
 export const revalidate = 300; // Revalidate every 5 minutes
 
 export default async function Post({ params }: { params: Promise<{ foodId: string }> }) {
-  const resolvedParams = await params; // Resolve the Promise
-  const foodId = resolvedParams.foodId; // Access foodId
+  const resolvedParams = await params; 
+  const foodId = resolvedParams.foodId; 
   
-
-  console.log(`Starting data fetch for post ${foodId}`);
-
   const post = await getPost(foodId);
+  const currentUser = await getCurrentUser();
 
   if (!post) {
     return <div>Post not found</div>;
   }
 
-  return <FoodPageContent post={post} foodId={foodId} />;
+  return <FoodPageContent post={post} foodId={foodId} currentUser={currentUser} />;
   
 }

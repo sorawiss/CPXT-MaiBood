@@ -9,7 +9,7 @@ import Image from "next/image";
 import { Suspense } from "react";
 import { sendNotification } from "./action";
 
-export default function FoodPageContent({ post, foodId }: { post: any, foodId: string }) {
+export default function FoodPageContent({ post, foodId, currentUser }: { post: any, foodId: string, currentUser: any }) {
     const categoryIcon = {
         "1": <Ham />,
         "2": <Croissant />,
@@ -21,6 +21,10 @@ export default function FoodPageContent({ post, foodId }: { post: any, foodId: s
         return <div>Post not found</div>;
     }
 
+    const isCurrentUser = currentUser?.id == post.user.id;
+
+
+    // Send Notification
     const handleSendNotification = async () => {
         try {
             await sendNotification(post.user.id, foodId);
@@ -96,7 +100,10 @@ export default function FoodPageContent({ post, foodId }: { post: any, foodId: s
                     </div>
 
                     {/* Button */}
-                    <Button type="button" text="รับอาหาร" className="mb-[1rem]" onClick={handleSendNotification} />
+                    {!isCurrentUser && (
+                        <Button type="button" text="รับอาหาร" className="mb-[1rem]" onClick={handleSendNotification} />
+                    )}
+
 
                 </div>
 
