@@ -1,6 +1,6 @@
 "use server"
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { createNotification } from "@/utils/DALs";
 import { getCurrentUser } from "@/utils/user";
 
@@ -17,6 +17,7 @@ export const sendNotification = async (postOwnerId: string, foodId: string) => {
     try {
         await createNotification(postOwnerId, currentUser.id, foodId);
         revalidatePath("/notification");
+        revalidateTag('post');
         return {
             success: "Notification sent successfully",
         };
