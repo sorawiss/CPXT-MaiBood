@@ -108,7 +108,7 @@ export async function getSession() {
     const sessionToken = cookieStore.get(cookie.name)?.value
 
     if (!sessionToken) {
-        return null;
+        redirect("/login")
     }
     return await cachedVerifySession(sessionToken);
 }
