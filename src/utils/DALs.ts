@@ -1,19 +1,9 @@
 import { prismaDB } from "@/lib/prisma-client"
 import { unstable_cache } from "next/cache"
+import { StatusType } from "@prisma/client";
 
 
-export enum StatusType {
-    fresh = "fresh",
-    selling = "selling",
-    sold = "sold",
-    expired = "expired",
-    eat = "eat",
-    free = "free"
-}
-
-
-
-
+export { StatusType };
 // User DALs
 //--------------------------------
 // Get user name
@@ -318,6 +308,7 @@ export const getPost = unstable_cache(
                 image: true,
                 user: {
                     select: {
+                        id: true,
                         name: true,
                         latitude: true,
                         longitude: true,
@@ -337,3 +328,51 @@ export const getPost = unstable_cache(
         revalidate: 300 // Cache for 5 minutes
     }
 )
+
+export const createNotification = async (recipientId: string, senderId: string, fridgeId: string) => {
+  try {
+    const notification = await prismaDB.notification.create({
+      data: {
+        recipientId,
+        senderId,
+        fridge_id: fridgeId,
+      },
+    });
+    return notification;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to create notification");
+  }
+};
+
+export const getNotifications = unstable_cache(
+  async (userId: string) => {
+    console.log(`(Re)validating notifications for ${userId}`);
+    return prismaDB.notification.findMany({
+      where: {
+        recipientId: userId,
+      },
+      include: {
+        sender: {
+          select: {
+            name: true,
+            profile_picture: true,
+          },
+        },
+        fridge: {
+          select: {
+            name: true,
+          },
+        },
+      },
+      orderBy: {
+        created_at: "desc",
+      },
+    });
+  },
+  ["notifications"],
+  {
+    tags: ["notifications"],
+    revalidate: 60, // Cache for 1 minute
+  }
+);
