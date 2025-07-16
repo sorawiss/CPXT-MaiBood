@@ -59,7 +59,7 @@ model Fridge {
   image String? @db.VarChar(255)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  user User @relation(fields: [user_id], references: [id])
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
   notification Notification[]
 
   @@index([user_id])
@@ -76,9 +76,9 @@ model Notification {
   fridge_id String
   isRead Boolean @default(false)
   created_at DateTime @default(now())
-  recipient User @relation("received_notifications", fields: [recipientId], references: [id])
-  sender User @relation("sent_notifications", fields: [senderId], references: [id])
-  fridge Fridge @relation(fields: [fridge_id], references: [id])
+  recipient User @relation("received_notifications", fields: [recipientId], references: [id], onDelete: Cascade)
+  sender User @relation("sent_notifications", fields: [senderId], references: [id], onDelete: Cascade)
+  fridge Fridge @relation(fields: [fridge_id], references: [id], onDelete: Cascade)
 
   @@index([recipientId])
   @@index([senderId])

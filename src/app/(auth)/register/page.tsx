@@ -3,11 +3,13 @@ import { useState } from "react"
 import { handleRegister } from "./action"
 import Input from "@/components/Input"
 import Button from "@/components/Button"
+import Link from "next/link"
 
 
 export default function Register() {
     const [form, setForm] = useState({ name: "", phone_number: "", password: "", confirm_password: "" })
     const [error, setError] = useState<string | null>(null)
+    const [isLoading, setIsLoading] = useState(false)
 
     const onChangeForm = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({ ...form, [e.target.name]: e.target.value })
@@ -16,6 +18,7 @@ export default function Register() {
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setError(null)
+        setIsLoading(true)
         const result = await handleRegister(new FormData(e.target as HTMLFormElement))
 
         if (result?.error) {
@@ -23,6 +26,7 @@ export default function Register() {
         } else {
             setForm({ name: "", phone_number: "", password: "", confirm_password: "" })
         }
+        setIsLoading(false)
     }
 
 
@@ -90,7 +94,8 @@ export default function Register() {
                         value={form.confirm_password}
                         onChange={onChangeForm}
                     />
-                    <Button type="submit" text="สมัคร" className="mt-[1rem] " />
+                    <Button type="submit" text="สมัคร" className="mt-[1rem] " isLoading={isLoading} />
+                    <p className="text-textsecondary text-[1.2rem] ">หากมีบัญชีแล้ว  <Link href="/login" className="text-makro">เข้าสู่ระบบ</Link></p>
                 </form>
 
                 {error && <div style={{ color: "red" }}>{error}</div>}
