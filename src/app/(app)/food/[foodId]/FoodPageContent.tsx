@@ -6,11 +6,15 @@ import PostDistance from "@/components/PostDistance";
 import TitleHeader from "@/components/TitleHeader";
 import { Croissant, Ellipsis, Ham, LeafyGreen } from "lucide-react";
 import Image from "next/image";
-import { Suspense } from "react";
+  import { Suspense, useTransition } from "react";
 import { sendNotification } from "./action";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function FoodPageContent({ post, foodId, currentUser, hasSentRequest }: { post: any, foodId: string, currentUser: any, hasSentRequest: boolean }) {
+    const [isPending, startTransition] = useTransition();
+    const router = useRouter();
+
     const categoryIcon = {
         "1": <Ham />,
         "2": <Croissant />,
@@ -27,12 +31,14 @@ export default function FoodPageContent({ post, foodId, currentUser, hasSentRequ
 
     // Send Notification
     const handleSendNotification = async () => {
-        try {
-            await sendNotification(post.user.id, foodId);
-            alert("Notification sent successfully");
-        } catch (error) {
-            alert("Failed to send notification. Please try again later.");
-        }
+        startTransition(async () => {
+            try {
+                await sendNotification(post.user.id, foodId);
+                router.refresh();
+            } catch (error) {
+                alert("Failed to send notification. Please try again later.");
+            }
+        });
     };
 
     // Post Location
@@ -109,7 +115,8 @@ export default function FoodPageContent({ post, foodId, currentUser, hasSentRequ
                             text={hasSentRequest ? "ส่งคำขอแล้ว" : "รับอาหาร"}
                             className="mb-[1rem]"
                             onClick={handleSendNotification}
-                            disabled={hasSentRequest}
+                            disabled={hasSentRequest || isPending}
+                            isLoading={isPending}
                         />
                     )}
 
