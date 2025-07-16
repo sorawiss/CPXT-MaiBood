@@ -3,6 +3,8 @@ import TitleHeader from "@/components/TitleHeader"
 import { getUserData } from "@/utils/user"
 import { countFreeItems, countSoldItems } from "@/utils/DALs"
 import ProfileStat from "@/components/ProfileStat"
+import Button from "@/components/Button"
+import { deleteSession } from "@/utils/session"
 
 
 
@@ -38,6 +40,9 @@ async function Profile() {
                 <ProfileStat title="🤝 ขายอาหาร" amount={soldItems} />
                 <ProfileStat title="❤ แจกฟรี" amount={freeItems} />
             </div>
+
+
+            <Button type="button" text="ออกจากระบบ" className="w-full" onClick={deleteSession} />
 
 
         </div>
