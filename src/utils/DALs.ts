@@ -75,6 +75,16 @@ export const getFridgeItems = unstable_cache(
     }
 )
 
+
+// Get fridge item image for delete
+export async function getFridgeItem(id: string) {
+    return prismaDB.fridge.findUnique({
+        where: { id },
+        select: { image: true },
+    });
+}
+
+
 // Count fridge items
 export const countFridgeItems = unstable_cache(
     async (userId: string) => {
@@ -157,7 +167,8 @@ export async function createSellingItem({
   userId, 
   category, 
   price, 
-  description 
+  description,
+  image
 }: { 
   name: string, 
   amount: number, 
@@ -165,7 +176,8 @@ export async function createSellingItem({
   userId: string, 
   category: string, 
   price: number, 
-  description: string 
+  description: string,
+  image?: string
 }) {
     return await prismaDB.fridge.create({
         data: {
@@ -176,13 +188,14 @@ export async function createSellingItem({
             category: category,
             price: price,
             description: description,
-            status: StatusType.selling
+            status: StatusType.selling,
+            image: image
         }
     });
 }
 
 // Update existing item
-export async function shareFridge({ id, price, name, description, category, exp_date }: { id: string, price: number, name: string, description: string, category: string, exp_date: string }) {
+export async function shareFridge({ id, price, name, description, category, exp_date, image }: { id: string, price: number, name: string, description: string, category: string, exp_date: string, image?: string }) {
     await prismaDB.fridge.update({
         where: {
             id: id
@@ -193,7 +206,8 @@ export async function shareFridge({ id, price, name, description, category, exp_
             name: name,
             description: description,
             category: category,
-            exp_date: new Date(exp_date)
+            exp_date: new Date(exp_date),
+            image: image
         }
     })
 }
@@ -204,6 +218,14 @@ export const getSellingFridgeItems = unstable_cache(
         return prismaDB.fridge.findMany({
             where: {
                 status: StatusType.selling
+            },
+            select: {
+                id: true,
+                name: true,
+                price: true,
+                category: true,
+                exp_date: true,
+                image: true
             },
             orderBy: { exp_date: "asc" }
         });
@@ -274,6 +296,7 @@ export const getPost = unstable_cache(
                 created_at: true,
                 exp_date: true,
                 updated_at: true,
+                image: true,
                 user: {
                     select: {
                         name: true,

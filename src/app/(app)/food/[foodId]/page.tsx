@@ -3,6 +3,7 @@ import TitleHeader from "@/components/TitleHeader";
 import { getPost } from "@/utils/DALs";
 import { getUserData } from "@/utils/user";
 import { Ellipsis, Croissant, LeafyGreen, Ham } from "lucide-react";
+import Image from "next/image";
 
 // Add revalidation for page-level caching
 export const revalidate = 300; // Revalidate every 5 minutes
@@ -18,7 +19,7 @@ export default async function Post({ params }: { params: Promise<{ foodId: strin
   };
 
   console.log(`Starting data fetch for post ${foodId}`);
-  
+
   const [post, user] = await Promise.all([getPost(foodId), getUserData()]);
 
   if (!post) {
@@ -37,6 +38,7 @@ export default async function Post({ params }: { params: Promise<{ foodId: strin
       ? { latitude: user.latitude, longitude: user.longitude }
       : null;
 
+  // Date Info
   const dateInfo = {
     created_at: new Date(post.created_at).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }),
     updated_at: new Date(post.updated_at).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }),
@@ -51,7 +53,10 @@ export default async function Post({ params }: { params: Promise<{ foodId: strin
       <TitleHeader title={post.name} />
       <div className="PostContainer">
         <div className="ProfileAndPic">
-          <div className="PostImage w-full h-[30rem] bg-backgroundsecondary rounded-2xl mt-2"></div>
+          <div className="PostImage w-full h-[30rem] bg-backgroundsecondary rounded-2xl mt-2">
+            <Image src={post.image ?? ""} alt={post.name} width={924} height={689} className="object-cover 
+                            rounded-2xl w-full h-full" />
+          </div>
           <div className="ProfileWrapper flex items-center gap-2 mt-[1rem]">
             <div className="ProfileImage w-10 h-10 bg-backgroundsecondary rounded-full"></div>
             <h3 className="h3 text-textprimary">{post.user.name}</h3>

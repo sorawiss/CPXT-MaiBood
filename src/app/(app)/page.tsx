@@ -62,6 +62,7 @@ export default async function Home() {
               price={item.price ?? 0}
               name={item.name}
               id={item.id}
+              image={item.image ?? undefined}
             />
           ))}
         </div>

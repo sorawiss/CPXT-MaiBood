@@ -1,6 +1,7 @@
 "use server"
-import { increaseAmount, decreaseAmount, deleteItem, updateStatus, StatusType } from "@/utils/DALs"
+import { increaseAmount, decreaseAmount, deleteItem, updateStatus, StatusType, getFridgeItem } from "@/utils/DALs"
 import { revalidateTag } from "next/cache"
+import { deleteFileFromSupabase } from "@/utils/file-upload";
 
 // Update item amout
 export async function handleIncreaseAmount(id: string) {
@@ -33,6 +34,10 @@ export async function handleDecreaseAmount(id: string) {
 // Delete item
 export async function handleDeleteItem(id: string) {
     try {
+        const item = await getFridgeItem(id);
+        if (item?.image) {
+            await deleteFileFromSupabase(item.image, "cpaxt-maibood-bucket");
+        }
         await deleteItem(id)
         revalidateTag("fridge-items")
         revalidateTag("selling-fridge-items")
@@ -47,6 +52,12 @@ export async function handleDeleteItem(id: string) {
 // Update status
 export async function handleUpdateStatus(id: string, status: StatusType) {
     try {
+        if (status === StatusType.eat || status === StatusType.sold) {
+            const item = await getFridgeItem(id);
+            if (item?.image) {
+                await deleteFileFromSupabase(item.image, "cpaxt-maibood-bucket");
+            }
+        }
         await updateStatus(id, status)
         revalidateTag("fridge-items")
         revalidateTag("selling-fridge-items")

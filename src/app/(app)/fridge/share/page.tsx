@@ -6,6 +6,9 @@ import Button from "@/components/Button";
 import { useState } from "react";
 import Category from "@/components/Category";
 import { useSearchParams } from "next/navigation";
+import { uploadFileToSupabase } from "@/utils/file-upload";
+import { ImagePlus } from "lucide-react";
+import Image from "next/image";
 
 export default function Share() {
   const searchParams = useSearchParams();
@@ -24,12 +27,27 @@ export default function Share() {
   const [category, setCategory] = useState<number | null>(
     prefillCategory && prefillCategory !== "" ? Number(prefillCategory) : null
   );
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
   const suggestAmount = [1, 3, 5, 10];
 
   // Hanle when click suggestion amount
   function handleSuggestAmount(amount: number) {
     setAmount(amount);
   }
+
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    const publicUrl = await uploadFileToSupabase(file, "cpaxt-maibood-bucket");
+    setUploading(false);
+
+    if (publicUrl) {
+      setImageUrl(publicUrl);
+    }
+  };
 
   return (
     // Title Header
@@ -38,6 +56,24 @@ export default function Share() {
 
       {/* Form */}
       <form action={handleShare} className="my-auto w-full flex flex-col gap-[1rem] ">
+        <div className="flex flex-col items-center justify-center w-full mb-4">
+            <label htmlFor="file-upload" className="w-full h-48 border-2 border-dashed rounded-lg cursor-pointer flex items-center justify-center">
+                {imageUrl ? (
+                    <Image src={imageUrl} alt="Uploaded" width={1000} height={1000} className="object-cover w-full h-full rounded-lg" />
+                ) : (
+                    <div className="flex flex-col items-center justify-center">
+                        <ImagePlus className="w-12 h-12 text-gray-400" />
+                        <p className="mt-2 text-sm text-gray-600">
+                            {uploading ? "กำลังอัปโหลด..." : "เพิ่มรูปภาพ"}
+                        </p>
+                    </div>
+                )}
+            </label>
+            <input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleFileChange} disabled={uploading} required
+              accept="image/*"
+            />
+            <input type="hidden" name="image_url" value={imageUrl || ""} />
+        </div>
         <Input type="text" name="item" placeholder="ตัวอย่าง: อกไก่สด" label="ชื่ออาหาร" required
           className="!bg-transparent !border-backgroundsecondary "
           value={name}

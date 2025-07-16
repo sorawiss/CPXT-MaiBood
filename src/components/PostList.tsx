@@ -24,7 +24,7 @@ function PostList({ exp_date, price, name, id, isMakro = false, image = "" }: Po
             <div className="PostContainer w-[10.5rem]  bg-white flex flex-col gap-2 ">
                 <div className="ImageWrapper relative ">
                     <div className="ImagePlaceHolder w-[10.5rem] h-[14rem] bg-backgroundsecondary rounded-2xl ">
-                        <Image src={image} alt={name} width={1000} height={1000} className="object-cover 
+                        <Image src={image} alt={name} width={378} height={504} className="object-cover 
                             rounded-2xl w-full h-full" />
                     </div>
                     <p className="ExpireDate absolute w-fit h-5 rounded-2xl p-2 top-2 left-2

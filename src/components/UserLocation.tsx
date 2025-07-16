@@ -26,9 +26,26 @@ function UserLocation() {
     async function fetchReverseGeocoding() {
         if (location) {
             try {
+                const cacheKey = `geocoding-${location.latitude.toFixed(4)}-${location.longitude.toFixed(4)}`;
+                const cachedData = localStorage.getItem(cacheKey);
+
+                if (cachedData) {
+                    const { address: cachedAddress, timestamp } = JSON.parse(cachedData);
+                    const isCacheValid = (new Date().getTime() - timestamp) < (24 * 60 * 60 * 1000); // 24 hours
+
+                    if (isCacheValid) {
+                        setAddress(cachedAddress);
+                        setLoading(false);
+                        return;
+                    }
+                }
+
                 const data = await reverseGeocoding(location.latitude, location.longitude);
                 console.log('Reverse geocoding:', data);
                 setAddress(data.address);
+
+                localStorage.setItem(cacheKey, JSON.stringify({ address: data.address, timestamp: new Date().getTime() }));
+
                 // If user has no postcode, update it
                 if (!userPostCode && data.address?.postcode) {
                     await updateUserLocation(location.latitude, location.longitude, data.address.postcode);
@@ -54,7 +71,6 @@ function UserLocation() {
                         longitude: cachedLocation.location.longitude,
                         accuracy: 0
                     });
-                    console.log('Using cached location:', cachedLocation.location);
                     return;
                 }
 

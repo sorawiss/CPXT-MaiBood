@@ -17,6 +17,7 @@ export async function handleShare(formData: FormData) {
   const category = formData.get("category") as string || "";
   const exp_date = formData.get("expiry_date") as string;
   const amount = Number(formData.get("amount")) || 1;
+  const image_url = formData.get("image_url") as string;
 
 
   if (id && id.trim() !== "") {
@@ -27,6 +28,7 @@ export async function handleShare(formData: FormData) {
       description,
       category,
       exp_date,
+      image: image_url,
     });
   } else {
     await createSellingItem({
@@ -37,6 +39,7 @@ export async function handleShare(formData: FormData) {
       category,
       price,
       description,
+      image: image_url,
     });
   }
 
