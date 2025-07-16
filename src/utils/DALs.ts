@@ -7,7 +7,8 @@ export enum StatusType {
     selling = "selling",
     sold = "sold",
     expired = "expired",
-    eat = "eat"
+    eat = "eat",
+    free = "free"
 }
 
 
@@ -271,7 +272,25 @@ export const countSoldItems = unstable_cache(
     ['sold-items-count'],
     {
         tags: ['sold-items-count'],
-        revalidate: 60
+        revalidate: 300
+    }
+)
+
+
+// Count free items
+export const countFreeItems = unstable_cache(
+    async (userId: string) => {
+        return prismaDB.fridge.count({
+            where: {
+                user_id: userId,
+                status: StatusType.free
+            }
+        })
+    },
+    ['free-items-count'],
+    {
+        tags: ['free-items-count'],
+        revalidate: 300
     }
 )
 
