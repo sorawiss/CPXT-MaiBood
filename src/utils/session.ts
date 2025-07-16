@@ -83,6 +83,7 @@ const cachedVerifySession = unstable_cache(
 // Verify the session
 //--------------------------------
 export async function verifySession() {
+    console.log('Verifying session')
     const cookieStore = await cookies()
     const session = cookieStore.get(cookie.name)?.value
 

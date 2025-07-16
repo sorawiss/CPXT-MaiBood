@@ -62,19 +62,37 @@ function UserLocation() {
     useEffect(() => {
         const initializeLocation = async () => {
             try {
-                const cachedLocation = await getUserLocation();
-                console.log('Cached location:', cachedLocation);
+                // 1. Check localStorage first
+                const localLocationData = localStorage.getItem('userLocation');
+                if (localLocationData) {
+                    const { location: storedLocation, timestamp } = JSON.parse(localLocationData);
+                    // Use cache if it's less than 1 hour old
+                    const isCacheValid = (new Date().getTime() - timestamp) < (60 * 60 * 1000); 
 
-                if (cachedLocation.success && cachedLocation.location) {
-                    setLocation({
-                        latitude: cachedLocation.location.latitude,
-                        longitude: cachedLocation.location.longitude,
+                    if (isCacheValid) {
+                        console.log('Using localStorage location:', storedLocation);
+                        setLocation(storedLocation);
+                        return; // Exit if we have a valid cached location
+                    }
+                }
+
+                // 2. Check Database (server-side cache) if localStorage is empty or stale
+                const dbLocation = await getUserLocation();
+                console.log('Cached location from DB:', dbLocation);
+
+                if (dbLocation.success && dbLocation.location) {
+                    const newLocation = {
+                        latitude: dbLocation.location.latitude,
+                        longitude: dbLocation.location.longitude,
                         accuracy: 0
-                    });
+                    };
+                    setLocation(newLocation);
+                    // Save to localStorage for next time
+                    localStorage.setItem('userLocation', JSON.stringify({ location: newLocation, timestamp: new Date().getTime() }));
                     return;
                 }
 
-                // If no cached location, get from browser
+                // 3. If no cached location, get from browser
                 if (!navigator.geolocation) {
                     setError({ code: 404, message: 'Geolocation is not supported by your browser.' });
                     setLoading(false);
@@ -91,6 +109,9 @@ function UserLocation() {
                     setLocation(newLocation);
                     setError(null);
                     console.log('New location:', newLocation);
+
+                    // Save to localStorage
+                    localStorage.setItem('userLocation', JSON.stringify({ location: newLocation, timestamp: new Date().getTime() }));
 
                     // Save to database
                     setIsUpdatingLocation(true);
@@ -167,6 +188,8 @@ function UserLocation() {
             return;
         }
 
+        // When manually refreshing, clear the localStorage cache first
+        localStorage.removeItem('userLocation'); 
         setIsUpdatingLocation(true);
         setLoading(true); // Show loading when refreshing
         setAddress(null); // Clear previous address
