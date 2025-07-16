@@ -31,7 +31,7 @@ function PostList({ exp_date, price, name, id, isMakro = false, image = "" }: Po
                                 bg-background flex items-center justify-center" >{formattedDate}
                     </p>
                     <p className="Price absolute w-fit h-5 rounded-2xl p-2 bottom-2 right-2
-                                bg-background flex items-center justify-center" >{price}
+                                bg-background flex items-center justify-center" >{price > 0 ? price + " บาท" : "ฟรี"}
                     </p>
 
 
