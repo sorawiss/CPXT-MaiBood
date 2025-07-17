@@ -4,7 +4,6 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { shareFridge, createSellingItem } from "@/utils/DALs";
 import { redirect } from "next/navigation";
 import { deleteFileFromSupabase, uploadFileToSupabase } from "@/utils/file-upload";
-import { compressImage } from "@/utils/image-compression";
 
 export async function handleShare(formData: FormData) {
   let imageUrl = "";
@@ -41,12 +40,11 @@ export async function handleShare(formData: FormData) {
     }
     
     if (imageFile && imageFile.size > 0) {
-        const compressedImage = await compressImage(imageFile);
-        const uploadedUrl = await uploadFileToSupabase(compressedImage, "cpaxt-maibood-bucket");
+        const uploadedUrl = await uploadFileToSupabase(imageFile, "cpaxt-maibood-bucket");
         if (uploadedUrl) {
             imageUrl = uploadedUrl;
         } else {
-            return { error: "การอัปโหลดรูปภาพล้มเหลว กรุณาลองใหม่อีกครั้ง " };
+            return { error: "การอัปโหลดรูปภาพล้มเหลว กรุณาลองใหม่อีกครั้ง" };
         }
     }
 

@@ -8,6 +8,7 @@ import Category from "@/components/Category";
 import { useSearchParams, useRouter } from "next/navigation";
 import { ImagePlus } from "lucide-react";
 import Image from "next/image";
+import { compressImage } from "@/utils/image-compression";
 
 export default function SharePageClient() {
   const [isPending, startTransition] = useTransition();
@@ -31,6 +32,7 @@ export default function SharePageClient() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isCompressing, setIsCompressing] = useState(false);
   const suggestAmount = [1, 3, 5, 10];
 
   // Hanle when click suggestion amount
@@ -38,13 +40,26 @@ export default function SharePageClient() {
     setAmount(amount);
   }
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    setImageFile(file);
-    const url = URL.createObjectURL(file);
-    setPreviewUrl(url);
+    setIsCompressing(true);
+    setError(null);
+    try {
+      const compressedFile = await compressImage(file);
+      setImageFile(compressedFile); 
+
+      const url = URL.createObjectURL(compressedFile);
+      setPreviewUrl(url);
+    } catch (error) {
+      console.error("Image compression error:", error);
+      setError("เกิดข้อผิดพลาดในการบีบอัดรูปภาพ");
+      setImageFile(null);
+      setPreviewUrl(null);
+    } finally {
+      setIsCompressing(false);
+    }
   };
 
   useEffect(() => {
@@ -57,23 +72,38 @@ export default function SharePageClient() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setError(null); // Clear any previous errors
+    setError(null);
+
+    if (!imageFile) {
+        setError("กรุณาเพิ่มรูปภาพ");
+        return;
+    }
     
     startTransition(async () => {
       try {
-        const formData = new FormData(event.currentTarget);
+        const formData = new FormData();
+        const priceInput = event.currentTarget.elements.namedItem('price') as HTMLInputElement;
+        const descriptionInput = event.currentTarget.elements.namedItem('description') as HTMLInputElement;
+
+        formData.append("item", name);
+        formData.append("expiry_date", expiryDate);
+        formData.append("amount", amount ? amount.toString() : "1");
+        formData.append("price", priceInput?.value || "0");
+        formData.append("description", descriptionInput?.value || "");
+        formData.append("category", category ? category.toString() : "");
+        formData.append("id", searchParams.get("id") || "");
+        formData.append("image", imageFile, imageFile.name);
+
         const result = await handleShare(formData);
         
-        // Handle error returned from server action
         if (result?.error) {
           setError(result.error);
         } else if (result?.success) {
-          // If successful, navigate to the fridge page
           router.push('/fridge');
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error("Form submission error:", error);
-        setError(error as string);
+        setError(error.message || "เกิดข้อผิดพลาดในการส่งข้อมูล กรุณาลองใหม่อีกครั้ง");
       }
     });
   };
@@ -161,7 +191,7 @@ export default function SharePageClient() {
           />
         </div>
 
-        <Button type="submit" text="แบ่งปัน ❤︎" isLoading={isPending} />
+        <Button type="submit" text="แบ่งปัน ❤︎" isLoading={isPending || isCompressing} />
         <p className="p2 text-textsecondary text-center " >
           {isExistingItem
             ? "🎁 แจกจ่ายอาหารจากตู้เย็นให้กับคนในชุมชน"
