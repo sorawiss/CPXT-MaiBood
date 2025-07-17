@@ -2,14 +2,14 @@
 
 import { useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
-import { updateUserWithId } from '../actions';
+import { updateUser } from './actions'; // Corrected import path
 import Input from '@/components/Input';
 import TitleHeader from '@/components/TitleHeader';
-import { User } from '@prisma/client';
 import Button from '@/components/Button';
 import { useEffect, useRef } from 'react';
+import { State } from './actions'; // Import State type
 
-const initialState = { message: null };
+const initialState: State = { message: null };
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -17,6 +17,7 @@ function SubmitButton() {
 }
 
 export default function EditProfileForm({ user }: { user: any }) {
+  const updateUserWithId = updateUser.bind(null, user.id);
   const [state, dispatch] = useActionState(updateUserWithId, initialState);
   const formRef = useRef<HTMLFormElement>(null);
 
