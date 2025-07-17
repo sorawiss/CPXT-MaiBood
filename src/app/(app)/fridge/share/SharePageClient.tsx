@@ -75,6 +75,9 @@ export default function SharePageClient() {
     });
   };
 
+
+  const today = new Date().toISOString().split('T')[0];
+
   return (
     // Title Header
     <div className="min-h-[calc(100vh-10rem)] flex flex-col justify-center items-center w-full ">
@@ -100,6 +103,7 @@ export default function SharePageClient() {
           value={expiryDate}
           readOnly={!!expiryDate}
           onChange={(e) => setExpiryDate(e.target.value)}
+          min={today}
         />
 
         <Input type="text" name="price" placeholder="ราคา" label="ราคา (ไม่ใส่เพื่อแจกฟรี)" defaultValue="0"
