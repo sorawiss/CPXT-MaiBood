@@ -1,20 +1,54 @@
+"use client"
 import Link from "next/link";
-import { Suspense } from "react";
-import { getFridgeItemsData, getUserData } from "./data";
+import { useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
-
 import FridgeList from "@/components/FridgeList";
 import Button from "@/components/Button";
 import { filterExpDate } from "@/utils/filter-exp-date";
 import Loading from "./loading";
 import TitleHeader from "../../../components/TitleHeader";
+import { getUser } from "@/utils/DALs"; 
+import { getCurrentUser } from "@/utils/user";
 
-async function FridgeItems() {
-  const { items, count } = await getFridgeItemsData();
 
-  if (!items || items.length === 0) {
+// API call function
+const fetchFridgeItems = async () => {
+  const res = await fetch('/api/fridge');
+  if (!res.ok) {
+    throw new Error('Network response was not ok');
+  }
+  return res.json();
+};
+
+const fetchUserData = async () => {
+    const user = await getCurrentUser();
+    if (!user) {
+        // This case should be handled by redirects or context,
+        // but as a fallback:
+        throw new Error("User not authenticated");
+    }
+    return getUser(user.id);
+}
+
+function FridgeItems() {
+  const { data: items, isLoading, isError } = useQuery({ 
+      queryKey: ['fridgeItems'], 
+      queryFn: fetchFridgeItems 
+  });
+
+  if (isLoading) {
+    return <Loading />;
+  }
+  
+  if (isError || !items) {
+      return <p className="text-textsecondary">เกิดข้อผิดพลาดในการโหลดข้อมูล</p>;
+  }
+
+  if (items.length === 0) {
     return <p className="text-textsecondary">ยังไม่มีอาหารถูกบันทึกในตู้เย็น เริ่มบันทึกอาหารเพื่อจัดระเบียบครัวกันเถอะ!</p>;
   }
+  
+  const count = items.length;
 
   return (
     <div className="w-full flex flex-col gap-[1rem]">
@@ -25,7 +59,7 @@ async function FridgeItems() {
         </p>
       </div>
       <div className="FridgeListContainer w-full flex flex-col gap-[1rem]">
-        {items.map((item) => (
+        {items.map((item: any) => (
           <FridgeList key={item.id} item={item} />
         ))}
       </div>
@@ -33,13 +67,16 @@ async function FridgeItems() {
   );
 }
 
-async function Fridge() {
-  const { userName } = await getUserData();
+function Fridge() {
+  const { data: userData, isLoading: isUserLoading } = useQuery({
+      queryKey: ['userData'],
+      queryFn: fetchUserData
+  })
 
   return (
     <div className="flex flex-col items-center justify-center gap-[3.5rem] ">
       <div className="Title w-full flex flex-col items-center ">
-        <TitleHeader title={`ตู้เย็นของ ${userName?.name}`} />
+        <TitleHeader title={isUserLoading ? `ตู้เย็นของ...` : `ตู้เย็นของ ${userData?.name}`} />
         <p className="p3 text-textsecondary ">
           บันทึกอาหารในตู้เย็น ช่วยให้จัดการอาหารได้ง่ายขึ้น
         </p>
@@ -47,9 +84,7 @@ async function Fridge() {
 
       {/* Data display */}
       <div className="DataDisplay w-full flex flex-col gap-[1rem] ">
-        <Suspense fallback={<Loading />}>
           <FridgeItems />
-        </Suspense>
       </div>
 
       {/* Add button */}

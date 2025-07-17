@@ -1,6 +1,6 @@
 "use client"
-import { handleDecreaseAmount, handleIncreaseAmount, handleDeleteItem, handleUpdateStatus } from "@/app/(app)/fridge/action";
-import { useTransition, useState } from "react";
+import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
     Dialog,
     DialogClose,
@@ -19,25 +19,78 @@ interface FridgeItem {
     amount: number;
     status: StatusType;
     user_id: string;
-    created_at: Date | string; // Allow string
-    updated_at: Date | string; // Allow string
-    exp_date: Date | string; // Allow string
+    created_at: Date | string; 
+    updated_at: Date | string; 
+    exp_date: Date | string;
+    category?: string; // Make category optional
 }
 
+// API Functions
+const updateItemAmount = async ({ id, action }: { id: string, action: 'increase' | 'decrease' }) => {
+    const res = await fetch('/api/fridge', {
+        method: 'POST',
+        body: JSON.stringify({ id, action }),
+        headers: { 'Content-Type': 'application/json' },
+    });
+    if (!res.ok) throw new Error('Failed to update amount');
+    return res.json();
+};
 
+const deleteItem = async (id: string) => {
+    const res = await fetch('/api/fridge', {
+        method: 'DELETE',
+        body: JSON.stringify({ id }),
+        headers: { 'Content-Type': 'application/json' },
+    });
+    if (!res.ok) throw new Error('Failed to delete item');
+    return res.json();
+};
 
+const updateItemStatus = async ({ id, status }: { id: string, status: StatusType }) => {
+    const res = await fetch('/api/fridge', {
+        method: 'PUT',
+        body: JSON.stringify({ id, status }),
+        headers: { 'Content-Type': 'application/json' },
+    });
+    if (!res.ok) throw new Error('Failed to update status');
+    return res.json();
+};
 
 
 function FridgeList({ item }: { item: FridgeItem }) {
-    const [isPending, startTransition] = useTransition()
-    const [amount, setAmount] = useState(item.amount)
-    const [isGone, setIsGone] = useState(false)
-    const [isDeleting, setIsDeleting] = useState(false)
+    const queryClient = useQueryClient();
     const router = useRouter();
+
+    const [amount, setAmount] = useState(item.amount);
     const expDate = safeDate(item.exp_date);
     const createdAtDate = safeDate(item.created_at);
-    const willExpire = expDate <= new Date(new Date().setDate(new Date().getDate() + 3))
-    let status: string = item.status
+    const willExpire = expDate <= new Date(new Date().setDate(new Date().getDate() + 3));
+    let status: string = item.status;
+
+    // Mutations
+    const mutationOptions = {
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['fridgeItems'] });
+        },
+        onError: (error: any) => {
+            console.error(error.message);
+            queryClient.invalidateQueries({ queryKey: ['fridgeItems'] }); // Revert optimistic update
+        },
+    };
+
+    const deleteMutation = useMutation({
+      mutationFn: deleteItem, 
+      ...mutationOptions
+    });
+    const updateAmountMutation = useMutation({
+      mutationFn: updateItemAmount,
+      ...mutationOptions
+    });
+    const updateStatusMutation = useMutation({
+      mutationFn: updateItemStatus, 
+      ...mutationOptions
+    });
+
 
     const buttonMenu = [
         {
@@ -45,11 +98,10 @@ function FridgeList({ item }: { item: FridgeItem }) {
             text: "🤝 แบ่งปัน",
             className: "bg-textprimary text-background ",
             function: () => {
-                // Go to share page with prefilled data
                 const params = new URLSearchParams({
                     name: item.name,
                     expiry_date: expDate.toISOString().split('T')[0],
-                    category: (item as any).category ? String((item as any).category) : "",
+                    category: item.category || "",
                     id: item.id,
                     amount: item.amount.toString()
                 });
@@ -60,92 +112,45 @@ function FridgeList({ item }: { item: FridgeItem }) {
             id: 2,
             text: "😋 กินหมด",
             className: "bg-transparent border border-textprimary !text-textprimary ",
-            function: async () => {
-                setIsGone(true)
-                startTransition(async () => {
-                    const result = await handleUpdateStatus(item.id, StatusType.eat)
-                    if (result.error) {
-                        setIsGone(false)
-                        console.error("Failed to update status:", result.error)
-                    }
-                })
-            }
+            function: () => updateStatusMutation.mutate({ id: item.id, status: StatusType.eat })
         },
         {
             id: 3,
             text: "แบ่งปันสำเร็จ",
             className: " bg-textprimary text-background ",
-            function: async () => {
-                setIsGone(true)
-                startTransition(async () => {
-                    const result = await handleUpdateStatus(item.id, StatusType.free)
-                    if (result.error) {
-                        setIsGone(false)
-                        console.error("Failed to update status:", result.error)
-                    }
-                })
-            }
+            function: () => updateStatusMutation.mutate({ id: item.id, status: StatusType.free })
         },
         {
             id: 4,
             text: "🗑 ลบ",
             className: "bg-transparent border border-makro !text-makro ",
-            function: async () => {
-                setIsDeleting(true)
-                setIsGone(true)
-                startTransition(async () => {
-                    const result = await handleDeleteItem(item.id)
-                    if (result.error) {
-                        setIsGone(false)
-                        setIsDeleting(false)
-                        // You could add a toast notification here
-                        console.error("Failed to delete item:", result.error)
-                    }
-                })
-            }
+            function: () => deleteMutation.mutate(item.id)
         }
     ]
 
 
     // Increase amount
     function increase(event: React.MouseEvent<HTMLButtonElement>) {
-        event.stopPropagation()
-        setAmount((amount) => amount + 1)
-        startTransition(async () => {
-            const result = await handleIncreaseAmount(item.id)
-            if (result.error) {
-                setAmount((amount) => amount - 1)
-            }
-        })
+        event.stopPropagation();
+        setAmount((prev) => prev + 1);
+        updateAmountMutation.mutate({ id: item.id, action: 'increase' });
     }
 
     // Decrease amount
     function decrease(event: React.MouseEvent<HTMLButtonElement>) {
-        event.stopPropagation()
+        event.stopPropagation();
         if (amount <= 1) {
-            setIsGone(true)
-            startTransition(async () => {
-                const result = await handleDeleteItem(item.id)
-                if (result.error) {
-                    setIsGone(false)
-                }
-            })
-        }
-        else {
-            setAmount((amount) => amount - 1)
-            startTransition(async () => {
-                const result = await handleDecreaseAmount(item.id)
-                if (result.error) {
-                    setAmount((amount) => amount + 1)
-                }
-            })
+            deleteMutation.mutate(item.id);
+        } else {
+            setAmount((prev) => prev - 1);
+            updateAmountMutation.mutate({ id: item.id, action: 'decrease' });
         }
     }
 
     // Status
     function setStatus() {
         const today = new Date();
-        today.setHours(0, 0, 0, 0); // Ignore time part
+        today.setHours(0, 0, 0, 0); 
 
         if (expDate < today) {
             status = "⚠️ บูด";
@@ -161,12 +166,10 @@ function FridgeList({ item }: { item: FridgeItem }) {
     }
     setStatus()
 
-
-    // Delete item
-    if (isGone) {
-        return null
+    // Optimistic UI - hide immediately on mutation
+    if (deleteMutation.isPending || updateStatusMutation.isPending) {
+        return null;
     }
-
 
 
     // Render
@@ -178,7 +181,7 @@ function FridgeList({ item }: { item: FridgeItem }) {
                     h-[4.5rem] flex items-center justify-between
                     ${willExpire ? "border border-makro " : "border border-textsecondary"}
                      ${status === "กำลังแบ่งปัน..." ? "bg-backgroundsecondary border-none " : ""}
-                     ${isDeleting ? "opacity-50" : ""}
+                     ${updateAmountMutation.isPending ? "opacity-50" : ""}
                      `} key={item.id}>
                     <div className="ItemInfo flex flex-col  ">
                         <p className={`text-textprimary w-fit `} >{item.name}</p>
@@ -196,10 +199,12 @@ function FridgeList({ item }: { item: FridgeItem }) {
                     <div className="Amount flex gap-[0.5rem] " >
                         <button className={` text-makro cursor-pointer h-ful w-5 `}
                             onClick={decrease}
+                            disabled={updateAmountMutation.isPending}
                         >-</button>
                         <p className={`text-textsecondary`} >{amount}</p>
                         <button className={`text-textprimary cursor-pointer  h-ful w-5 `}
                             onClick={increase}
+                            disabled={updateAmountMutation.isPending}
                         >+</button>
                     </div>
 
@@ -243,17 +248,8 @@ function FridgeList({ item }: { item: FridgeItem }) {
                             </DialogClose>
                         ))}
                 </div>
-
-
-
-
             </DialogContent>
         </Dialog>
-
-
-
-
-
     )
 }
 export default FridgeList
