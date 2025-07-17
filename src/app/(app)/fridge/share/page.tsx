@@ -8,7 +8,7 @@ export default async function Share() {
     const user = await getCurrentUser();
 
     if (!user) {
-        redirect("/login");
+        redirect("/welcome");
     }
 
     return (

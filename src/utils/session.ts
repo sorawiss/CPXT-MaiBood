@@ -94,7 +94,7 @@ export async function verifySession() {
     const user = await cachedVerifySession(session);
 
     if (!user) {
-        redirect("/login")
+        redirect("/welcome")
     }
 
     return user
@@ -108,7 +108,7 @@ export async function getSession() {
     const sessionToken = cookieStore.get(cookie.name)?.value
 
     if (!sessionToken) {
-        redirect("/login")
+        redirect("/welcome")
     }
     return await cachedVerifySession(sessionToken);
 }
@@ -119,7 +119,7 @@ export async function getSession() {
 export async function deleteSession() {
     const cookieStore = await cookies()
     cookieStore.delete(cookie.name)
-    redirect("/login")
+    redirect("/welcome")
 }
 
 
