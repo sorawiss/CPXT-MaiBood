@@ -1,30 +1,29 @@
 "use client"
+import Input from "@/components/Input";
 import TitleHeader from "@/components/TitleHeader";
 import { handleAddToFridge } from "./action";
-import Input from "@/components/Input";
+import { useActionState, useState, useRef, useEffect } from "react";
+import { useFormStatus } from "react-dom";
 import Button from "@/components/Button";
-import { useState, useRef, useEffect } from "react";
-import { useFormState, useFormStatus } from "react-dom";
 import Category from "@/components/Category";
 
-// Submit button component with loading state
+type FormState = {
+  error?: string;
+  success?: string;
+};
+
 function SubmitButton() {
   const { pending } = useFormStatus();
-  
   return (
-    <Button 
-      type="submit" 
-      text={pending ? "กำลังเพิ่ม..." : "เพิ่มเข้าตู้เย็น ✚"} 
-      className="mt-[3rem]" 
-      isLoading={pending}
-    />
-  );
+    <Button type="submit" text={pending ? "กำลังเพิ่ม..." : "เพิ่มเข้าตู้เย็น ✚"} className="mt-[3rem]" isLoading={pending} />
+  )
 }
 
+
 export default function Add() {
+  const [state, formAction] = useActionState(handleAddToFridge, { error: undefined, success: undefined });
   const [amount, setAmount] = useState<number | string>("");
   const [category, setCategory] = useState<number | null>(0);
-  const [state, formAction] = useFormState(handleAddToFridge, { error: undefined, success: undefined });
   const formRef = useRef<HTMLFormElement>(null);
   const suggestAmount = [1, 3, 5, 10];
 

@@ -1,6 +1,6 @@
 "use server"
 import { increaseAmount, decreaseAmount, deleteItem, updateStatus, StatusType, getFridgeItem } from "@/utils/DALs"
-import { revalidateTag } from "next/cache"
+import { revalidatePath, revalidateTag } from "next/cache"
 import { deleteFileFromSupabase } from "@/utils/file-upload";
 
 // Update item amout
@@ -41,6 +41,8 @@ export async function handleDeleteItem(id: string) {
         await deleteItem(id)
         revalidateTag("fridge-items")
         revalidateTag("selling-fridge-items")
+        revalidatePath("/")
+        revalidatePath("/fridge")
         console.log("Item deleted")
         return { success: "Item deleted" }
     } catch (error) {
@@ -63,6 +65,8 @@ export async function handleUpdateStatus(id: string, status: StatusType) {
         revalidateTag("selling-fridge-items")
         revalidateTag("sold-items-count")
         revalidateTag("free-items-count")
+        revalidatePath("/")
+        revalidatePath("/fridge")
         console.log("Status updated")
         return { success: "Status updated" }
     } catch (error) {
