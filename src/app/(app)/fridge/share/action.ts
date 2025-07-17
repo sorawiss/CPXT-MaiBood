@@ -47,6 +47,7 @@ export async function handleShare(formData: FormData) {
   revalidateTag("selling-fridge-items");
   revalidateTag("post");
   revalidatePath("/");
+  revalidatePath("/fridge");
   redirect("/fridge");
 }
 
