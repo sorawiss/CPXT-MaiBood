@@ -88,7 +88,7 @@ export async function verifySession() {
     const session = cookieStore.get(cookie.name)?.value
 
     if (!session) {
-        redirect("/login")
+        redirect("/welcome")
     }
 
     const user = await cachedVerifySession(session);
