@@ -47,25 +47,18 @@ export async function addToFridge(item: string, amount: number, expiry_date: Dat
 }
 
 // Get fridge items
-export const getFridgeItems = unstable_cache(
-    async (userId: string) => {
-        console.log(`(Re)validating fridge items for ${userId}`)
-        return prismaDB.fridge.findMany({
-            where: {
-                user_id: userId,
-                status: {
-                    in: [StatusType.fresh, StatusType.selling]
-                }
-            },
-            orderBy: { exp_date: "asc" }
-        })
-    },
-    ['fridge-items'],
-    {
-        tags: ['fridge-items'],
-        revalidate: 300
-    }
-)
+export async function getFridgeItems(userId: string) {
+    console.log(`(Re)validating fridge items for ${userId}`)
+    return prismaDB.fridge.findMany({
+        where: {
+            user_id: userId,
+            status: {
+                in: [StatusType.fresh, StatusType.selling]
+            }
+        },
+        orderBy: { exp_date: "asc" }
+    })
+}
 
 
 // Get fridge item image for delete
@@ -78,24 +71,17 @@ export async function getFridgeItem(id: string) {
 
 
 // Count fridge items
-export const countFridgeItems = unstable_cache(
-    async (userId: string) => {
-        console.log(`(Re)validating fridge item count for ${userId}`)
-        return prismaDB.fridge.count({
-            where: {
-                user_id: userId,
-                status: {
-                    in: [StatusType.fresh, StatusType.selling]
-                }
+export async function countFridgeItems(userId: string) {
+    console.log(`(Re)validating fridge item count for ${userId}`)
+    return prismaDB.fridge.count({
+        where: {
+            user_id: userId,
+            status: {
+                in: [StatusType.fresh, StatusType.selling]
             }
-        })
-    },
-    ['fridge-items-count'],
-    {
-        tags: ['fridge-items'], // Use the same tag so it revalidates with the list
-        revalidate: 60 // Cache for 1 minute
-    }
-)
+        }
+    })
+}
 
 
 // Increase amount
@@ -205,30 +191,23 @@ export async function shareFridge({ id, price, name, description, category, exp_
 }
 
 
-export const getSellingFridgeItems = unstable_cache(
-    async () => {
-        return prismaDB.fridge.findMany({
-            where: {
-                status: StatusType.selling
-            },
-            select: {
-                id: true,
-                name: true,
-                price: true,
-                category: true,
-                exp_date: true,
-                image: true,
-                updated_at: true
-            },
-            orderBy: { exp_date: "asc" }
-        });
-    },
-    ['selling-fridge-items'],
-    {
-        tags: ['fridge-items', 'selling-fridge-items'], // Add both tags for consistency
-        revalidate: 30 // Cache for 30 seconds
-    }
-);
+export async function getSellingFridgeItems() {
+    return prismaDB.fridge.findMany({
+        where: {
+            status: StatusType.selling
+        },
+        select: {
+            id: true,
+            name: true,
+            price: true,
+            category: true,
+            exp_date: true,
+            image: true,
+            updated_at: true
+        },
+        orderBy: { exp_date: "asc" }
+    });
+}
 
 
 // User DALs
@@ -252,97 +231,76 @@ export async function addLocation(latitude: number, longitude: number, userId: s
 
 
 // Cout sold items
-export const countSoldItems = unstable_cache(
-    async (userId: string) => {
-        return prismaDB.fridge.count({
-            where: {
-                user_id: userId,
-                status: StatusType.sold
-            }
-        })
-    },
-    ['sold-items-count'],
-    {
-        tags: ['sold-items-count'],
-        revalidate: 300
-    }
-)
+export async function countSoldItems(userId: string) {
+    return prismaDB.fridge.count({
+        where: {
+            user_id: userId,
+            status: StatusType.sold
+        }
+    })
+}
 
 
 // Count free items
-export const countFreeItems = unstable_cache(
-    async (userId: string) => {
-        return prismaDB.fridge.count({
-            where: {
-                user_id: userId,
-                status: StatusType.free
-            }
-        })
-    },
-    ['free-items-count'],
-    {
-        tags: ['free-items-count'],
-        revalidate: 300
-    }
-)
+export async function countFreeItems(userId: string) {
+    return prismaDB.fridge.count({
+        where: {
+            user_id: userId,
+            status: StatusType.free
+        }
+    })
+}
 
 
 
 
 // Post DALs
 //--------------------------------
-export const getPost = unstable_cache(
-    async (id: string, userId?: string) => {
-        console.log(`(Re)validating post ${id}`)
-        const post = await prismaDB.fridge.findUnique({
-            where: {
-                id: id
-            },
-            select: {
-                id: true,
-                name: true,
-                price: true,
-                description: true,
-                category: true,
-                created_at: true,
-                exp_date: true,
-                updated_at: true,
-                image: true,
-                user: {
-                    select: {
-                        id: true,
-                        name: true,
-                        latitude: true,
-                        longitude: true,
-                        facebook: true,
-                        line: true,
-                        instagram: true,
-                        phone_number: true,
+export async function getPost(id: string, userId?: string) {
+    console.log(`(Re)validating post ${id}`)
+    const post = await prismaDB.fridge.findUnique({
+        where: {
+            id: id
+        },
+        select: {
+            id: true,
+            name: true,
+            price: true,
+            description: true,
+            category: true,
+            created_at: true,
+            exp_date: true,
+            updated_at: true,
+            image: true,
+            user: {
+                select: {
+                    id: true,
+                    name: true,
+                    latitude: true,
+                    longitude: true,
+                    facebook: true,
+                    line: true,
+                    instagram: true,
+                    phone_number: true,
 
-                    }
                 }
             }
-        })
-
-        if (!post || !userId) {
-            return { ...post, hasSentRequest: false };
         }
+    })
 
-        const notification = await prismaDB.notification.findFirst({
-            where: {
-                senderId: userId,
-                fridge_id: id,
-            },
-        });
-
-        return { ...post, hasSentRequest: !!notification };
-    },
-    ['post'],
-    {
-        tags: ['post'],
-        revalidate: 300 // Cache for 5 minutes
+    if (!post || !userId) {
+        return { ...post, hasSentRequest: false };
     }
-)
+
+    const notification = await prismaDB.notification.findFirst({
+        where: {
+            senderId: userId,
+            fridge_id: id,
+        },
+    });
+
+    return { ...post, hasSentRequest: !!notification };
+}
 
 export const createNotification = async (recipientId: string, senderId: string, fridgeId: string) => {
     try {
@@ -362,35 +320,28 @@ export const createNotification = async (recipientId: string, senderId: string, 
 
 // Notification DALs
 //--------------------------------
-export const getNotifications = unstable_cache(
-    async (userId: string) => {
-        console.log(`(Re)validating notifications for ${userId}`);
-        return prismaDB.notification.findMany({
-            where: {
-                recipientId: userId,
-            },
-            include: {
-                sender: {
-                    select: {
-                        name: true,
-                        profile_picture: true,
-                        id: true,
-                    },
-                },
-                fridge: {
-                    select: {
-                        name: true,
-                    },
+export async function getNotifications(userId: string) {
+    console.log(`(Re)validating notifications for ${userId}`);
+    return prismaDB.notification.findMany({
+        where: {
+            recipientId: userId,
+        },
+        include: {
+            sender: {
+                select: {
+                    name: true,
+                    profile_picture: true,
+                    id: true,
                 },
             },
-            orderBy: {
-                created_at: "desc",
+            fridge: {
+                select: {
+                    name: true,
+                },
             },
-        });
-    },
-    ["notifications"],
-    {
-        tags: ["notifications"],
-        revalidate: 60, // Cache for 1 minute
-    }
-);
+        },
+        orderBy: {
+            created_at: "desc",
+        },
+    });
+}

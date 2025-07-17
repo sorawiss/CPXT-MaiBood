@@ -7,7 +7,7 @@ import Button from "@/components/Button"
 import { deleteSession } from "@/utils/session"
 import Image from "next/image"
 
-
+export const revalidate = 3600; // Revalidate every 1 hour
 
 async function Profile() {
     const user = await getCurrentUser()
