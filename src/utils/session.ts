@@ -54,7 +54,7 @@ export async function decrypt(session: string) {
 //--------------------------------
 export async function createSession(userId: string) {
     const session = await encrypt({ userId });
-    const expire = new Date(Date.now() + cookie.duration)
+    const expire = new Date(Date.now() + cookie.duration * 1000)
 
     const cookieStore = await cookies()
     cookieStore.set(cookie.name, session, { ...cookie.options, expires: expire })
@@ -76,7 +76,7 @@ const cachedVerifySession = unstable_cache(
     ['session-verification'],
     {
         tags: ['session'],
-        revalidate: 300 // Cache for 5 minutes
+        revalidate: 300 
     }
 );
 
