@@ -132,7 +132,7 @@ export default function SharePageClient() {
             )}
           </label>
           <input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleFileChange} 
-            accept="image/*" required
+            accept="image/*" capture="environment" required
           />
         </div>
 
