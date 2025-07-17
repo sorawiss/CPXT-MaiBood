@@ -61,9 +61,6 @@ export default function SharePageClient() {
     startTransition(async () => {
       try {
         const formData = new FormData(event.currentTarget);
-        if (imageFile) {
-          formData.append("image", imageFile);
-        }
         const result = await handleShare(formData);
         
         // Handle error returned from server action
@@ -152,7 +149,7 @@ export default function SharePageClient() {
               </div>
             )}
           </label>
-          <input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleFileChange} 
+          <input id="file-upload" name="image" type="file" className="sr-only" onChange={handleFileChange} 
             accept="image/*" capture="environment" required
           />
         </div>
