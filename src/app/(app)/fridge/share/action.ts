@@ -46,7 +46,7 @@ export async function handleShare(formData: FormData) {
         if (uploadedUrl) {
             imageUrl = uploadedUrl;
         } else {
-            return { error: "การอัปโหลดรูปภาพล้มเหลว กรุณาลองใหม่อีกครั้ง" };
+            return { error: "การอัปโหลดรูปภาพล้มเหลว กรุณาลองใหม่อีกครั้ง " };
         }
     }
 
@@ -86,7 +86,7 @@ export async function handleShare(formData: FormData) {
       // Attempt to clean up the uploaded image if the database operation fails
       await deleteFileFromSupabase(imageUrl, "cpaxt-maibood-bucket");
     }
-    return { error: "เกิดข้อผิดพลาดในการแบ่งปันอาหาร กรุณาลองใหม่อีกครั้ง" };
+    return { error: "เกิดข้อผิดพลาดในการแบ่งปันอาหาร กรุณาลองใหม่อีกครั้ง " + error };
   }
 
   // Only redirect if everything is successful

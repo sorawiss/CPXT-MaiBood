@@ -70,7 +70,7 @@ export default function SharePageClient() {
         // If successful, the action will redirect to /fridge
       } catch (error) {
         console.error("Form submission error:", error);
-        setError("เกิดข้อผิดพลาดในการส่งข้อมูล กรุณาลองใหม่อีกครั้ง");
+        setError(error as string);
       }
     });
   };
