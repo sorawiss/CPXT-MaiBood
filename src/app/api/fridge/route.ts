@@ -6,7 +6,8 @@ import {
     decreaseAmount, 
     deleteItem,
     updateStatus,
-    StatusType
+    StatusType,
+    countItemsByCategory
 } from "@/utils/DALs";
 
 // GET - Fetch all fridge items for the current user
@@ -16,8 +17,12 @@ export async function GET() {
         if (!user) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
-        const items = await getFridgeItems(user.id);
-        return NextResponse.json(items);
+        const [items, categoryCounts] = await Promise.all([
+            getFridgeItems(user.id),
+            countItemsByCategory(user.id)
+        ]);
+
+        return NextResponse.json({ items, categoryCounts });
     } catch (error) {
         console.error("Failed to get fridge items:", error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

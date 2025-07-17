@@ -7,12 +7,13 @@ import Button from "@/components/Button";
 import { filterExpDate } from "@/utils/filter-exp-date";
 import Loading from "./loading";
 import TitleHeader from "../../../components/TitleHeader";
-import { getUser } from "@/utils/DALs"; 
+import { getUser } from "@/utils/DALs";
 import { getCurrentUser } from "@/utils/user";
+import FridgeInfo from "@/components/FridgeInfo";
 
 
 // API call function
-const fetchFridgeItems = async () => {
+const fetchFridgeData = async () => {
   const res = await fetch('/api/fridge');
   if (!res.ok) {
     throw new Error('Network response was not ok');
@@ -23,26 +24,26 @@ const fetchFridgeItems = async () => {
 const fetchUserData = async () => {
     const user = await getCurrentUser();
     if (!user) {
-        // This case should be handled by redirects or context,
-        // but as a fallback:
         throw new Error("User not authenticated");
     }
     return getUser(user.id);
 }
 
 function FridgeItems() {
-  const { data: items, isLoading, isError } = useQuery({ 
-      queryKey: ['fridgeItems'], 
-      queryFn: fetchFridgeItems 
+  const { data, isLoading, isError } = useQuery({ 
+      queryKey: ['fridgeData'], 
+      queryFn: fetchFridgeData 
   });
 
   if (isLoading) {
     return <Loading />;
   }
   
-  if (isError || !items) {
+  if (isError || !data) {
       return <p className="text-textsecondary">เกิดข้อผิดพลาดในการโหลดข้อมูล</p>;
   }
+  
+  const { items, categoryCounts } = data as { items: any[], categoryCounts: Record<string, number> };
 
   if (items.length === 0) {
     return <p className="text-textsecondary">ยังไม่มีอาหารถูกบันทึกในตู้เย็น เริ่มบันทึกอาหารเพื่อจัดระเบียบครัวกันเถอะ!</p>;
@@ -52,11 +53,12 @@ function FridgeItems() {
 
   return (
     <div className="w-full flex flex-col gap-[1rem]">
-      <div className="MetaData flex justify-between">
-        <p className="text-textprimary">อาหารในตู้เย็น {count} รายการ</p>
+      <div className="MetaData flex">
+        <FridgeInfo meat={categoryCounts["1"]} cake={categoryCounts["2"]} fruit={categoryCounts["3"]} other={categoryCounts["4"]} />
+        {/* <p className="text-textprimary">อาหารในตู้เย็น {count} รายการ</p>
         <p className="text-textprimary">
           ใกล้หมดอายุ {filterExpDate(items)} รายการ
-        </p>
+        </p> */}
       </div>
       <div className="FridgeListContainer w-full flex flex-col gap-[1rem]">
         {items.map((item: any) => (

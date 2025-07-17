@@ -302,6 +302,32 @@ export async function getPost(id: string, userId?: string) {
     return { ...post, hasSentRequest: !!notification };
 }
 
+export async function countItemsByCategory(userId: string) {
+    const categoryCounts = await prismaDB.fridge.groupBy({
+        by: ['category'],
+        where: {
+            user_id: userId,
+            status: {
+                in: [StatusType.fresh, StatusType.selling]
+            },
+            category: {
+                not: null
+            }
+        },
+        _count: {
+            _all: true,
+        },
+    });
+
+    // Format the data into a simple { categoryName: count } object
+    return categoryCounts.reduce((acc, curr) => {
+        if (curr.category) {
+            acc[curr.category] = curr._count._all;
+        }
+        return acc;
+    }, {} as Record<string, number>);
+}
+
 export const createNotification = async (recipientId: string, senderId: string, fridgeId: string) => {
     try {
         const notification = await prismaDB.notification.create({
