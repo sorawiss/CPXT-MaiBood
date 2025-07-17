@@ -1,21 +1,23 @@
 import Contact from "@/components/Contact"
 import TitleHeader from "@/components/TitleHeader"
-import { getCurrentUser } from "@/utils/user"
-import { countFreeItems, countSoldItems, getUser } from "@/utils/DALs"
+import { countFreeItems, countSoldItems, getUser, checkNotificationConnection } from "@/utils/DALs"
 import ProfileStat from "@/components/ProfileStat"
-import Button from "@/components/Button"
-import { deleteSession } from "@/utils/session"
+import { getCurrentUser } from "@/utils/user"
+import Image from "next/image"
 
 
 
 async function ProfileFromId({ params }: { params: Promise<{ profileId: string }> }) {
-    const { profileId } = await params
+    const resolvedParams = await params
+    const profileId = resolvedParams.profileId
     const user = await getUser(profileId)
     if (!user) {
         return <div>User not found</div>
     }
     const soldItems = await countSoldItems(profileId)
     const freeItems = await countFreeItems(profileId)
+    const currentUser = await getCurrentUser()
+    const hasConnection = currentUser ? await checkNotificationConnection(currentUser.id, profileId) : false
 
 
     return (
@@ -23,11 +25,21 @@ async function ProfileFromId({ params }: { params: Promise<{ profileId: string }
             <TitleHeader title={"บัญชีของ " + user.name} />
 
             <div className="ProfileHeader flex flex-col items-center justify-between w-full gap-2 ">
-                <div className="ImageWrapper size-[10rem] bg-backgroundsecondary rounded-full "></div>
+                <div className="ImageWrapper size-[10rem] bg-backgroundsecondary rounded-full ">
+                    <Image src={user.profile_picture ?? "/default-profile.jpg"} alt={user.name} width={180} height={180} className="object-cover rounded-full w-full h-full" />
+                </div>
                 <div className="ProfileInfo flex flex-col items-center justify-center w-full">
                     <h1 className="text-textprimary " >{user.name}</h1>
                     <p className="p4 text-textsecondary text-center " >Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna. Pellentesque sit amet sapien fringilla, mattis ligula consectetur, ultrices mauris.</p>
                 </div>
+                {hasConnection && (
+                    <Contact
+                        phone={user.phone_number ?? undefined}
+                        line={user.line ?? undefined}
+                        facebook={user.facebook ?? undefined}
+                        ig={user.instagram ?? undefined}
+                    />
+                )}
             </div>
 
             <div className="StateWrapper flex flex-col items-center justify-center w-full gap-2 ">

@@ -1,36 +1,30 @@
-import { verifySession } from "@/utils/session"
-import { getFridgeItems, countFridgeItems, getUser } from "@/utils/DALs"
-
+import { getCurrentUser } from "@/utils/user";
+import { getFridgeItems, getUser, countItemsByCategory } from "@/utils/DALs";
 
 export async function getFridgeItemsData() {
-    const session = await verifySession()
-    if (!session?.userId) {
-        return { items: [], count: 0 }
+    const user = await getCurrentUser();
+    if (!user) {
+        // This should be handled by verifySession redirecting, but as a safeguard.
+        return { items: [], count: 0, categoryCounts: {} };
     }
 
-    try {
-        const [items, count] = await Promise.all([
-            getFridgeItems(session.userId as string),
-            countFridgeItems(session.userId as string)
-        ])
-        return { items, count }
-    } catch (error) {
-        console.error("Failed to get fridge items:", error);
-        return { items: [], count: 0 };
-    }
+    const [items, categoryCounts] = await Promise.all([
+        getFridgeItems(user.id),
+        countItemsByCategory(user.id)
+    ]);
+    
+    return {
+        items,
+        count: items.length,
+        categoryCounts
+    };
 }
 
 export async function getUserData() {
-    const session = await verifySession()
-    if (!session?.userId) {
-        return { userName: null }
-    }
-
-    try {
-        const userName = await getUser(session.userId as string)
-        return { userName }
-    } catch (error) {
-        console.error("Failed to get user:", error);
+    const user = await getCurrentUser();
+    if (!user) {
         return { userName: null };
     }
+    const userData = await getUser(user.id);
+    return { userName: userData };
 } 

@@ -8,9 +8,12 @@ import Button from "@/components/Button";
 import { filterExpDate } from "@/utils/filter-exp-date";
 import Loading from "./loading";
 import TitleHeader from "../../../components/TitleHeader";
+import { getUser } from "@/utils/DALs";
+import { getCurrentUser } from "@/utils/user";
+import FridgeInfo from "@/components/FridgeInfo";
 
 async function FridgeItems() {
-  const { items, count } = await getFridgeItemsData();
+  const { items, count, categoryCounts } = await getFridgeItemsData();
 
   if (!items || items.length === 0) {
     return <p className="text-textsecondary">ยังไม่มีอาหารถูกบันทึกในตู้เย็น เริ่มบันทึกอาหารเพื่อจัดระเบียบครัวกันเถอะ!</p>;
@@ -18,11 +21,13 @@ async function FridgeItems() {
 
   return (
     <div className="w-full flex flex-col gap-[1rem]">
-      <div className="MetaData flex justify-between">
-        <p className="text-textprimary">อาหารในตู้เย็น {count} รายการ</p>
-        <p className="text-textprimary">
-          ใกล้หมดอายุ {filterExpDate(items)} รายการ
-        </p>
+      <div className="MetaData flex mb-[2rem]">
+         <FridgeInfo 
+            meat={categoryCounts["1"] || 0} 
+            cake={categoryCounts["2"] || 0} 
+            fruit={categoryCounts["3"] || 0} 
+            other={categoryCounts["4"] || 0}
+         />
       </div>
       <div className="FridgeListContainer w-full flex flex-col gap-[1rem]">
         {items.map((item) => (

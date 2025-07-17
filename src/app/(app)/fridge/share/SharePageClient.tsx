@@ -5,13 +5,14 @@ import Input from "@/components/Input";
 import Button from "@/components/Button";
 import { useState, useTransition, useEffect } from "react";
 import Category from "@/components/Category";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { ImagePlus } from "lucide-react";
 import Image from "next/image";
 
 export default function SharePageClient() {
   const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
+  const router = useRouter();
   const isExistingItem = searchParams.get("id") && searchParams.get("id")?.trim() !== "";
   
   const [name, setName] = useState<string>(
@@ -66,14 +67,19 @@ export default function SharePageClient() {
         // Handle error returned from server action
         if (result?.error) {
           setError(result.error);
+        } else if (result?.success) {
+          // If successful, navigate to the fridge page
+          router.push('/fridge');
         }
-        // If successful, the action will redirect to /fridge
       } catch (error) {
         console.error("Form submission error:", error);
-        setError("เกิดข้อผิดพลาดในการส่งข้อมูล กรุณาลองใหม่อีกครั้ง");
+        setError(error as string);
       }
     });
   };
+
+
+  const today = new Date().toISOString().split('T')[0];
 
   return (
     // Title Header
@@ -100,9 +106,10 @@ export default function SharePageClient() {
           value={expiryDate}
           readOnly={!!expiryDate}
           onChange={(e) => setExpiryDate(e.target.value)}
+          min={today}
         />
 
-        <Input type="text" name="price" placeholder="ราคา" label="ราคา (ไม่ใส่เพื่อแจกฟรี)" defaultValue="0"
+        <Input type="text" name="price" placeholder="ราคา" label="ราคา (ไม่ใส่เพื่อแจกฟรี)" 
           className="!bg-transparent !border-backgroundsecondary "
         />
 
@@ -150,7 +157,7 @@ export default function SharePageClient() {
             )}
           </label>
           <input id="file-upload" name="image" type="file" className="sr-only" onChange={handleFileChange} 
-            accept="image/*" capture="environment" required
+            accept="image/jpeg, image/png, image/jpg" required
           />
         </div>
 

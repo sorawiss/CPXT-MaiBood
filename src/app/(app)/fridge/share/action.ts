@@ -46,7 +46,7 @@ export async function handleShare(formData: FormData) {
         if (uploadedUrl) {
             imageUrl = uploadedUrl;
         } else {
-            return { error: "การอัปโหลดรูปภาพล้มเหลว กรุณาลองใหม่อีกครั้ง" };
+            return { error: "การอัปโหลดรูปภาพล้มเหลว กรุณาลองใหม่อีกครั้ง " };
         }
     }
 
@@ -79,6 +79,8 @@ export async function handleShare(formData: FormData) {
     revalidateTag("post");
     revalidatePath("/");
     revalidatePath("/fridge");
+
+    return { success: true };
       
   } catch (error) {
     console.error("Failed to share item:", error);
@@ -88,9 +90,6 @@ export async function handleShare(formData: FormData) {
     }
     return { error: "เกิดข้อผิดพลาดในการแบ่งปันอาหาร กรุณาลองใหม่อีกครั้ง" };
   }
-
-  // Only redirect if everything is successful
-  redirect("/fridge");
 }
 
 

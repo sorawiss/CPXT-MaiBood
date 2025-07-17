@@ -9,30 +9,32 @@ interface CategoryProps {
     onChange: (categoryId: number | null) => void;
 }
 
+const category = [
+    {
+        id: 1,
+        name: 'เนื้อสัตว์',
+        icon: <Ham />
+    },
+    {
+        id: 2,
+        name: 'ขนม',
+        icon: <Croissant />
+    },
+    {
+        id: 3,
+        name: 'ผัก/ผลไม้',
+        icon: <LeafyGreen />
+    },
+    {
+        id: 4,
+        name: 'อื่นๆ',
+        icon: <Ellipsis />
+    }
+]
+
 
 function Category({ value, onChange }: CategoryProps) {
-    const category = [
-        {
-            id: 1,
-            name: 'เนื้อสัตว์',
-            icon: <Ham />
-        },
-        {
-            id: 2,
-            name: 'ขนม',
-            icon: <Croissant />
-        },
-        {
-            id: 3,
-            name: 'ผัก/ผลไม้',
-            icon: <LeafyGreen />
-        },
-        {
-            id: 4,
-            name: 'อื่นๆ',
-            icon: <Ellipsis />
-        }
-    ]
+   
 
     return (
         <div className="category-button flex justify-between items-center w-full">

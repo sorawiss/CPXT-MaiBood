@@ -99,25 +99,21 @@ export default function FoodPageContent({ post, foodId, currentUser, hasSentRequ
                         <p className="p3 text-textsecondary">🤢 จะบูดตอน {dateInfo.exp_date}</p>
                     </div>
 
-                    {/* Contact */}
-                    {isCurrentUser && (
-                        <div className="Contact flex flex-col gap-1 ">
-                            <h1 className="text-textprimary text-center " >
-                                นี่คืออาหารที่คุณแจกจ่าย สามารถจัดการได้ใน <Link href="/fridge" className="text-makro">ตู้เย็นของคุณ</Link>
-                            </h1>
-                        </div>
-                    )}
 
-                    {!isCurrentUser && (
-                        <div className="Contact flex flex-col gap-1 ">
-                            <Suspense fallback={<div className="p3 text-textsecondary">กำลังคำนวณระยะทาง...</div>}>
-                                <PostDistance postLocation={postLocation} />
-                            </Suspense>
-                            <Contact ig={post.user.instagram ?? undefined}
-                                line={post.user.line ?? undefined} phone={post.user.phone_number ?? undefined}
-                                facebook={post.user.facebook ?? undefined} align="start" />
-                        </div>
-                    )}
+
+
+                    <div className="Contact flex flex-col gap-1 ">
+                        {isCurrentUser && (
+                            <p className="p3 text-textsecondary">นี่คืออาหารของคุณสามารถจัดการได้ใน <Link href="/fridge" className="text-makro">ตู้เย็นของคุณ</Link></p>
+                        )}
+                        <Suspense fallback={<div className="p3 text-textsecondary">กำลังคำนวณระยะทาง...</div>}>
+                            <PostDistance postLocation={postLocation} />
+                        </Suspense>
+                        <Contact ig={post.user.instagram ?? undefined}
+                            line={post.user.line ?? undefined} phone={post.user.phone_number ?? undefined}
+                            facebook={post.user.facebook ?? undefined} align="start" />
+                    </div>
+
 
 
                     {/* Button */}

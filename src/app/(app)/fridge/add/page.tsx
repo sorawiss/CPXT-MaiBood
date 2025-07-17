@@ -27,6 +27,9 @@ export default function Add() {
   const formRef = useRef<HTMLFormElement>(null);
   const suggestAmount = [1, 3, 5, 10];
 
+  // Get today's date in YYYY-MM-DD format
+  const today = new Date().toISOString().split('T')[0];
+
 
   useEffect(() => {
     if (state.success) {
@@ -57,6 +60,7 @@ export default function Add() {
         {/* Expiry Date */}
         <Input type="date" name="expiry_date" placeholder="วันหมดอายุ" label="วันหมดอายุ" required
           className="!bg-transparent !border-backgroundsecondary "
+          min={today}
         />
 
         {/* Amount */}
