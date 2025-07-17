@@ -106,7 +106,7 @@ export default function SharePageClient() {
           min={today}
         />
 
-        <Input type="text" name="price" placeholder="ราคา" label="ราคา (ไม่ใส่เพื่อแจกฟรี)" defaultValue="0"
+        <Input type="text" name="price" placeholder="ราคา" label="ราคา (ไม่ใส่เพื่อแจกฟรี)" 
           className="!bg-transparent !border-backgroundsecondary "
         />
 
@@ -154,7 +154,7 @@ export default function SharePageClient() {
             )}
           </label>
           <input id="file-upload" name="image" type="file" className="sr-only" onChange={handleFileChange} 
-            accept="image/*" capture="environment" required
+            accept="image/jpeg, image/png, image/jpg" required
           />
         </div>
 
