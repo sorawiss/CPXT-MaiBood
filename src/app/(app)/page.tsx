@@ -32,7 +32,7 @@ export default async function Home() {
       <div className="PostContainer w-full flex flex-col gap-[1rem] ">
         <div className="Title w-full flex flex-col ">
           <h1>จาก CPAXT</h1>
-          <p className="p3 text-textsecondary" >คำอธิบายตรงนี้จะมาจากการเก็บข้อมูล user </p>
+          <p className="p3 text-textsecondary" >อาหารจาก Makro และ Lotus ใกล้บ้านคุณ </p>
         </div>
         <div className="MakroPost w-full grid grid-cols-2 gap-[1rem] ">
           {makroData.map((item, index) => (
@@ -51,8 +51,8 @@ export default async function Home() {
 
       <div className="PostContainer w-full flex flex-col gap-[1rem] ">
         <div className="Title w-full flex flex-col ">
-          <h1>จากเพื่อน ๆ ในชุมชน</h1>
-          <p className="p3 text-textsecondary" >คำอธิบายตรงนี้จะมาจากการเก็บข้อมูล user </p>
+          <h1>จากชุมชนของคุณ</h1>
+          <p className="p3 text-textsecondary" >อาหารจากเพื่อน ๆ ในชุมชน </p>
         </div>
         <div className="MakroPost w-full grid grid-cols-2 gap-[1rem] ">
           {postList.map((item) => (
