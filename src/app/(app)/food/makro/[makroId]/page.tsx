@@ -3,6 +3,7 @@ import { Ellipsis, Croissant, LeafyGreen, Ham } from "lucide-react";
 import { makroData } from "../../../../../../public/makro-data";
 import Image from "next/image";
 import { safeDate } from "@/utils/date-formate";
+import Button from "@/components/Button";
 
 export function generateStaticParams() {
     return makroData.map((post) => ({
@@ -86,7 +87,14 @@ export default async function Post({ params }: { params: Promise<{ makroId: stri
                             <div>ไม่พบข้อมูลตำแหน่ง</div>
                         )}
 
+                        
                     </div> */}
+
+                    <Button
+                        text="รับอาหาร"
+                        className="!w-full !h-[3rem] !bg-makro !text-white"
+                        type="button"
+                    />
 
                 </div>
 

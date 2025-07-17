@@ -229,7 +229,8 @@ function FridgeList({ item }: { item: FridgeItem }) {
                             button =>
                                 !(item.status === "selling" && button.id === 1) &&
                                 !(item.status !== "selling" && button.id === 3) &&
-                                !(status === "⚠️ บูด" && button.id === 1)
+                                !(status === "⚠️ บูด" && button.id === 1) &&
+                                !(status === "⚠️ บูด" && button.id === 2)
                         )
                         .map((button) => (
                             <DialogClose key={button.id} asChild>
