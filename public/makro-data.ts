@@ -3,7 +3,7 @@ export const makroData = [
         id: "1",
         name: "อกไก่สด",
         price: 100,
-        description: "อกไก่สด",
+        description: "คำอธิบายอาหาร",
         exp_date: new Date("2025-08-10T13:31:32.217Z"),
         image: "/chicken.jpg",
         category: 1,
@@ -17,10 +17,10 @@ export const makroData = [
         id: "2",
         name: "ขนมปัง",
         price: 100,
-        description: "ขนมปัง",
+        description: "คำอธิบายอาหาร",
         exp_date: new Date("2025-08-10T13:31:32.217Z"),
         image: "/bread.jpg",
-        category: 1,
+        category: 2,
         user: {
             id: "1",
             name: "Makro รามคำแหง"
@@ -31,9 +31,9 @@ export const makroData = [
         id: "3",
         name: "ผักผักผัก",
         price: 100,
-        description: "ผักผักผัก",
+        description: "คำอธิบายอาหาร",
         exp_date: new Date("2025-08-10T13:31:32.217Z"),
-        category: 1,
+        category: 3,
         user: {
             id: "1",
             name: "Makro รามคำแหง"
@@ -43,12 +43,12 @@ export const makroData = [
     },
     {
         id: "4",
-        name: "ซัมติง",
+        name: "แอปเปิ้ล",
         price: 100,
-        description: "อกไก่สด",
+        description: "คำอธิบายอาหาร",
         exp_date: new Date("2025-08-10T13:31:32.217Z"),
         image: "/fruit.jpg",
-        category: 1,
+        category: 3,
         user: {
             id: "1",
             name: "Makro รามคำแหง"
