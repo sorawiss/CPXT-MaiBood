@@ -6,17 +6,29 @@ import ProfileStat from "@/components/ProfileStat"
 import Button from "@/components/Button"
 import { deleteSession } from "@/utils/session"
 import Image from "next/image"
+import { Suspense } from "react"
 
 export const revalidate = 3600; // Revalidate every 1 hour
+
+async function ProfileStats({ userId }: { userId: string }) {
+    const [soldItems, freeItems] = await Promise.all([
+        countSoldItems(userId),
+        countFreeItems(userId)
+    ]);
+
+    return (
+        <div className="StateWrapper flex flex-col items-center justify-center w-full gap-2 ">
+            <ProfileStat title="🤝 ขายอาหาร" amount={soldItems} />
+            <ProfileStat title="❤ แจกฟรี" amount={freeItems} />
+        </div>
+    );
+}
 
 async function Profile() {
     const user = await getCurrentUser()
     if (!user) {
         return <div>User not found</div>
     }
-    const soldItems = await countSoldItems(user.id)
-    const freeItems = await countFreeItems(user.id)
-
 
     return (
         <div className="flex flex-col items-center justify-center pt-[4rem] w-[25rem] px-[1.5rem] mx-auto gap-[2rem] " >
@@ -39,10 +51,9 @@ async function Profile() {
                 ig={user.instagram ?? undefined}
             />
 
-            <div className="StateWrapper flex flex-col items-center justify-center w-full gap-2 ">
-                <ProfileStat title="🤝 ขายอาหาร" amount={soldItems} />
-                <ProfileStat title="❤ แจกฟรี" amount={freeItems} />
-            </div>
+            <Suspense fallback={<div className="h-24 bg-gray-200 animate-pulse rounded-lg w-full"></div>}>
+                <ProfileStats userId={user.id} />
+            </Suspense>
 
 
             <Button type="button" text="ออกจากระบบ" className="w-full" onClick={deleteSession} />

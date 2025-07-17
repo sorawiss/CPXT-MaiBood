@@ -231,25 +231,41 @@ export async function addLocation(latitude: number, longitude: number, userId: s
 
 
 // Cout sold items
-export async function countSoldItems(userId: string) {
-    return prismaDB.fridge.count({
-        where: {
-            user_id: userId,
-            status: StatusType.sold
-        }
-    })
-}
+export const countSoldItems = unstable_cache(
+    async (userId: string) => {
+        console.log(`(Re)validating count sold items for ${userId}`)
+        return prismaDB.fridge.count({
+            where: {
+                user_id: userId,
+                status: StatusType.sold
+            }
+        })
+    },
+    ['count-sold-items'],
+    {
+        tags: ['count-sold-items'],
+        revalidate: 3600
+    }
+)
 
 
 // Count free items
-export async function countFreeItems(userId: string) {
-    return prismaDB.fridge.count({
-        where: {
-            user_id: userId,
-            status: StatusType.free
-        }
-    })
-}
+export const countFreeItems = unstable_cache(
+    async (userId: string) => {
+        console.log(`(Re)validating count free items for ${userId}`)
+        return prismaDB.fridge.count({
+            where: {
+                user_id: userId,
+                status: StatusType.free
+            }
+        })
+    },
+    ['count-free-items'],
+    {
+        tags: ['count-free-items'],
+        revalidate: 3600
+    }
+)
 
 
 
