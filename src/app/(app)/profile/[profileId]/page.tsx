@@ -8,7 +8,8 @@ import Image from "next/image"
 
 
 async function ProfileFromId({ params }: { params: { profileId: string } }) {
-    const { profileId } = params
+    const resolvedParams = await params
+    const profileId = resolvedParams.profileId
     const user = await getUser(profileId)
     if (!user) {
         return <div>User not found</div>
