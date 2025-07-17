@@ -1,6 +1,7 @@
 import Button from "@/components/Button"
 import Image from "next/image"
 import Link from "next/link"
+import WelcomePageContent from "./WelcomePageContent"
 
 function WelcomePage() {
   return (
@@ -12,7 +13,7 @@ function WelcomePage() {
         height={260}
       />
 
-      <Image 
+      <Image
         src="/cpaxt-logo.svg"
         alt="Welcome"
         width={260}
@@ -26,11 +27,8 @@ function WelcomePage() {
         <Link href="/register">
           <Button type="button" text="สมัครสมาชิก" className="!w-[22rem] !bg-background !text-textprimary " />
         </Link>
-        <Button type="button" text="ทดลองใช้งาน" className="!w-[22rem] !text-background border border-background !bg-transparent " />
-
+        <WelcomePageContent />
       </div>
-
-
     </div>
   )
 }
