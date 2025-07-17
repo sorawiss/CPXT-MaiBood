@@ -3,12 +3,10 @@ import TitleHeader from "@/components/TitleHeader";
 import { handleShare } from "./action";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import Category from "@/components/Category";
 import { useSearchParams } from "next/navigation";
-import { uploadFileToSupabase } from "@/utils/file-upload";
 import { ImagePlus } from "lucide-react";
-import { compressImage } from "@/utils/image-compression";
 import Image from "next/image";
 
 export default function SharePageClient() {
@@ -29,8 +27,8 @@ export default function SharePageClient() {
   const [category, setCategory] = useState<number | null>(
     prefillCategory && prefillCategory !== "" ? Number(prefillCategory) : null
   );
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const suggestAmount = [1, 3, 5, 10];
 
   // Hanle when click suggestion amount
@@ -38,29 +36,30 @@ export default function SharePageClient() {
     setAmount(amount);
   }
 
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    setUploading(true);
-
-    try {
-      const compressedFile = await compressImage(file);
-      const publicUrl = await uploadFileToSupabase(compressedFile, "cpaxt-maibood-bucket");
-      
-      if (publicUrl) {
-        setImageUrl(publicUrl);
-      }
-    } catch (error) {
-        console.error("Upload failed:", error);
-        // Optionally, show an error message to the user
-    } finally {
-        setUploading(false);
-    }
+    setImageFile(file);
+    const url = URL.createObjectURL(file);
+    setPreviewUrl(url);
   };
 
-  const shareAction = (formData: FormData) => {
+  useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     startTransition(async () => {
+      const formData = new FormData(event.currentTarget);
+      if (imageFile) {
+        formData.append("image", imageFile);
+      }
       await handleShare(formData);
     });
   };
@@ -70,26 +69,7 @@ export default function SharePageClient() {
     <div className="min-h-[calc(100vh-10rem)] flex flex-col justify-center items-center w-full ">
       <TitleHeader title="แบ่งปัน ❤︎" />
 
-      {/* Form */}
-      <form action={shareAction} className="my-auto w-full flex flex-col gap-[1rem] ">
-        <div className="flex flex-col items-center justify-center w-full mb-4">
-            <label htmlFor="file-upload" className="w-full h-48 border-2 border-dashed rounded-lg cursor-pointer flex items-center justify-center">
-                {imageUrl ? (
-                    <Image src={imageUrl} alt="Uploaded" width={1000} height={1000} className="object-cover w-full h-full rounded-lg" />
-                ) : (
-                    <div className="flex flex-col items-center justify-center">
-                        <ImagePlus className="w-12 h-12 text-gray-400" />
-                        <p className="mt-2 text-sm text-gray-600">
-                            {uploading ? "กำลังอัปโหลด..." : "เพิ่มรูปภาพ"}
-                        </p>
-                    </div>
-                )}
-            </label>
-            <input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleFileChange} disabled={uploading} required
-              accept="image/*"
-            />
-            <input type="hidden" name="image_url" value={imageUrl || ""} />
-        </div>
+      <form onSubmit={handleSubmit} className="my-auto w-full flex flex-col gap-[1rem] ">
         <Input type="text" name="item" placeholder="ตัวอย่าง: อกไก่สด" label="ชื่ออาหาร" required
           className="!bg-transparent !border-backgroundsecondary "
           value={name}
@@ -137,11 +117,29 @@ export default function SharePageClient() {
             <input type="hidden" name="category" value={category ? category.toString() : ""} />
           </div>
         )}
+        
+        <div className="flex flex-col items-center justify-center w-full mt-[2rem] ">
+          <label htmlFor="file-upload" className="w-full h-[30rem] border-2 border-dashed rounded-lg cursor-pointer flex items-center justify-center">
+            {previewUrl ? (
+              <Image src={previewUrl} alt="Uploaded" width={396} height={540} className="object-cover w-full h-full rounded-lg" />
+            ) : (
+              <div className="flex flex-col items-center justify-center">
+                <ImagePlus className="w-12 h-12 text-gray-400" />
+                <p className="mt-2 text-sm text-gray-600">
+                    เพิ่มรูปภาพ
+                </p>
+              </div>
+            )}
+          </label>
+          <input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleFileChange} 
+            accept="image/*" required
+          />
+        </div>
 
-        <Button type="submit" text="แบ่งปัน ❤︎" className="mt-[3rem] " isLoading={isPending} />
+        <Button type="submit" text="แบ่งปัน ❤︎" isLoading={isPending} />
         <p className="p2 text-textsecondary text-center " >
-          {isExistingItem 
-            ? "🎁 แจกจ่ายอาหารจากตู้เย็นให้กับคนในชุมชน" 
+          {isExistingItem
+            ? "🎁 แจกจ่ายอาหารจากตู้เย็นให้กับคนในชุมชน"
             : "🎁 แจกจ่ายอาหารใหม่ให้กับคนในชุมชน"
           }
         </p>

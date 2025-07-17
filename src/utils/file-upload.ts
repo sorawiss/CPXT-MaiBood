@@ -20,21 +20,30 @@ export async function uploadFileToSupabase(file: File, bucket: string) {
     return data.publicUrl;
 }
 
-export async function deleteFileFromSupabase(fileUrl: string, bucket: string) {
-    if (!fileUrl) return;
+export async function deleteFileFromSupabase(fileUrl: string, bucketName: string): Promise<boolean> {
+    if (!fileUrl) return false;
 
     try {
-        const fileName = fileUrl.split('/').pop();
-        if (!fileName) return;
+        const url = new URL(fileUrl);
+        const filePath = url.pathname.split(`/${bucketName}/`)[1];
+        
+        if (!filePath) {
+            console.error("Could not extract file path from URL:", fileUrl);
+            return false;
+        }
 
         const { error } = await supabase.storage
-            .from(bucket)
-            .remove([fileName]);
+            .from(bucketName)
+            .remove([filePath]);
 
         if (error) {
             console.error("Error deleting file:", error);
+            return false;
         }
+
+        return true;
     } catch (error) {
-        console.error("Error parsing file URL:", error);
+        console.error("Error processing file deletion:", error);
+        return false;
     }
 } 
