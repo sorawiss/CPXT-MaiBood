@@ -22,11 +22,11 @@ const fetchFridgeData = async () => {
 };
 
 const fetchUserData = async () => {
-    const user = await getCurrentUser();
-    if (!user) {
-        throw new Error("User not authenticated");
+    const res = await fetch('/api/user');
+    if (!res.ok) {
+        throw new Error('Failed to fetch user data');
     }
-    return getUser(user.id);
+    return res.json();
 }
 
 function FridgeItems() {
@@ -53,7 +53,7 @@ function FridgeItems() {
 
   return (
     <div className="w-full flex flex-col gap-[1rem]">
-      <div className="MetaData flex">
+      <div className="MetaData flex mb-[2rem]">
         <FridgeInfo meat={categoryCounts["1"]} cake={categoryCounts["2"]} fruit={categoryCounts["3"]} other={categoryCounts["4"]} />
         {/* <p className="text-textprimary">อาหารในตู้เย็น {count} รายการ</p>
         <p className="text-textprimary">
@@ -78,7 +78,7 @@ function Fridge() {
   return (
     <div className="flex flex-col items-center justify-center gap-[3.5rem] ">
       <div className="Title w-full flex flex-col items-center ">
-        <TitleHeader title={isUserLoading ? `ตู้เย็นของ...` : `ตู้เย็นของ ${userData?.name}`} />
+        <TitleHeader title={isUserLoading ? "ตู้เย็นของคุณ" : `ตู้เย็นของ ${userData?.name}`} />
         <p className="p3 text-textsecondary ">
           บันทึกอาหารในตู้เย็น ช่วยให้จัดการอาหารได้ง่ายขึ้น
         </p>
