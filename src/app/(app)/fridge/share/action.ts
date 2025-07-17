@@ -7,6 +7,7 @@ import { deleteFileFromSupabase, uploadFileToSupabase } from "@/utils/file-uploa
 import { compressImage } from "@/utils/image-compression";
 
 export async function handleShare(formData: FormData) {
+  let imageUrl = "";
   try {
     const session = await verifySession();
     if (!session?.userId) {
@@ -39,64 +40,57 @@ export async function handleShare(formData: FormData) {
       return { error: "กรุณาเพิ่มรูปภาพ" };
     }
     
-    let imageUrl = "";
-
-    try {
-      if (imageFile && imageFile.size > 0) {
-          const compressedImage = await compressImage(imageFile);
-          const uploadedUrl = await uploadFileToSupabase(compressedImage, "cpaxt-maibood-bucket");
-          if (uploadedUrl) {
-              imageUrl = uploadedUrl;
-          } else {
-              return { error: "การอัปโหลดรูปภาพล้มเหลว กรุณาลองใหม่อีกครั้ง" };
-          }
-      }
-
-      if (id && id.trim() !== "") {
-        await shareFridge({
-          id,
-          price,
-          name,
-          description,
-          category,
-          exp_date,
-          image: imageUrl,
-        });
-      } else {
-        await createSellingItem({
-          name,
-          amount,
-          exp_date,
-          userId: session.userId as string,
-          category,
-          price,
-          description,
-          image: imageUrl,
-        });
-      }
-      
-      // Revalidate cache
-      revalidateTag("fridge-items");
-      revalidateTag("selling-fridge-items");
-      revalidateTag("post");
-      revalidatePath("/");
-      revalidatePath("/fridge");
-      
-    } catch (error) {
-      console.error("Failed to share item:", error);
-      if (imageUrl) {
-        await deleteFileFromSupabase(imageUrl, "cpaxt-maibood-bucket");
-      }
-      return { error: "เกิดข้อผิดพลาดในการแบ่งปันอาหาร กรุณาลองใหม่อีกครั้ง" };
+    if (imageFile && imageFile.size > 0) {
+        const compressedImage = await compressImage(imageFile);
+        const uploadedUrl = await uploadFileToSupabase(compressedImage, "cpaxt-maibood-bucket");
+        if (uploadedUrl) {
+            imageUrl = uploadedUrl;
+        } else {
+            return { error: "การอัปโหลดรูปภาพล้มเหลว กรุณาลองใหม่อีกครั้ง" };
+        }
     }
 
-    // Only redirect if everything is successful
-    redirect("/fridge");
+    if (id && id.trim() !== "") {
+      await shareFridge({
+        id,
+        price,
+        name,
+        description,
+        category,
+        exp_date,
+        image: imageUrl,
+      });
+    } else {
+      await createSellingItem({
+        name,
+        amount,
+        exp_date,
+        userId: session.userId as string,
+        category,
+        price,
+        description,
+        image: imageUrl,
+      });
+    }
     
+    // Revalidate cache
+    revalidateTag("fridge-items");
+    revalidateTag("selling-fridge-items");
+    revalidateTag("post");
+    revalidatePath("/");
+    revalidatePath("/fridge");
+      
   } catch (error) {
-    console.error("Unexpected error in handleShare:", error);
-    return { error: "เกิดข้อผิดพลาดที่ไม่คาดคิด กรุณาลองใหม่อีกครั้ง" };
+    console.error("Failed to share item:", error);
+    if (imageUrl) {
+      // Attempt to clean up the uploaded image if the database operation fails
+      await deleteFileFromSupabase(imageUrl, "cpaxt-maibood-bucket");
+    }
+    return { error: "เกิดข้อผิดพลาดในการแบ่งปันอาหาร กรุณาลองใหม่อีกครั้ง" };
   }
+
+  // Only redirect if everything is successful
+  redirect("/fridge");
 }
 
 

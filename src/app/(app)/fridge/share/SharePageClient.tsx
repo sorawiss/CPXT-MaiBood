@@ -61,9 +61,6 @@ export default function SharePageClient() {
     startTransition(async () => {
       try {
         const formData = new FormData(event.currentTarget);
-        if (imageFile) {
-          formData.append("image", imageFile);
-        }
         const result = await handleShare(formData);
         
         // Handle error returned from server action
@@ -135,9 +132,9 @@ export default function SharePageClient() {
           <div className="Category flex flex-col mt-[2rem] ">
             <label className="text-textprimary font-medium text-[1rem] " htmlFor="category">ประเภท</label>
             <Category value={category} onChange={setCategory} />
-            <input type="hidden" name="category" value={category ? category.toString() : ""} />
           </div>
         )}
+        <input type="hidden" name="category" value={category ? category.toString() : ""} />
         
         <div className="flex flex-col items-center justify-center w-full mt-[2rem] ">
           <label htmlFor="file-upload" className="w-full h-[30rem] border-2 border-dashed rounded-lg cursor-pointer flex items-center justify-center">
@@ -152,7 +149,7 @@ export default function SharePageClient() {
               </div>
             )}
           </label>
-          <input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleFileChange} 
+          <input id="file-upload" name="image" type="file" className="sr-only" onChange={handleFileChange} 
             accept="image/*" capture="environment" required
           />
         </div>
