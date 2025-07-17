@@ -7,7 +7,7 @@ import Image from "next/image"
 
 
 
-async function ProfileFromId({ params }: { params: { profileId: string } }) {
+async function ProfileFromId({ params }: { params: Promise<{ profileId: string }> }) {
     const resolvedParams = await params
     const profileId = resolvedParams.profileId
     const user = await getUser(profileId)
