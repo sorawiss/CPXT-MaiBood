@@ -44,6 +44,7 @@ export default async function Home() {
               id={item.id}
               isMakro={true}
               image={item.image}
+              updated_at={item.updated_at}
             />
           ))}
         </div>
@@ -63,6 +64,7 @@ export default async function Home() {
               name={item.name}
               id={item.id}
               image={item.image ?? undefined}
+              updated_at={item.updated_at}
             />
           ))}
         </div>

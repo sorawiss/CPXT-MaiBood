@@ -217,7 +217,8 @@ export const getSellingFridgeItems = unstable_cache(
                 price: true,
                 category: true,
                 exp_date: true,
-                image: true
+                image: true,
+                updated_at: true
             },
             orderBy: { exp_date: "asc" }
         });

@@ -10,11 +10,18 @@ interface PostListProps {
     id: string
     isMakro?: boolean
     image?: string
+    updated_at: Date
 }
 
 
-function PostList({ exp_date, price, name, id, isMakro = false, image = "" }: PostListProps) {
+function PostList({ exp_date, price, name, id, isMakro = false, image = "", updated_at }: PostListProps) {
     const formattedDate = safeDate(exp_date).toLocaleDateString('th-TH', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+
+    const formattedUpdatedAt = safeDate(updated_at).toLocaleDateString('th-TH', {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
@@ -39,7 +46,7 @@ function PostList({ exp_date, price, name, id, isMakro = false, image = "" }: Po
                 </div>
                 <div className="food-description-wrapper">
                     <p className="food-name text-textprimary "> {name} </p>
-                    <p className="p2 text-textsecondary food-seller"> ข้อมูลตรงนี้จะมาจากการเก็บข้อมูล user </p>
+                    <p className="p2 text-textsecondary food-seller"> แจกจ่ายเมื่อ {formattedUpdatedAt} </p>
                 </div>
             </div>
         </Link>
