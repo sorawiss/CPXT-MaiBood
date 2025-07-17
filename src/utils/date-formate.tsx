@@ -23,3 +23,23 @@ export function safeDate(dateString: string | Date): Date {
     return date;
 }
 
+export function formatDateToRelative(date: Date | string) {
+    const targetDate = safeDate(date);
+    const now = new Date();
+
+    // Reset time to start of the day for accurate day difference calculation
+    targetDate.setHours(0, 0, 0, 0);
+    now.setHours(0, 0, 0, 0);
+
+    const diffTime = targetDate.getTime() - now.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) {
+        return "วันนี้";
+    } else if (diffDays > 0) {
+        return `${diffDays} วันข้างหน้า`;
+    } else {
+        return `${Math.abs(diffDays)} วันที่ผ่านมา`;
+    }
+}
+

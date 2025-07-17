@@ -1,6 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
-import { safeDate } from "@/utils/date-formate";
+import { formatDateToRelative, safeDate } from "@/utils/date-formate";
 
 
 interface PostListProps {
@@ -15,17 +15,9 @@ interface PostListProps {
 
 
 function PostList({ exp_date, price, name, id, isMakro = false, image = "", updated_at }: PostListProps) {
-    const formattedDate = safeDate(exp_date).toLocaleDateString('th-TH', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
+    const formattedDate = formatDateToRelative(exp_date);
 
-    const formattedUpdatedAt = safeDate(updated_at).toLocaleDateString('th-TH', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
+    const formattedUpdatedAt = formatDateToRelative(updated_at);
 
     return (
         <Link href={`${isMakro ? "food/makro" : "/food"}/${id}?name=${name}`} >
@@ -36,7 +28,7 @@ function PostList({ exp_date, price, name, id, isMakro = false, image = "", upda
                             rounded-2xl w-full h-full" />
                     </div>
                     <p className="ExpireDate p2 absolute w-fit h-5 rounded-2xl p-2 top-2 left-2
-                                bg-background flex items-center justify-center" >exp: {formattedDate}
+                                bg-background flex items-center justify-center" >บูด: {formattedDate}
                     </p>
                     <p className="Price p2 absolute w-fit h-5 rounded-2xl p-2 bottom-2 right-2
                                 bg-background flex items-center justify-center" >{price > 0 ? price + " บาท" : "ฟรี"}

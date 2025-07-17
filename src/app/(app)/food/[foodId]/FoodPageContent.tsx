@@ -10,7 +10,7 @@ import { Suspense, useTransition } from "react";
 import { sendNotification } from "./action";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { safeDate } from "@/utils/date-formate";
+import { safeDate, formatDateToRelative } from "@/utils/date-formate";
 
 export default function FoodPageContent({ post, foodId, currentUser, hasSentRequest }: { post: any, foodId: string, currentUser: any, hasSentRequest: boolean }) {
     const [isPending, startTransition] = useTransition();
@@ -49,11 +49,11 @@ export default function FoodPageContent({ post, foodId, currentUser, hasSentRequ
             : null;
 
     // Date Info
-    const dateInfo = {
-        created_at: safeDate(post.created_at).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }),
-        updated_at: safeDate(post.updated_at).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }),
-        exp_date: safeDate(post.exp_date).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })
-    }
+    const relativeDateInfo = {
+        created_at: formatDateToRelative(post.created_at),
+        updated_at: formatDateToRelative(post.updated_at),
+        exp_date: formatDateToRelative(post.exp_date)
+    };
 
     return (
         <div className="Post min-h-[calc(100vh-10rem)] w-[25rem] mx-auto pt-[4rem] px-[1.5rem]">
@@ -91,27 +91,27 @@ export default function FoodPageContent({ post, foodId, currentUser, hasSentRequ
                     {/* DateInfo */}
                     <div className="DateInfo">
                         <p className="p3 text-textsecondary">
-                            ✚ เพิ่มเข้าตู้เย็นเมื่อ {dateInfo.created_at}
+                            ✚ เพิ่มเข้าตู้เย็นเมื่อ {relativeDateInfo.created_at}
                         </p>
                         <p className="p3 text-textsecondary">
-                            ✏️ อัปเดตล่าสุดเมื่อ {dateInfo.updated_at}
+                            ✏️ อัปเดตล่าสุดเมื่อ {relativeDateInfo.updated_at}
                         </p>
-                        <p className="p3 text-textsecondary">🤢 จะบูดตอน {dateInfo.exp_date}</p>
+                        <p className="p3 text-textsecondary ">🤢 จะบูดตอน {relativeDateInfo.exp_date}</p>
                     </div>
 
 
 
 
                     <div className="Contact flex flex-col gap-1 ">
-                        {isCurrentUser && (
-                            <p className="p3 text-textsecondary">นี่คืออาหารของคุณสามารถจัดการได้ใน <Link href="/fridge" className="text-makro">ตู้เย็นของคุณ</Link></p>
-                        )}
                         <Suspense fallback={<div className="p3 text-textsecondary">กำลังคำนวณระยะทาง...</div>}>
                             <PostDistance postLocation={postLocation} />
                         </Suspense>
                         <Contact ig={post.user.instagram ?? undefined}
                             line={post.user.line ?? undefined} phone={post.user.phone_number ?? undefined}
                             facebook={post.user.facebook ?? undefined} align="start" />
+                        {isCurrentUser && (
+                            <p className="p3 text-textsecondary">นี่คืออาหารของคุณสามารถจัดการได้ใน <Link href="/fridge" className="text-makro">ตู้เย็นของคุณ</Link></p>
+                        )}
                     </div>
 
 
