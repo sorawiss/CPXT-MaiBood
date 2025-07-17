@@ -5,13 +5,14 @@ import Input from "@/components/Input";
 import Button from "@/components/Button";
 import { useState, useTransition, useEffect } from "react";
 import Category from "@/components/Category";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { ImagePlus } from "lucide-react";
 import Image from "next/image";
 
 export default function SharePageClient() {
   const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
+  const router = useRouter();
   const isExistingItem = searchParams.get("id") && searchParams.get("id")?.trim() !== "";
   
   const [name, setName] = useState<string>(
@@ -66,8 +67,10 @@ export default function SharePageClient() {
         // Handle error returned from server action
         if (result?.error) {
           setError(result.error);
+        } else if (result?.success) {
+          // If successful, navigate to the fridge page
+          router.push('/fridge');
         }
-        // If successful, the action will redirect to /fridge
       } catch (error) {
         console.error("Form submission error:", error);
         setError(error as string);

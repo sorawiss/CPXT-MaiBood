@@ -79,6 +79,8 @@ export async function handleShare(formData: FormData) {
     revalidateTag("post");
     revalidatePath("/");
     revalidatePath("/fridge");
+
+    return { success: true };
       
   } catch (error) {
     console.error("Failed to share item:", error);
@@ -86,11 +88,8 @@ export async function handleShare(formData: FormData) {
       // Attempt to clean up the uploaded image if the database operation fails
       await deleteFileFromSupabase(imageUrl, "cpaxt-maibood-bucket");
     }
-    return { error: "เกิดข้อผิดพลาดในการแบ่งปันอาหาร กรุณาลองใหม่อีกครั้ง " + error };
+    return { error: "เกิดข้อผิดพลาดในการแบ่งปันอาหาร กรุณาลองใหม่อีกครั้ง" };
   }
-
-  // Only redirect if everything is successful
-  redirect("/fridge");
 }
 
 
