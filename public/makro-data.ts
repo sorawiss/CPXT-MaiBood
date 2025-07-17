@@ -11,7 +11,7 @@ export const makroData = [
             id: "1",
             name: "Makro รามคำแหง"
         },
-        updated_at: new Date("2025-08-10T13:31:32.217Z")
+        updated_at: new Date("2025-07-10T13:31:32.217Z")
     },
     {
         id: "2",
@@ -25,7 +25,7 @@ export const makroData = [
             id: "1",
             name: "Makro รามคำแหง"
         },
-        updated_at: new Date("2025-08-10T13:31:32.217Z")
+        updated_at: new Date("2025-07-10T13:31:32.217Z")
     },
     {
         id: "3",
@@ -39,7 +39,7 @@ export const makroData = [
             name: "Makro รามคำแหง"
         },
         image: "/vegetable.jpg",
-        updated_at: new Date("2025-08-10T13:31:32.217Z")
+        updated_at: new Date("2025-07-10T13:31:32.217Z")
     },
     {
         id: "4",
@@ -53,7 +53,7 @@ export const makroData = [
             id: "1",
             name: "Makro รามคำแหง"
         },
-        updated_at: new Date("2025-08-10T13:31:32.217Z")
+        updated_at: new Date("2025-07-10T13:31:32.217Z")
     },
 
 ]
