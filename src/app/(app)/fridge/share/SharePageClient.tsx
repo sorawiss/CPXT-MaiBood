@@ -29,6 +29,7 @@ export default function SharePageClient() {
   );
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const suggestAmount = [1, 3, 5, 10];
 
   // Hanle when click suggestion amount
@@ -55,12 +56,25 @@ export default function SharePageClient() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setError(null); // Clear any previous errors
+    
     startTransition(async () => {
-      const formData = new FormData(event.currentTarget);
-      if (imageFile) {
-        formData.append("image", imageFile);
+      try {
+        const formData = new FormData(event.currentTarget);
+        if (imageFile) {
+          formData.append("image", imageFile);
+        }
+        const result = await handleShare(formData);
+        
+        // Handle error returned from server action
+        if (result?.error) {
+          setError(result.error);
+        }
+        // If successful, the action will redirect to /fridge
+      } catch (error) {
+        console.error("Form submission error:", error);
+        setError("เกิดข้อผิดพลาดในการส่งข้อมูล กรุณาลองใหม่อีกครั้ง");
       }
-      await handleShare(formData);
     });
   };
 
@@ -70,6 +84,13 @@ export default function SharePageClient() {
       <TitleHeader title="แบ่งปัน ❤︎" />
 
       <form onSubmit={handleSubmit} className="my-auto w-full flex flex-col gap-[1rem] ">
+        {/* Error display */}
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-4">
+            <p className="text-sm">{error}</p>
+          </div>
+        )}
+
         <Input type="text" name="item" placeholder="ตัวอย่าง: อกไก่สด" label="ชื่ออาหาร" required
           className="!bg-transparent !border-backgroundsecondary "
           value={name}
