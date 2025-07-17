@@ -318,6 +318,18 @@ export const createNotification = async (recipientId: string, senderId: string, 
     }
 };
 
+export async function checkNotificationConnection(userId1: string, userId2: string) {
+    const notification = await prismaDB.notification.findFirst({
+        where: {
+            OR: [
+                { senderId: userId1, recipientId: userId2 },
+                { senderId: userId2, recipientId: userId1 },
+            ],
+        },
+    });
+    return !!notification;
+}
+
 // Notification DALs
 //--------------------------------
 export async function getNotifications(userId: string) {
