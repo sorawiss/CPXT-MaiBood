@@ -6,7 +6,7 @@ import PostDistance from "@/components/PostDistance";
 import TitleHeader from "@/components/TitleHeader";
 import { Croissant, Ellipsis, Ham, LeafyGreen } from "lucide-react";
 import Image from "next/image";
-  import { Suspense, useTransition } from "react";
+import { Suspense, useTransition } from "react";
 import { sendNotification } from "./action";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -100,14 +100,25 @@ export default function FoodPageContent({ post, foodId, currentUser, hasSentRequ
                     </div>
 
                     {/* Contact */}
-                    <div className="Contact flex flex-col gap-1 ">
-                        <Suspense fallback={<div className="p3 text-textsecondary">กำลังคำนวณระยะทาง...</div>}>
-                            <PostDistance postLocation={postLocation} />
-                        </Suspense>
-                        <Contact ig={post.user.instagram ?? undefined}
-                            line={post.user.line ?? undefined} phone={post.user.phone_number ?? undefined}
-                            facebook={post.user.facebook ?? undefined} align="start" />
-                    </div>
+                    {isCurrentUser && (
+                        <div className="Contact flex flex-col gap-1 ">
+                            <h1 className="text-textprimary text-center " >
+                                นี่คืออาหารที่คุณแจกจ่าย สามารถจัดการได้ใน <Link href="/fridge" className="text-makro">ตู้เย็นของคุณ</Link>
+                            </h1>
+                        </div>
+                    )}
+
+                    {!isCurrentUser && (
+                        <div className="Contact flex flex-col gap-1 ">
+                            <Suspense fallback={<div className="p3 text-textsecondary">กำลังคำนวณระยะทาง...</div>}>
+                                <PostDistance postLocation={postLocation} />
+                            </Suspense>
+                            <Contact ig={post.user.instagram ?? undefined}
+                                line={post.user.line ?? undefined} phone={post.user.phone_number ?? undefined}
+                                facebook={post.user.facebook ?? undefined} align="start" />
+                        </div>
+                    )}
+
 
                     {/* Button */}
                     {!isCurrentUser && (

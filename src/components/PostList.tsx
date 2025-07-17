@@ -28,10 +28,10 @@ function PostList({ exp_date, price, name, id, isMakro = false, image = "" }: Po
                         <Image src={image} alt={name} width={378} height={504} className="object-cover 
                             rounded-2xl w-full h-full" />
                     </div>
-                    <p className="ExpireDate absolute w-fit h-5 rounded-2xl p-2 top-2 left-2
-                                bg-background flex items-center justify-center" >{formattedDate}
+                    <p className="ExpireDate p2 absolute w-fit h-5 rounded-2xl p-2 top-2 left-2
+                                bg-background flex items-center justify-center" >exp: {formattedDate}
                     </p>
-                    <p className="Price absolute w-fit h-5 rounded-2xl p-2 bottom-2 right-2
+                    <p className="Price p2 absolute w-fit h-5 rounded-2xl p-2 bottom-2 right-2
                                 bg-background flex items-center justify-center" >{price > 0 ? price + " บาท" : "ฟรี"}
                     </p>
 
