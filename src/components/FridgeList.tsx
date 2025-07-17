@@ -144,14 +144,19 @@ function FridgeList({ item }: { item: FridgeItem }) {
 
     // Status
     function setStatus() {
-        if (item.status === StatusType.fresh) {
-            status = ""
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Ignore time part
+
+        if (expDate < today) {
+            status = "⚠️ บูด";
+        } else if (item.status === StatusType.fresh) {
+            status = "";
         }
-        if (willExpire) {
-            status = "🤢 จะบูด"
+        if (willExpire && expDate >= today) {
+            status = "🤢 จะบูด";
         }
         if (item.status === StatusType.selling) {
-            status = "กำลังแบ่งปัน..."
+            status = "กำลังแบ่งปัน...";
         }
     }
     setStatus()
@@ -223,7 +228,8 @@ function FridgeList({ item }: { item: FridgeItem }) {
                         .filter(
                             button =>
                                 !(item.status === "selling" && button.id === 1) &&
-                                !(item.status !== "selling" && button.id === 3)   
+                                !(item.status !== "selling" && button.id === 3) &&
+                                !(status === "⚠️ บูด" && button.id === 1)
                         )
                         .map((button) => (
                             <DialogClose key={button.id} asChild>
