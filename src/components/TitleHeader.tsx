@@ -12,7 +12,7 @@ function TitleHeader({ title, showEdit = false }: { title: string, showEdit?: bo
     return (
         <div className="TitleHeader flex items-center justify-between w-full mb-[2rem] ">
             <ChevronLeft
-                className="cursor-pointer text-makro "
+                className="cursor-pointer text-textprimary "
                 onClick={() => router.back()}
             />
             <h1>{title}</h1>

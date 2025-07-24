@@ -62,8 +62,8 @@ async function Fridge() {
         fixed bottom-24 left-1/2 -translate-x-1/2 z-10  bg-background rounded-full ">
         <Button
           type="button"
-          text={<Plus className="size-12 text-makro " />}
-          className="!size-[4.5rem] rounded-full !bg-transparent !border-makro !border-2    "
+          text={<Plus className="size-12 text-textprimary " />}
+          className="!size-[4.5rem] rounded-full !bg-transparent !border-textprimary !border-2    "
         />
         <h3 className="text-textsecondary " >เพิ่มอาหาร</h3>
       </Link>

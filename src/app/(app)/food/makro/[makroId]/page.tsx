@@ -92,7 +92,7 @@ export default async function Post({ params }: { params: Promise<{ makroId: stri
 
                     <Button
                         text="รับอาหาร"
-                        className="!w-full !h-[3rem] !bg-makro !text-white"
+                        className="!w-full !h-[3rem] !bg-textprimary !text-white"
                         type="button"
                     />
 

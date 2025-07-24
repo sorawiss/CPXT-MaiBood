@@ -25,11 +25,11 @@ export default function HomePageContent({ initialPosts, makroData }: HomePageCon
 
   return (
     <div className="flex flex-col items-center justify-center pt-[4rem] w-[25rem] px-[1.5rem] mx-auto gap-[2rem] ">
-      <div className="UserLocation w-full bg-makro rounded-2xl px-[1rem] py-[0.5rem]
+      <div className="UserLocation w-full bg-textprimary rounded-2xl px-[1rem] py-[0.5rem]
           text-background flex flex-col gap-[1rem] ">
         <div className="GreatMessage">
           <h3>มีส้มลดราคาเป็นจำนวนมากในชุมชน</h3>
-          <h2 className="text-textprimary" >ลองเข้าไปดูสิ</h2>
+          <h2 className="text-background" >ลองเข้าไปดูสิ</h2>
         </div>
         <UserLocation />
       </div>
@@ -41,8 +41,8 @@ export default function HomePageContent({ initialPosts, makroData }: HomePageCon
 
       <div className="PostContainer w-full flex flex-col gap-[1rem] ">
         <div className="Title w-full flex flex-col ">
-          <h1>จาก CPAXT</h1>
-          <p className="p3 text-textsecondary" >อาหารจาก Makro และ Lotus ใกล้บ้านคุณ </p>
+          <h1>จาก Tops ลาดกระบัง</h1>
+          <p className="p3 text-textsecondary" >อาหารลดราคาจาก Tops ลาดกระบัง </p>
         </div>
         <div className="MakroPost w-full grid grid-cols-2 gap-[1rem] ">
           {filteredMakroPosts.map((item, index) => (
