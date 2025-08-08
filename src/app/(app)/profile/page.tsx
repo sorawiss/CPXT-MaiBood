@@ -17,7 +17,8 @@ async function ProfileStats({ userId }: { userId: string }) {
     ]);
 
     return (
-        <div className="StateWrapper flex flex-col items-center justify-center w-full gap-2 ">
+        <div className={`StateWrapper flex flex-col items-center justify-center w-full gap-2 `}>
+            <ProfileStat title="♞ อัศวิน" amount={soldItems} isBold={true} />
             <ProfileStat title="🤝 ขายอาหาร" amount={soldItems} />
             <ProfileStat title="❤ แจกฟรี" amount={freeItems} />
         </div>
