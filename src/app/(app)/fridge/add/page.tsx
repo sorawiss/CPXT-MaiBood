@@ -2,11 +2,12 @@
 import Input from "@/components/Input";
 import TitleHeader from "@/components/TitleHeader";
 import { handleAddToFridge } from "./action";
-import { useActionState, useState, useRef, useEffect } from "react";
+import { useActionState, useState, useRef, useEffect, useTransition } from "react";
 import { useFormStatus } from "react-dom";
 import Button from "@/components/Button";
 import Category from "@/components/Category";
 import SuccessMessage from "@/components/SuccessMessage";
+import ConfirmationModal from "@/components/ConfirmationModal";
 
 type FormState = {
   error?: string;
@@ -25,6 +26,9 @@ export default function Add() {
   const [amount, setAmount] = useState<number | string>("");
   const [category, setCategory] = useState<number | null>(0);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [formData, setFormData] = useState<FormData | null>(null);
+  const [isPending, startTransition] = useTransition();
   const formRef = useRef<HTMLFormElement>(null);
   const suggestAmount = [1, 3, 5, 10];
 
@@ -46,6 +50,26 @@ export default function Add() {
     setShowSuccess(false);
   };
 
+  const handleFormSubmit = (formData: FormData) => {
+    setFormData(formData);
+    setShowConfirmation(true);
+  };
+
+  const handleConfirm = () => {
+    if (formData) {
+      startTransition(async () => {
+        await formAction(formData);
+      });
+    }
+    setShowConfirmation(false);
+    setFormData(null);
+  };
+
+  const handleCancel = () => {
+    setShowConfirmation(false);
+    setFormData(null);
+  };
+
   // Hanle when click suggestion amount
   function handleSuggestAmount(amount: number) {
     setAmount(amount);
@@ -56,12 +80,23 @@ export default function Add() {
       {/* Success Message */}
       {showSuccess && <SuccessMessage message={"เพิ่มอาหารเข้าตู้เย็นสำเร็จแล้ว"} onClose={handleCloseSuccess} />}
       
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showConfirmation}
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+        title="ยืนยันการเพิ่มอาหาร"
+        message="คุณต้องการเพิ่มอาหารนี้เข้าตู้เย็นหรือไม่?"
+        confirmText="เพิ่มอาหาร"
+        cancelText="ยกเลิก"
+      />
+      
       {/* Title Header */}
       <div className="min-h-[calc(100vh-10rem)] flex flex-col justify-center items-center w-full ">
         <TitleHeader title="เพิ่มอาหาร" />
 
         {/* Form */}
-        <form ref={formRef} action={formAction} className="my-auto w-full flex flex-col gap-[1rem] ">
+        <form ref={formRef} action={handleFormSubmit} className="my-auto w-full flex flex-col gap-[1rem] ">
           <Input type="text" name="item" placeholder="ตัวอย่าง: อกไก่สด" label="ชื่ออาหาร" required
             className="!bg-transparent !border-backgroundsecondary " />
 
