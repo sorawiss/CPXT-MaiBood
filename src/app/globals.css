@@ -36,6 +36,9 @@ p {
 .p4 {
     @apply text-[0.75rem] font-light
 }
+.test {
+  border: 1px solid red;
+}
 
 .circle-button {
     border: none;
